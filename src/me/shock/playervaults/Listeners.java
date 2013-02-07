@@ -2,7 +2,6 @@ package me.shock.playervaults;
 
 import java.io.IOException;
 
-import me.shock.playervaults.util.Config;
 import me.shock.playervaults.util.VaultManager;
 
 import org.bukkit.ChatColor;
@@ -33,23 +32,22 @@ public class Listeners implements Listener
 		this.plugin = instance;
 	}
 	VaultManager vm = new VaultManager();
-	Config config = new Config();
 	Commands commands = new Commands();
-	
-	
-	
+
+
+
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event)
 	{
 		if(commands.inVault.containsKey(event.getPlayer().getName())) {
-		Player player = event.getPlayer();
-		Inventory inv = player.getOpenInventory().getTopInventory();
-		int number = Integer.parseInt(commands.inVault.get(player.getName()));
-		try {
-			vm.saveVault(inv, player, number);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			Player player = event.getPlayer();
+			Inventory inv = player.getOpenInventory().getTopInventory();
+			int number = Integer.parseInt(commands.inVault.get(player.getName()));
+			try {
+				vm.saveVault(inv, player, number);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	@EventHandler
@@ -74,9 +72,9 @@ public class Listeners implements Listener
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			}
 		}
-	
+	}
+
 	@EventHandler
 	public void onTP(PlayerTeleportEvent event) {
 		if(commands.inVault.containsKey(event.getPlayer().getName())) {
@@ -88,9 +86,9 @@ public class Listeners implements Listener
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			}
 		}
-	
+	}
+
 	@EventHandler
 	public void onWorldChange(PlayerChangedWorldEvent event) {
 		if(commands.inVault.containsKey(event.getPlayer().getName())) {
@@ -102,9 +100,9 @@ public class Listeners implements Listener
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			}
 		}
-	
+	}
+
 	@EventHandler 
 	public void onClose(InventoryCloseEvent event) {
 		if(commands.inVault.containsKey(event.getPlayer().getName())) {
@@ -120,9 +118,9 @@ public class Listeners implements Listener
 					e.printStackTrace();
 				}
 			}
-			}
 		}
-	
+	}
+
 	/**
 	 * Check if a player is trying to do something while
 	 * in a vault.
@@ -136,7 +134,7 @@ public class Listeners implements Listener
 		if(commands.inVault.containsKey(player.getName()) && event.getAction() == Action.RIGHT_CLICK_BLOCK)
 		{
 			Block block = event.getClickedBlock();
-			
+
 			/**
 			 * Different inventories that
 			 * we don't want the player to open.
@@ -148,9 +146,6 @@ public class Listeners implements Listener
 					 * Storage_minecart and Powered minecart aren't blocks ;)- added to EntityInteractEvent
 					 */
 					|| block.getType() == Material.BURNING_FURNACE
-					//|| block.getType() == Material.STORAGE_MINECART
-					//|| block.getType() == Material.MINECART
-					//|| block.getType() == Material.POWERED_MINECART
 					|| block.getType() == Material.BREWING_STAND
 					|| block.getType() == Material.BEACON)
 			{
@@ -158,7 +153,7 @@ public class Listeners implements Listener
 			}
 		}
 	}
-	
+
 	/**
 	 * Don't let a player open a trading inventory OR a minecart
 	 * while he has his vault open.
