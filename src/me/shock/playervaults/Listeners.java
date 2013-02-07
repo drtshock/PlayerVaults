@@ -31,7 +31,7 @@ public class Listeners implements Listener
 	{
 		this.plugin = instance;
 	}
-	VaultManager vm = new VaultManager();
+	VaultManager vm = new VaultManager(plugin);
 	Commands commands = new Commands();
 
 
@@ -54,7 +54,7 @@ public class Listeners implements Listener
 	public void onJoin(PlayerJoinEvent event)
 	{
 		Player player = event.getPlayer();
-		plugin.playerVaultFile(player);
+		plugin.playerVaultFile(player.getName());
 		if(player.isOp() && Main.update)
 		{
 			player.sendMessage(ChatColor.GREEN + "Version " + Main.name + " of PlayerVaults is up for download!");

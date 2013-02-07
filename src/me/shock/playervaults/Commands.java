@@ -14,7 +14,8 @@ import org.bukkit.entity.Player;
 public class Commands implements CommandExecutor
 {
 
-	VaultManager vm = new VaultManager();
+	private Main plugin;
+	VaultManager vm = new VaultManager(plugin);
 	String pv = ChatColor.DARK_RED + "[" + ChatColor.WHITE + "PlayerVaults" + 
 			ChatColor.DARK_RED + "]" + ChatColor.WHITE + ": ";
 
@@ -23,7 +24,7 @@ public class Commands implements CommandExecutor
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	{
-		if (cmd.getName().equalsIgnoreCase("vault"))
+		if (cmd.getName().equalsIgnoreCase("pv"))
 		{
 			if (!(sender instanceof Player))
 			{

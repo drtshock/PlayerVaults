@@ -17,7 +17,10 @@ import org.bukkit.inventory.Inventory;
 public class VaultManager 
 {
 
-	private Main plugin;
+	public Main plugin;
+	public VaultManager(Main instance) {
+		this.plugin = instance;
+	}
 	String title;
 
 	/**
@@ -33,7 +36,7 @@ public class VaultManager
 		{
 			// Get the player's file and serialize the inventory.
 			String ser = Serialization.toBase64(inv);
-			YamlConfiguration file = plugin.playerVaultFile(player);
+			YamlConfiguration file = plugin.playerVaultFile(player.getName());
 
 			// Prepare to save D:
 			file.set("vault" + number + "", ser);
@@ -52,24 +55,13 @@ public class VaultManager
 	 */
 	public void loadVault(CommandSender sender, String target, int number)
 	{
-		String name = target.toLowerCase();
-		File file = new File(plugin.getDataFolder() + File.separator + "vaults" + name + ".yml");
-		FileConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
-		if(file.exists())
-		{
-			String data = playerFile.getString("vault" + "" + number + "");
-			Inventory inv = Serialization.fromBase64(data);
-			Player player = (Player) sender;
-			player.openInventory(inv);
-			player.sendMessage(title + " Opening " + ChatColor.GREEN + " " + number);
-			return;
-
-		}
-		else
-		{
-			sender.sendMessage(title + " That doesn't exist!");
-			return;
-		}
+		YamlConfiguration playerFile = plugin.playerVaultFile(target);
+		String data = playerFile.getString("vault" + "" + number + "");
+		Inventory inv = Serialization.fromBase64(data);
+		Player player = (Player) sender;
+		player.openInventory(inv);
+		player.sendMessage(title + " Opening " + ChatColor.GREEN + " " + number);
+		return;
 
 	}
 
