@@ -15,6 +15,7 @@ import me.shock.playervaults.util.Updater;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.libs.jline.internal.Log;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -119,7 +120,7 @@ public class Main extends JavaPlugin {
 			 * New, genius way to write it :)
 			 */
 			try {
-				FileOutputStream fos = new FileOutputStream(new File(getDataFolder() + File.separator + "lang.yml"));
+				FileOutputStream fos = new FileOutputStream(lang);
 				InputStream is = getResource("lang.yml");
 				byte[] linebuffer = new byte[4096];
 				int lineLength = 0;
@@ -135,9 +136,26 @@ public class Main extends JavaPlugin {
 	}
 	
 	private YamlConfiguration lang() {
-		File file = new File(getDataFolder() + "/lang.yml");
+		File file = new File(getDataFolder() + File.separator + "lang.yml");
 		YamlConfiguration lang = YamlConfiguration.loadConfiguration(file);
 		return lang;
+	}
+	
+	public YamlConfiguration playerVaultFile(Player player) {
+		File folder = new File(getDataFolder() + File.separator + "vaults");
+		if(!folder.exists()) {
+			folder.mkdir();
+		}
+		File file = new File(getDataFolder() + File.separator + "vaults" + File.separator + player.getName().toLowerCase() + ".yml");
+		if(!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		YamlConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
+		return playerFile;
 	}
 	
 	/**

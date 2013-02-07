@@ -20,18 +20,6 @@ public class VaultManager
 	private Main plugin;
 	String title;
 
-	public void checkFile(Player player)
-	{
-		String name = player.getName().toLowerCase();
-
-		File file = new File(plugin.getDataFolder() + File.separator + "vaults" + name + ".yml");
-		if(!file.exists())
-		{
-			file.mkdir();
-		}
-		return;
-	}
-
 	/**
 	 * Method to save player's vault.
 	 * Serialize his inventory.
@@ -44,18 +32,15 @@ public class VaultManager
 		if(plugin.inVault().containsKey(player.getName()))
 		{
 			// Get the player's file and serialize the inventory.
-			String name = player.getName().toLowerCase();
 			String ser = Serialization.toBase64(inv);
-			File file = new File(plugin.getDataFolder() + File.separator + "vaults" + name + ".yml");
-			FileConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
+			YamlConfiguration file = plugin.playerVaultFile(player);
 
 			// Prepare to save D:
-			playerFile.set("vault" + number + "", ser);
+			file.set("vault" + number + "", ser);
 			if(plugin.debugMode())
 			{
 				plugin.getLogger().log(Level.INFO, "[PlayerVaults] Saved " + " " + number + " for " + player.getName());
 			}
-			playerFile.save(file);
 		}
 	}
 

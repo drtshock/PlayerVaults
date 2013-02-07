@@ -54,7 +54,7 @@ public class Listeners implements Listener
 	public void onJoin(PlayerJoinEvent event)
 	{
 		Player player = event.getPlayer();
-		vm.checkFile(player);
+		plugin.playerVaultFile(player);
 		if(player.isOp() && Main.update)
 		{
 			player.sendMessage(ChatColor.GREEN + "Version " + Main.name + " of PlayerVaults is up for download!");
