@@ -108,7 +108,7 @@ public class Commands implements CommandExecutor
 					{
 						if (args[1].matches("[1-9]"))
 						{
-							int number = Integer.parseInt(args[1]);
+							Integer number = Integer.parseInt(args[1]);
 							try {
 								vm.deleteVault(sender, sender.getName(), number);
 							} catch (IOException e) {
@@ -135,7 +135,7 @@ public class Commands implements CommandExecutor
 					}
 					if (args[1].matches("[1-9]"))
 					{
-						int number = Integer.parseInt(args[2]);
+						Integer number = Integer.parseInt(args[2]);
 						vm.loadVault(sender, args[1].toLowerCase(), number);
 						sender.sendMessage(pv + "Opened vault " + ChatColor.GREEN + args[1] + ChatColor.WHITE + " for " + 
 								ChatColor.GREEN + args[0]);
