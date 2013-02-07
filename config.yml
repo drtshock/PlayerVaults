@@ -1,0 +1,6 @@
+# PlayerVaults by drsthock
+check-update: true
+debug-mode: false
+disabled-worlds:
+  - YourAwesomeWorld
+  - Toonville

@@ -1,0 +1,12 @@
+name: PlayerVaults
+main: me.shock.playervaults.Main
+authors: [drtshock]
+version: 1.1.4
+website: www.dev.bukkit.org/server-mods/PlayerVaults
+commands:
+  pv:
+    description: Open a vault with /vault <number>
+    aliases: [vault, playervault, playervaults]
+permissions:
+  playervaults.amount.9:
+    default: op
