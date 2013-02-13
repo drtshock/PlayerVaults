@@ -11,6 +11,7 @@ import net.minecraft.server.v1_4_R1.NBTBase;
 import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import net.minecraft.server.v1_4_R1.NBTTagList;
  
+import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_4_R1.inventory.CraftInventoryCustom;
 import org.bukkit.craftbukkit.v1_4_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.Inventory;
@@ -44,7 +45,7 @@ public class Serialization {
     public static Inventory fromBase64(String data) {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
         NBTTagList itemList = (NBTTagList) NBTBase.b(new DataInputStream(inputStream));
-        Inventory inventory = new CraftInventoryCustom(null, itemList.size());
+        Inventory inventory = new CraftInventoryCustom(null, itemList.size(), ChatColor.DARK_RED + "Vault");
  
         for (int i = 0; i < itemList.size(); i++) {
             NBTTagCompound inputObject = (NBTTagCompound) itemList.get(i);

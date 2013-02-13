@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 import me.shock.playervaults.Main;
-import me.shock.playervaults.commands.Feedback;
+import me.shock.playervaults.commands.Commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -22,9 +22,10 @@ public class VaultManager {
 	public VaultManager(Main instance) {
 		this.plugin = instance;
 	}
-	Feedback feedback = new Feedback();
+	
+	Commands commands = new Commands();
 	String title;
-	private static String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
+	private String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
 
 	/**
 	 * Method to save player's vault.
@@ -34,7 +35,7 @@ public class VaultManager {
 	 * @throws IOException 
 	 */
 	public void saveVault(Inventory inv, Player player, int number) throws IOException {
-		if(feedback.hasKey(player.getName())) {
+		if(commands.inVault.containsKey(player.getName())) {
 			System.out.println("savevault");
 			// Get the player's file and serialize the inventory.
 			String ser = Serialization.toBase64(inv);
@@ -59,13 +60,12 @@ public class VaultManager {
 		String data = playerFile.getString("vault" + "" + number + "");
 		Player player = (Player) sender;
 		if(data == null) {
-			Inventory inv = Bukkit.createInventory(player, 54);
+			Inventory inv = Bukkit.createInventory(player, 54, ChatColor.DARK_RED + "Vault");
 			player.openInventory(inv);
 		} else {
 			Inventory inv = Serialization.fromBase64(data);
 			player.openInventory(inv);
 		}
-		player.sendMessage(title + " Opening " + ChatColor.GREEN + " " + number);
 		return;
 	}
 
