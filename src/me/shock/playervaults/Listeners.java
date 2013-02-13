@@ -102,7 +102,9 @@ public class Listeners implements Listener {
 
 	@EventHandler 
 	public void onClose(InventoryCloseEvent event) {
+		System.out.println(feedback.hashSize());
 		if(feedback.hasKey(event.getPlayer().getName())) {
+			System.out.println("haskey :D");
 			HumanEntity he = event.getPlayer();
 			if(he instanceof Player) {
 				Player player = (Player) he;

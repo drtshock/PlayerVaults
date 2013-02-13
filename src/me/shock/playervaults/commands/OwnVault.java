@@ -16,7 +16,6 @@ public class OwnVault {
 			ChatColor.DARK_RED + "]" + ChatColor.WHITE + ": ";
 
 	public boolean openOwnVault(CommandSender sender, String arg0) {
-		System.out.println("Passed to ownvault class.");
 		if(arg0.matches("^[0-9]{1,2}$")) {
 			System.out.println("yay regex!");
 			if(sender.hasPermission("playervaults.amount." + arg0)) {

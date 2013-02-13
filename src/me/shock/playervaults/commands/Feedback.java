@@ -38,5 +38,10 @@ public class Feedback {
 			return true;
 		return false;
 	}
+	
+	public int hashSize() {
+		int size = inVault.size();
+		return size;
+	}
 
 }
