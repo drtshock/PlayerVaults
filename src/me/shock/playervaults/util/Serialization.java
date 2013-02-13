@@ -42,8 +42,6 @@ public class Serialization {
     }
     
     public static Inventory fromBase64(String data) {
-    	if(data.isEmpty())
-    		return null;
         ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
         NBTTagList itemList = (NBTTagList) NBTBase.b(new DataInputStream(inputStream));
         Inventory inventory = new CraftInventoryCustom(null, itemList.size());

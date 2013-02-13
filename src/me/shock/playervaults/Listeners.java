@@ -2,6 +2,7 @@ package me.shock.playervaults;
 
 import java.io.IOException;
 
+import me.shock.playervaults.commands.Feedback;
 import me.shock.playervaults.util.VaultManager;
 
 import org.bukkit.ChatColor;
@@ -30,16 +31,16 @@ public class Listeners implements Listener {
 		this.plugin = instance;
 	}
 	VaultManager vm = new VaultManager(plugin);
-	Commands commands = new Commands();
+	Feedback feedback = new Feedback();
 
 
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
-		if(commands.inVault.containsKey(event.getPlayer().getName())) {
-			Player player = event.getPlayer();
+		Player player = event.getPlayer();
+		if(feedback.hasKey(player.getName())) {
 			Inventory inv = player.getOpenInventory().getTopInventory();
-			int number = Integer.parseInt(commands.inVault.get(player.getName()));
+			int number = feedback.getNumber(player.getName());
 			try {
 				vm.saveVault(inv, player, number);
 			} catch (IOException e) {
@@ -59,10 +60,10 @@ public class Listeners implements Listener {
 	}
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
-		if(commands.inVault.containsKey(event.getEntity().getName())) {
+		if(feedback.hasKey(event.getEntity().getName())) {
 			Player player = event.getEntity();
 			Inventory inv = player.getOpenInventory().getTopInventory();
-			int number = Integer.parseInt(commands.inVault.get(player.getName()));
+			int number = feedback.getNumber(player.getName());
 			try {
 				vm.saveVault(inv, player, number);
 			} catch (IOException e) {
@@ -73,10 +74,10 @@ public class Listeners implements Listener {
 
 	@EventHandler
 	public void onTP(PlayerTeleportEvent event) {
-		if(commands.inVault.containsKey(event.getPlayer().getName())) {
+		if(feedback.hasKey(event.getPlayer().getName())) {
 			Player player = event.getPlayer();
 			Inventory inv = player.getOpenInventory().getTopInventory();
-			int number = Integer.parseInt(commands.inVault.get(player.getName()));
+			int number = feedback.getNumber(player.getName());
 			try {
 				vm.saveVault(inv, player, number);
 			} catch (IOException e) {
@@ -87,10 +88,10 @@ public class Listeners implements Listener {
 
 	@EventHandler
 	public void onWorldChange(PlayerChangedWorldEvent event) {
-		if(commands.inVault.containsKey(event.getPlayer().getName())) {
+		if(feedback.hasKey(event.getPlayer().getName())) {
 			Player player = event.getPlayer();
 			Inventory inv = player.getOpenInventory().getTopInventory();
-			int number = Integer.parseInt(commands.inVault.get(player.getName()));
+			int number = feedback.getNumber(player.getName());
 			try {
 				vm.saveVault(inv, player, number);
 			} catch (IOException e) {
@@ -101,12 +102,13 @@ public class Listeners implements Listener {
 
 	@EventHandler 
 	public void onClose(InventoryCloseEvent event) {
-		if(commands.inVault.containsKey(event.getPlayer().getName())) {
+		if(feedback.hasKey(event.getPlayer().getName())) {
 			HumanEntity he = event.getPlayer();
 			if(he instanceof Player) {
 				Player player = (Player) he;
 				Inventory inv = player.getOpenInventory().getTopInventory();
-				int number = Integer.parseInt(commands.inVault.get(player.getName()));
+				System.out.println("listener inv: " + inv);
+				int number = feedback.getNumber(player.getName());
 				try {
 					vm.saveVault(inv, player, number);
 				} catch (IOException e) {
@@ -125,7 +127,7 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		if(commands.inVault.containsKey(player.getName()) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+		if(feedback.hasKey(player.getName()) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Block block = event.getClickedBlock();
 
 			/**
@@ -152,7 +154,7 @@ public class Listeners implements Listener {
 	public void onInteractEntity(PlayerInteractEntityEvent event) {
 		Player player = event.getPlayer();
 		EntityType type = event.getRightClicked().getType();
-		if((type == EntityType.VILLAGER||type==EntityType.MINECART) && commands.inVault.containsKey(player.getName())) {
+		if((type == EntityType.VILLAGER||type==EntityType.MINECART) && feedback.hasKey(player.getName())) {
 			event.setCancelled(true);
 		}
 	}

@@ -5,11 +5,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
 import me.shock.playervaults.Listeners;
+import me.shock.playervaults.commands.Commands;
 import me.shock.playervaults.util.Metrics;
 import me.shock.playervaults.util.Updater;
 
@@ -64,29 +64,7 @@ public class Main extends JavaPlugin {
 		 */
 		File config = new File(getDataFolder() + File.separator + "config.yml");
 		if(!config.exists()) {
-			try{
-				getDataFolder().mkdir();
-				config.createNewFile();
-			} catch (IOException e) {
-				Log.error("[PlayerVaults] Couldn't create config");
-			}
-			/**
-			 * Write the config file here.
-			 * New, genius way to write it :)
-			 */
-			try {
-				FileOutputStream fos = new FileOutputStream(new File(getDataFolder() + File.separator + "config.yml"));
-				InputStream is = getResource("config.yml");
-				byte[] linebuffer = new byte[4096];
-				int lineLength = 0;
-				while((lineLength = is.read(linebuffer)) > 0)
-				{
-					fos.write(linebuffer, 0, lineLength);
-				}
-				fos.close();
-			} catch (IOException e) {
-				Log.error("[PlayerVaults] Couldn't write config: " + e);
-			}	
+			saveDefaultConfig();
 		}
 	}
 
@@ -204,11 +182,6 @@ public class Main extends JavaPlugin {
 	 */
 	public String deleteOtherVault() {
 		return lang().getString("delete-other-vault");
-	}
-
-	
-	public HashMap<?, ?> inVault() {
-		return commands.inVault;
 	}
 	
 	public Logger getLog() {

@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 import me.shock.playervaults.Main;
+import me.shock.playervaults.commands.Feedback;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -20,6 +22,7 @@ public class VaultManager {
 	public VaultManager(Main instance) {
 		this.plugin = instance;
 	}
+	Feedback feedback = new Feedback();
 	String title;
 	private static String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
 
@@ -31,11 +34,12 @@ public class VaultManager {
 	 * @throws IOException 
 	 */
 	public void saveVault(Inventory inv, Player player, int number) throws IOException {
-		if(plugin.inVault().containsKey(player.getName())) {
+		if(feedback.hasKey(player.getName())) {
+			System.out.println("savevault");
 			// Get the player's file and serialize the inventory.
 			String ser = Serialization.toBase64(inv);
 			YamlConfiguration file = playerVaultFile(player.getName());
-
+			System.out.println("" + inv);
 			// Prepare to save D:
 			file.set("vault" + number + "", ser);
 			if(plugin.debugMode()) {
@@ -53,9 +57,14 @@ public class VaultManager {
 	public void loadVault(CommandSender sender, String target, int number) {
 		YamlConfiguration playerFile = playerVaultFile(target);
 		String data = playerFile.getString("vault" + "" + number + "");
-		Inventory inv = Serialization.fromBase64(data);
 		Player player = (Player) sender;
-		player.openInventory(inv);
+		if(data == null) {
+			Inventory inv = Bukkit.createInventory(player, 54);
+			player.openInventory(inv);
+		} else {
+			Inventory inv = Serialization.fromBase64(data);
+			player.openInventory(inv);
+		}
 		player.sendMessage(title + " Opening " + ChatColor.GREEN + " " + number);
 		return;
 	}
@@ -76,7 +85,7 @@ public class VaultManager {
 			return;
 		}
 	}
-	
+
 	public YamlConfiguration playerVaultFile(String player) {
 		File folder = new File(directory);
 		if(!folder.exists()) {
