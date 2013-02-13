@@ -120,10 +120,6 @@ public class Main extends JavaPlugin {
 		return getConfig().getBoolean("check-update");
 	}
 
-	public boolean debugMode() {
-		return getConfig().getBoolean("debug-mode");
-	}
-
 	/**
 	 * 
 	 * @return disabled worlds.

@@ -22,6 +22,7 @@ public class OwnVault {
 				int number = Integer.parseInt(arg0);
 				vm.loadVault(sender, sender.getName(), number);
 				sender.sendMessage(pv + "Opening vault " + ChatColor.GREEN + number);
+				return true;
 			} else {
 				feedback.noPerms(sender);
 			}

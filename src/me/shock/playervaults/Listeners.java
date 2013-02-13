@@ -31,15 +31,13 @@ public class Listeners implements Listener {
 		this.plugin = instance;
 	}
 	VaultManager vm = new VaultManager(plugin);
-	Commands commands = new Commands();
-
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		if(commands.inVault.containsKey(player.getName())) {
+		if(Commands.inVault.containsKey(player.getName())) {
 			Inventory inv = player.getOpenInventory().getTopInventory();
-			int number = commands.inVault.get(player.getName());
+			int number = Commands.inVault.get(player.getName());
 			try {
 				vm.saveVault(inv, player, number);
 			} catch (IOException e) {
@@ -60,9 +58,9 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
-		if(commands.inVault.containsKey(player.getName())) {
+		if(Commands.inVault.containsKey(player.getName())) {
 			Inventory inv = player.getOpenInventory().getTopInventory();
-			int number = commands.inVault.get(player.getName());
+			int number = Commands.inVault.get(player.getName());
 			try {
 				vm.saveVault(inv, player, number);
 			} catch (IOException e) {
@@ -74,9 +72,9 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onTP(PlayerTeleportEvent event) {
 		Player player = event.getPlayer();
-		if(commands.inVault.containsKey(player.getName())) {
+		if(Commands.inVault.containsKey(player.getName())) {
 			Inventory inv = player.getOpenInventory().getTopInventory();
-			int number = commands.inVault.get(player.getName());
+			int number = Commands.inVault.get(player.getName());
 			try {
 				vm.saveVault(inv, player, number);
 			} catch (IOException e) {
@@ -88,9 +86,9 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onWorldChange(PlayerChangedWorldEvent event) {
 		Player player = event.getPlayer();
-		if(commands.inVault.containsKey(player.getName())) {
+		if(Commands.inVault.containsKey(player.getName())) {
 			Inventory inv = player.getOpenInventory().getTopInventory();
-			int number = commands.inVault.get(player.getName());
+			int number = Commands.inVault.get(player.getName());
 			try {
 				vm.saveVault(inv, player, number);
 			} catch (IOException e) {
@@ -101,15 +99,15 @@ public class Listeners implements Listener {
 
 	@EventHandler 
 	public void onClose(InventoryCloseEvent event) {
-		System.out.println(commands.inVault.size());
+		System.out.println(Commands.inVault.size());
 		HumanEntity he = event.getPlayer();
 		if(he instanceof Player) {
-			if(commands.inVault.containsKey(he.getName())) {
+			if(Commands.inVault.containsKey(he.getName())) {
 				System.out.println("haskey :D");
 				Player player = (Player) he;
 				Inventory inv = player.getOpenInventory().getTopInventory();
 				System.out.println("listener inv: " + inv);
-				int number = commands.inVault.get(player.getName());
+				int number = Commands.inVault.get(player.getName());
 				try {
 					vm.saveVault(inv, player, number);
 				} catch (IOException e) {
@@ -119,44 +117,44 @@ public class Listeners implements Listener {
 		}
 	}
 
-/**
- * Check if a player is trying to do something while
- * in a vault.
- * Don't let them open up another chest.
- * @param event
- */
-@EventHandler
-public void onInteract(PlayerInteractEvent event) {
-	Player player = event.getPlayer();
-	if(commands.inVault.containsKey(player.getName()) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-		Block block = event.getClickedBlock();
+	/**
+	 * Check if a player is trying to do something while
+	 * in a vault.
+	 * Don't let them open up another chest.
+	 * @param event
+	 */
+	@EventHandler
+	public void onInteract(PlayerInteractEvent event) {
+		Player player = event.getPlayer();
+		if(Commands.inVault.containsKey(player.getName()) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			Block block = event.getClickedBlock();
 
-		/**
-		 * Different inventories that
-		 * we don't want the player to open.
-		 */
-		if(block.getType() == Material.CHEST 
-				|| block.getType() == Material.ENDER_CHEST
-				|| block.getType() == Material.FURNACE
-				|| block.getType() == Material.BURNING_FURNACE
-				|| block.getType() == Material.BREWING_STAND
-				|| block.getType() == Material.BEACON) {
+			/**
+			 * Different inventories that
+			 * we don't want the player to open.
+			 */
+			if(block.getType() == Material.CHEST 
+					|| block.getType() == Material.ENDER_CHEST
+					|| block.getType() == Material.FURNACE
+					|| block.getType() == Material.BURNING_FURNACE
+					|| block.getType() == Material.BREWING_STAND
+					|| block.getType() == Material.BEACON) {
+				event.setCancelled(true);
+			}
+		}
+	}
+
+	/**
+	 * Don't let a player open a trading inventory OR a minecart
+	 * while he has his vault open.
+	 * @param event
+	 */
+	@EventHandler
+	public void onInteractEntity(PlayerInteractEntityEvent event) {
+		Player player = event.getPlayer();
+		EntityType type = event.getRightClicked().getType();
+		if((type == EntityType.VILLAGER||type==EntityType.MINECART) && Commands.inVault.containsKey(player.getName())) {
 			event.setCancelled(true);
 		}
 	}
-}
-
-/**
- * Don't let a player open a trading inventory OR a minecart
- * while he has his vault open.
- * @param event
- */
-@EventHandler
-public void onInteractEntity(PlayerInteractEntityEvent event) {
-	Player player = event.getPlayer();
-	EntityType type = event.getRightClicked().getType();
-	if((type == EntityType.VILLAGER||type==EntityType.MINECART) && commands.inVault.containsKey(player.getName())) {
-		event.setCancelled(true);
-	}
-}
 }

@@ -1,6 +1,6 @@
 package me.shock.playervaults.commands;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
 
 public class Commands implements CommandExecutor {
 
-	public HashMap<String, Integer> inVault = new HashMap<String, Integer>();
-	
+	public static ConcurrentHashMap<String, Integer> inVault = new ConcurrentHashMap<String, Integer>();
+
 	private String pv = ChatColor.DARK_RED + "[" + ChatColor.WHITE + "PlayerVaults" + 
 			ChatColor.DARK_RED + "]" + ChatColor.WHITE + ": ";
 
@@ -24,11 +24,11 @@ public class Commands implements CommandExecutor {
 						inVault.put(sender.getName(), Integer.parseInt(args[0]));
 				}
 			}
-				
+
 		}
 		return true;
 	}
-	
+
 	public boolean notConsole(CommandSender sender) {
 		if(!(sender instanceof Player)) {
 			sender.sendMessage(pv + "Sorry but that can only be run by a player!");

@@ -2,7 +2,6 @@ package me.shock.playervaults.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
 
 import me.shock.playervaults.Main;
 import me.shock.playervaults.commands.Commands;
@@ -23,7 +22,6 @@ public class VaultManager {
 		this.plugin = instance;
 	}
 	
-	Commands commands = new Commands();
 	String title;
 	private String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
 
@@ -35,7 +33,7 @@ public class VaultManager {
 	 * @throws IOException 
 	 */
 	public void saveVault(Inventory inv, Player player, int number) throws IOException {
-		if(commands.inVault.containsKey(player.getName())) {
+		if(Commands.inVault.containsKey(player.getName())) {
 			System.out.println("savevault");
 			// Get the player's file and serialize the inventory.
 			String ser = Serialization.toBase64(inv);
@@ -43,9 +41,6 @@ public class VaultManager {
 			System.out.println("" + inv);
 			// Prepare to save D:
 			file.set("vault" + number + "", ser);
-			if(plugin.debugMode()) {
-				plugin.getLogger().log(Level.INFO, "[PlayerVaults] Saved " + " " + number + " for " + player.getName());
-			}
 		}
 	}
 
