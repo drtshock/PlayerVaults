@@ -6,7 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
  
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
- 
+
 import net.minecraft.server.v1_4_R1.NBTBase;
 import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import net.minecraft.server.v1_4_R1.NBTTagList;
@@ -16,18 +16,15 @@ import org.bukkit.craftbukkit.v1_4_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
  
-public class Serialization 
-{
+public class Serialization {
 	
-    public static String toBase64(Inventory inventory) 
-    {
+    public static String toBase64(Inventory inventory) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         DataOutputStream dataOutput = new DataOutputStream(outputStream);
         NBTTagList itemList = new NBTTagList();
         
         // Save every element in the list
-        for (int i = 0; i < inventory.getSize(); i++) 
-        {
+        for (int i = 0; i < inventory.getSize(); i++) {
             NBTTagCompound outputObject = new NBTTagCompound();
             CraftItemStack craft = getCraftVersion(inventory.getItem(i));
             
@@ -44,18 +41,17 @@ public class Serialization
         return Base64Coder.encodeLines(outputStream.toByteArray());
     }
     
-    public static Inventory fromBase64(String data) 
-    {
+    public static Inventory fromBase64(String data) {
+    	if(data.isEmpty())
+    		return null;
         ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
         NBTTagList itemList = (NBTTagList) NBTBase.b(new DataInputStream(inputStream));
         Inventory inventory = new CraftInventoryCustom(null, itemList.size());
  
-        for (int i = 0; i < itemList.size(); i++) 
-        {
+        for (int i = 0; i < itemList.size(); i++) {
             NBTTagCompound inputObject = (NBTTagCompound) itemList.get(i);
             
-            if (!inputObject.isEmpty()) 
-            {
+            if (!inputObject.isEmpty()) {
                 inventory.setItem(i, CraftItemStack.asCraftMirror(net.minecraft.server.v1_4_R1.ItemStack.createStack(inputObject)));
             }
         }
@@ -64,10 +60,8 @@ public class Serialization
         return inventory;
     }
     
-    private static CraftItemStack getCraftVersion(ItemStack stack) 
-    {
+    private static CraftItemStack getCraftVersion(ItemStack stack) {
         if (stack instanceof CraftItemStack)
-        	
             return (CraftItemStack) stack;
         else if (stack != null)
             return CraftItemStack.asCraftCopy(stack);

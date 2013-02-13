@@ -23,12 +23,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 
-public class Listeners implements Listener 
-{
+public class Listeners implements Listener {
 
 	public Main plugin;
-	public Listeners(Main instance)
-	{
+	public Listeners(Main instance) {
 		this.plugin = instance;
 	}
 	VaultManager vm = new VaultManager(plugin);
@@ -37,8 +35,7 @@ public class Listeners implements Listener
 
 
 	@EventHandler
-	public void onQuit(PlayerQuitEvent event)
-	{
+	public void onQuit(PlayerQuitEvent event) {
 		if(commands.inVault.containsKey(event.getPlayer().getName())) {
 			Player player = event.getPlayer();
 			Inventory inv = player.getOpenInventory().getTopInventory();
@@ -51,10 +48,9 @@ public class Listeners implements Listener
 		}
 	}
 	@EventHandler
-	public void onJoin(PlayerJoinEvent event)
-	{
+	public void onJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		plugin.playerVaultFile(player.getName());
+		vm.playerVaultFile(player.getName());
 		if(player.isOp() && Main.update)
 		{
 			player.sendMessage(ChatColor.GREEN + "Version " + Main.name + " of PlayerVaults is up for download!");
@@ -107,8 +103,7 @@ public class Listeners implements Listener
 	public void onClose(InventoryCloseEvent event) {
 		if(commands.inVault.containsKey(event.getPlayer().getName())) {
 			HumanEntity he = event.getPlayer();
-			if(he instanceof Player)
-			{
+			if(he instanceof Player) {
 				Player player = (Player) he;
 				Inventory inv = player.getOpenInventory().getTopInventory();
 				int number = Integer.parseInt(commands.inVault.get(player.getName()));
@@ -128,11 +123,9 @@ public class Listeners implements Listener
 	 * @param event
 	 */
 	@EventHandler
-	public void onInteract(PlayerInteractEvent event)
-	{
+	public void onInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		if(commands.inVault.containsKey(player.getName()) && event.getAction() == Action.RIGHT_CLICK_BLOCK)
-		{
+		if(commands.inVault.containsKey(player.getName()) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Block block = event.getClickedBlock();
 
 			/**
@@ -142,13 +135,9 @@ public class Listeners implements Listener
 			if(block.getType() == Material.CHEST 
 					|| block.getType() == Material.ENDER_CHEST
 					|| block.getType() == Material.FURNACE
-					/**
-					 * Storage_minecart and Powered minecart aren't blocks ;)- added to EntityInteractEvent
-					 */
 					|| block.getType() == Material.BURNING_FURNACE
 					|| block.getType() == Material.BREWING_STAND
-					|| block.getType() == Material.BEACON)
-			{
+					|| block.getType() == Material.BEACON) {
 				event.setCancelled(true);
 			}
 		}
@@ -160,12 +149,10 @@ public class Listeners implements Listener
 	 * @param event
 	 */
 	@EventHandler
-	public void onInteractEntity(PlayerInteractEntityEvent event)
-	{
+	public void onInteractEntity(PlayerInteractEntityEvent event) {
 		Player player = event.getPlayer();
 		EntityType type = event.getRightClicked().getType();
-		if((type == EntityType.VILLAGER||type==EntityType.MINECART) && commands.inVault.containsKey(player.getName()))
-		{
+		if((type == EntityType.VILLAGER||type==EntityType.MINECART) && commands.inVault.containsKey(player.getName())) {
 			event.setCancelled(true);
 		}
 	}

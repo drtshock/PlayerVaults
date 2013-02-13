@@ -27,8 +27,7 @@ public class Main extends JavaPlugin {
 	public static String name = "";
 	Commands commands = new Commands();
 
-	public void onEnable() 
-	{
+	public void onEnable() {
 		log = getServer().getLogger();
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new Listeners(this), this);
@@ -37,42 +36,34 @@ public class Main extends JavaPlugin {
 		loadLang();
 		startMetrics();
 
-		if(updateCheck())
-		{
+		if(updateCheck()) {
 			Updater updater = new Updater(this, "playervaults", this.getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
 			update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE; 
 			name = updater.getLatestVersionString();
 		}
 	}
 
-	public void onDisable() 
-	{
+	public void onDisable() {
 		//saveData();
 	}
 
 
-	public void startMetrics()
-	{
-		try
-		{
+	public void startMetrics() {
+		try {
 			Metrics metrics = new Metrics(this);
 			metrics.start();
-		}
-		catch (IOException localIOException)
-		{
+		} catch (IOException localIOException) {
 			localIOException.printStackTrace();
 		}
 	}
 	
-	public void loadConfig()
-	{
+	public void loadConfig() {
 		/**
 		 * Check to see if there's a config.
 		 * If not then create a new one.
 		 */
 		File config = new File(getDataFolder() + File.separator + "config.yml");
-		if(!config.exists())
-		{
+		if(!config.exists()) {
 			try{
 				getDataFolder().mkdir();
 				config.createNewFile();
@@ -99,15 +90,13 @@ public class Main extends JavaPlugin {
 		}
 	}
 
-	public void loadLang()
-	{
+	public void loadLang() {
 		/**
 		 * Check to see if there's a config.
 		 * If not then create a new one.
 		 */
 		File lang = new File(getDataFolder() + File.separator + "lang.yml");
-		if(!lang.exists())
-		{
+		if(!lang.exists()) {
 			try{
 				getDataFolder().mkdir();
 				lang.createNewFile();
@@ -138,23 +127,6 @@ public class Main extends JavaPlugin {
 		File file = new File(getDataFolder() + File.separator + "lang.yml");
 		YamlConfiguration lang = YamlConfiguration.loadConfiguration(file);
 		return lang;
-	}
-	
-	public YamlConfiguration playerVaultFile(String player) {
-		File folder = new File(getDataFolder() + File.separator + "vaults");
-		if(!folder.exists()) {
-			folder.mkdir();
-		}
-		File file = new File(getDataFolder() + File.separator + "vaults" + File.separator + player.toLowerCase() + ".yml");
-		if(!file.exists()) {
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		YamlConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
-		return playerFile;
 	}
 	
 	/**

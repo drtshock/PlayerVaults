@@ -1,6 +1,9 @@
 # PlayerVaults by drsthock
 check-update: true
 debug-mode: false
+
+# Worlds that players can't access their vaults.
+# playervaults.worlds.bypass will override this (default to op).
 disabled-worlds:
   - YourAwesomeWorld
   - Toonville
