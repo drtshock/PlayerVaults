@@ -38,7 +38,7 @@ public class VaultManager {
 			// Get the player's file and serialize the inventory.
 			String ser = Serialization.toBase64(inv);
 			YamlConfiguration file = playerVaultFile(player.getName());
-			System.out.println("" + inv);
+			System.out.println("serial: " + ser);
 			// Prepare to save D:
 			file.set("vault" + number + "", ser);
 		}

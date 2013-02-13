@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 public class Commands implements CommandExecutor {
 
 	public static ConcurrentHashMap<String, Integer> inVault = new ConcurrentHashMap<String, Integer>();
-
 	private String pv = ChatColor.DARK_RED + "[" + ChatColor.WHITE + "PlayerVaults" + 
 			ChatColor.DARK_RED + "]" + ChatColor.WHITE + ": ";
 
@@ -23,8 +22,9 @@ public class Commands implements CommandExecutor {
 					if(OwnVault.openOwnVault(sender, args[0]))
 						inVault.put(sender.getName(), Integer.parseInt(args[0]));
 				}
+			} else {
+				Feedback.showHelp(sender);
 			}
-
 		}
 		return true;
 	}

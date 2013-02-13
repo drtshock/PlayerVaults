@@ -5,6 +5,7 @@ import me.shock.playervaults.util.VaultManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class OwnVault {
 
@@ -19,10 +20,13 @@ public class OwnVault {
 		if(arg0.matches("^[0-9]{1,2}$")) {
 			System.out.println("yay regex!");
 			if(sender.hasPermission("playervaults.amount." + arg0)) {
-				int number = Integer.parseInt(arg0);
-				vm.loadVault(sender, sender.getName(), number);
-				sender.sendMessage(pv + "Opening vault " + ChatColor.GREEN + number);
-				return true;
+				if(Feedback.allowedWorld((Player) sender)) {
+					int number = Integer.parseInt(arg0);
+					vm.loadVault(sender, sender.getName(), number);
+					sender.sendMessage(pv + "Opening vault " + ChatColor.GREEN + number);
+					return true;
+				} else
+					return false;
 			} else {
 				feedback.noPerms(sender);
 			}
