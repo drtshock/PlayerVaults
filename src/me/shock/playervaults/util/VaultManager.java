@@ -40,7 +40,10 @@ public class VaultManager {
 			YamlConfiguration file = playerVaultFile(player.getName());
 			System.out.println("serial: " + ser);
 			// Prepare to save D:
+			file.createSection("vault" + number);
 			file.set("vault" + number + "", ser);
+			saveFile(player.getName());
+			Commands.inVault.remove(player.getName());
 		}
 	}
 
@@ -96,5 +99,12 @@ public class VaultManager {
 		}
 		YamlConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
 		return playerFile;
+	}
+	
+	public void saveFile(String name) throws IOException {
+		File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
+		YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+		yaml.save(file);
+		return;
 	}
 }
