@@ -8,13 +8,11 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.logging.Logger;
 
-import me.shock.playervaults.Listeners;
 import me.shock.playervaults.commands.Commands;
 import me.shock.playervaults.util.Metrics;
 import me.shock.playervaults.util.Updater;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.libs.jline.internal.Log;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,6 +25,7 @@ public class Main extends JavaPlugin {
 	public static String name = "";
 	Commands commands = new Commands();
 
+	@Override
 	public void onEnable() {
 		log = getServer().getLogger();
 		PluginManager pm = getServer().getPluginManager();
@@ -43,6 +42,7 @@ public class Main extends JavaPlugin {
 		}
 	}
 
+	@Override
 	public void onDisable() {
 		//saveData();
 	}
@@ -79,7 +79,7 @@ public class Main extends JavaPlugin {
 				getDataFolder().mkdir();
 				lang.createNewFile();
 			} catch (IOException e) {
-				Log.error("[PlayerVaults] Couldn't create language file.");
+				log.warning("[PlayerVaults] Couldn't create language file.");
 			}
 			/**
 			 * Write the config file here.
@@ -96,7 +96,7 @@ public class Main extends JavaPlugin {
 				}
 				fos.close();
 			} catch (IOException e) {
-				Log.error("[PlayerVaults] Couldn't write Language file: " + e);
+				log.warning("[PlayerVaults] Couldn't write Language file: " + e);
 			}	
 		}
 	}
