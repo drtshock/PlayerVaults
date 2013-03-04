@@ -16,12 +16,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 
 public class Listeners implements Listener {
@@ -32,18 +30,23 @@ public class Listeners implements Listener {
 	}
 	VaultManager vm = new VaultManager(plugin);
 
-	@EventHandler
-	public void onQuit(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
-		if(Commands.inVault.containsKey(player.getName())) {
-			Inventory inv = player.getOpenInventory().getTopInventory();
-			int number = Commands.inVault.get(player.getName());
+	public void doSaveStuff(Player p) {
+		if(Commands.inVault.containsKey(p.getName())) {
+			Inventory inv = p.getOpenInventory().getTopInventory();
+			int number = Commands.inVault.get(p.getName());
 			try {
-				vm.saveVault(inv, player, number);
+				vm.saveVault(inv, p, number);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	
+	@EventHandler
+	public void onQuit(PlayerQuitEvent event) {
+		Player player = event.getPlayer();
+		doSaveStuff(player);
 	}
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
@@ -58,43 +61,7 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
-		if(Commands.inVault.containsKey(player.getName())) {
-			Inventory inv = player.getOpenInventory().getTopInventory();
-			int number = Commands.inVault.get(player.getName());
-			try {
-				vm.saveVault(inv, player, number);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@EventHandler
-	public void onTP(PlayerTeleportEvent event) {
-		Player player = event.getPlayer();
-		if(Commands.inVault.containsKey(player.getName())) {
-			Inventory inv = player.getOpenInventory().getTopInventory();
-			int number = Commands.inVault.get(player.getName());
-			try {
-				vm.saveVault(inv, player, number);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@EventHandler
-	public void onWorldChange(PlayerChangedWorldEvent event) {
-		Player player = event.getPlayer();
-		if(Commands.inVault.containsKey(player.getName())) {
-			Inventory inv = player.getOpenInventory().getTopInventory();
-			int number = Commands.inVault.get(player.getName());
-			try {
-				vm.saveVault(inv, player, number);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		doSaveStuff(player);
 	}
 
 	@EventHandler 
@@ -102,18 +69,8 @@ public class Listeners implements Listener {
 		System.out.println(Commands.inVault.size());
 		HumanEntity he = event.getPlayer();
 		if(he instanceof Player) {
-			if(Commands.inVault.containsKey(he.getName())) {
-				System.out.println("haskey :D");
-				Player player = (Player) he;
-				Inventory inv = player.getOpenInventory().getTopInventory();
-				System.out.println("listener inv: " + inv);
-				int number = Commands.inVault.get(player.getName());
-				try {
-					vm.saveVault(inv, player, number);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+			Player player = (Player) he;
+			doSaveStuff(player);
 		}
 	}
 
