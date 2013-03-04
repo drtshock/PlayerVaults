@@ -17,11 +17,31 @@ public class OwnVault {
 	static String pv = ChatColor.DARK_RED + "[" + ChatColor.WHITE + "PlayerVaults" + 
 			ChatColor.DARK_RED + "]" + ChatColor.WHITE + ": ";
 
+	public static boolean checkPerms(CommandSender cs, int number) {
+		if(number <= 0) {
+			return false;
+		}
+		if(cs.hasPermission("playervaults.amount." + String.valueOf(number))) {
+			return true;
+		}
+		else if(checkPerms(cs, number-1)) {
+			return true;
+		}
+		return false;
+	}
+	
 	public static boolean openOwnVault(CommandSender sender, String arg0) {
 		if(arg0.matches("^[0-9]{1,2}$")) {
 			System.out.println("yay regex!");
-			if(sender.hasPermission("playervaults.amount." + arg0)) {
-				int number = Integer.parseInt(arg0);
+			int number = 0;
+			try {
+				number = Integer.parseInt(arg0);
+			}
+			catch(NumberFormatException nfe) {
+				//Yell at the player
+				//We should probably check perms first though
+			}
+			if(checkPerms(sender, number)) {
 				vm.loadVault(sender, sender.getName(), number);
 				sender.sendMessage(pv + "Opening vault " + ChatColor.GREEN + number);
 				return true;
