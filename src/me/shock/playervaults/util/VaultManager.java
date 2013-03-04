@@ -23,7 +23,7 @@ public class VaultManager {
 	}
 	
 	String title;
-	private String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
+	private final String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
 
 	/**
 	 * Method to save player's vault.
@@ -37,12 +37,12 @@ public class VaultManager {
 			System.out.println("savevault");
 			// Get the player's file and serialize the inventory.
 			String ser = Serialization.toBase64(inv);
-			YamlConfiguration file = playerVaultFile(player.getName());
+			YamlConfiguration yaml = playerVaultFile(player.getName());
 			System.out.println("serial: " + ser);
-			// Prepare to save D:
-			file.createSection("vault" + number);
-			file.set("vault" + number + "", ser);
-			saveFile(player.getName());
+			// Prepare to save :D?
+			yaml.createSection("vault" + number);
+			yaml.set("vault" + number + "", ser);
+			saveFile(player.getName(), yaml);
 			Commands.inVault.remove(player.getName());
 		}
 	}
@@ -64,7 +64,6 @@ public class VaultManager {
 			Inventory inv = Serialization.fromBase64(data);
 			player.openInventory(inv);
 		}
-		return;
 	}
 
 	public void deleteVault(CommandSender sender, String target, int number) throws IOException {
@@ -76,11 +75,9 @@ public class VaultManager {
 			section.set(null, null);
 			sender.sendMessage(title + "Deleting " + ChatColor.GREEN + " " + number);
 			playerFile.save(file);
-			return;
 		}
 		else {
 			sender.sendMessage(title + " That doesn't exist!");
-			return;
 		}
 	}
 
@@ -101,10 +98,8 @@ public class VaultManager {
 		return playerFile;
 	}
 	
-	public void saveFile(String name) throws IOException {
+	public void saveFile(String name, YamlConfiguration yaml) throws IOException {
 		File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
-		YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
 		yaml.save(file);
-		return;
 	}
 }
