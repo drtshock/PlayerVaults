@@ -35,11 +35,14 @@ public class Main extends JavaPlugin {
 		loadLang();
 		startMetrics();
 
-		if(updateCheck()) {
-			Updater updater = new Updater(this, "playervaults", this.getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
-			update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE; 
-			name = updater.getLatestVersionString();
-		}
+		Updater u = new Updater();
+		try {
+			if(u.getUpdate()) {
+				update = true;
+				name = u.getNewVersion();
+			}
+		} catch (Exception e) {}
+		
 	}
 
 	@Override

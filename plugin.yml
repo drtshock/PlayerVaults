@@ -1,7 +1,7 @@
 name: PlayerVaults
 main: me.shock.playervaults.Main
-authors: [drtshock]
-version: 1.1.4
+authors: [drtshock, gomeow]
+version: 2.0.0
 website: www.dev.bukkit.org/server-mods/PlayerVaults
 commands:
   pv:
