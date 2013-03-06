@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import me.shock.playervaults.Main;
-import me.shock.playervaults.commands.Commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -33,16 +32,11 @@ public class VaultManager {
 	 * @throws IOException 
 	 */
 	public void saveVault(Inventory inv, String player, int number) throws IOException {
-			System.out.println("savevault");
 			// Get the player's file and serialize the inventory.
 			String ser = Serialization.toBase64(inv);
 			YamlConfiguration yaml = playerVaultFile(player);
-			System.out.println("serial: " + ser);
-			// Prepare to save :D?
-			yaml.createSection("vault" + number);
 			yaml.set("vault" + number + "", ser);
 			saveFile(player, yaml);
-			Commands.inVault.remove(player);
 	}
 
 	/**
@@ -53,11 +47,10 @@ public class VaultManager {
 	 */
 	public void loadVault(CommandSender sender, String holder, int number) {
 		YamlConfiguration playerFile = playerVaultFile(holder);
-		String data = playerFile.getString("vault" + "" + number + "");
+		String data = playerFile.getString("vault"+number);
 		Player player = (Player) sender;
 		if(data == null) {
-			System.out.println("nll");
-			Inventory inv = Bukkit.createInventory(player, 54, ChatColor.DARK_RED + "Vault "+String.valueOf(number));
+			Inventory inv = Bukkit.createInventory(player, 54, ChatColor.DARK_RED + "Vault #"+String.valueOf(number));
 			player.openInventory(inv);
 		} else {
 			Inventory inv = Serialization.fromBase64(data);
