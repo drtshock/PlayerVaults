@@ -41,6 +41,7 @@ public class Listeners implements Listener {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			Commands.inVault.remove(p.getName());
 		}
 	}
 	
