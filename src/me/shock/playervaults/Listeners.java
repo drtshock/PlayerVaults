@@ -3,6 +3,7 @@ package me.shock.playervaults;
 import java.io.IOException;
 
 import me.shock.playervaults.commands.Commands;
+import me.shock.playervaults.commands.VaultViewInfo;
 import me.shock.playervaults.util.VaultManager;
 
 import org.bukkit.ChatColor;
@@ -25,6 +26,7 @@ import org.bukkit.inventory.Inventory;
 public class Listeners implements Listener {
 
 	public Main plugin;
+	
 	public Listeners(Main instance) {
 		this.plugin = instance;
 	}
@@ -33,15 +35,14 @@ public class Listeners implements Listener {
 	public void doSaveStuff(Player p) {
 		if(Commands.inVault.containsKey(p.getName())) {
 			Inventory inv = p.getOpenInventory().getTopInventory();
-			int number = Commands.inVault.get(p.getName());
+			VaultViewInfo info = Commands.inVault.get(p.getName());
 			try {
-				vm.saveVault(inv, p, number);
+				vm.saveVault(inv, info.getHolder(), info.getNumber());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-	
 	
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
@@ -66,7 +67,6 @@ public class Listeners implements Listener {
 
 	@EventHandler 
 	public void onClose(InventoryCloseEvent event) {
-		System.out.println(Commands.inVault.size());
 		HumanEntity he = event.getPlayer();
 		if(he instanceof Player) {
 			Player player = (Player) he;

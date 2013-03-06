@@ -32,19 +32,17 @@ public class VaultManager {
 	 * @param player
 	 * @throws IOException 
 	 */
-	public void saveVault(Inventory inv, Player player, int number) throws IOException {
-		if(Commands.inVault.containsKey(player.getName())) {
+	public void saveVault(Inventory inv, String player, int number) throws IOException {
 			System.out.println("savevault");
 			// Get the player's file and serialize the inventory.
 			String ser = Serialization.toBase64(inv);
-			YamlConfiguration yaml = playerVaultFile(player.getName());
+			YamlConfiguration yaml = playerVaultFile(player);
 			System.out.println("serial: " + ser);
 			// Prepare to save :D?
 			yaml.createSection("vault" + number);
 			yaml.set("vault" + number + "", ser);
-			saveFile(player.getName(), yaml);
-			Commands.inVault.remove(player.getName());
-		}
+			saveFile(player, yaml);
+			Commands.inVault.remove(player);
 	}
 
 	/**
@@ -53,12 +51,13 @@ public class VaultManager {
 	 * 
 	 * TODO: Check to see if the path exists before we get it!
 	 */
-	public void loadVault(CommandSender sender, String target, int number) {
-		YamlConfiguration playerFile = playerVaultFile(target);
+	public void loadVault(CommandSender sender, String holder, int number) {
+		YamlConfiguration playerFile = playerVaultFile(holder);
 		String data = playerFile.getString("vault" + "" + number + "");
 		Player player = (Player) sender;
 		if(data == null) {
-			Inventory inv = Bukkit.createInventory(player, 54, ChatColor.DARK_RED + "Vault");
+			System.out.println("nll");
+			Inventory inv = Bukkit.createInventory(player, 54, ChatColor.DARK_RED + "Vault "+String.valueOf(number));
 			player.openInventory(inv);
 		} else {
 			Inventory inv = Serialization.fromBase64(data);
