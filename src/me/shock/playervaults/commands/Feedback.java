@@ -14,7 +14,7 @@ public class Feedback {
 	static String pv = ChatColor.DARK_RED + "[" + ChatColor.WHITE + "PlayerVaults" + 
 			ChatColor.DARK_RED + "]" + ChatColor.WHITE + ": ";
 	
-	public void noPerms(CommandSender sender) {
+	public static void noPerms(CommandSender sender) {
 		sender.sendMessage(pv + "You don't have permission for that!");
 		return;
 	}

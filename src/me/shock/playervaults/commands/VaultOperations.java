@@ -14,7 +14,6 @@ public class VaultOperations {
 
 	private static Main plugin;
 	private static VaultManager vm = new VaultManager(plugin);
-	static Feedback feedback = new Feedback();
 
 	static String pv = ChatColor.DARK_RED + "[" + ChatColor.WHITE + "PlayerVaults" + 
 			ChatColor.DARK_RED + "]" + ChatColor.WHITE + ": ";
@@ -42,28 +41,29 @@ public class VaultOperations {
 				sender.sendMessage(pv + "Opening vault " + ChatColor.GREEN + number);
 				return true;
 			} else {
-				feedback.noPerms(sender);
+				Feedback.noPerms(sender);
 			}
 		}
 		return false;
 	}
 	public static boolean openOtherVault(CommandSender sender, String user, String arg) {
-		if(arg.matches("^[0-9]{1,2}$")) {
-			int number = 0;
-			try {
-				number = Integer.parseInt(arg);
-			}
-			catch(NumberFormatException nfe) {
-				sender.sendMessage(pv+ChatColor.RED+"You need to specify a number!");
-			}
-			if(sender.hasPermission("playervaults.admin")) {
+		if(sender.hasPermission("playervaults.admin")) {
+			if(arg.matches("^[0-9]{1,2}$")) {
+				int number = 0;
+				try {
+					number = Integer.parseInt(arg);
+				}
+				catch(NumberFormatException nfe) {
+					sender.sendMessage(pv+ChatColor.RED+"You need to specify a number!");
+				}
 				vm.loadVault(sender, user, number);
 				sender.sendMessage(pv + "Opening vault " + ChatColor.GREEN + number);
 				return true;
-			} else {
-				feedback.noPerms(sender);
 			}
-		}
+			else {
+				Feedback.noPerms(sender);
+			}
+	}
 		return false;
 	}
 	public static void deleteOwnVault(CommandSender sender, String arg) {
@@ -78,9 +78,28 @@ public class VaultOperations {
 			try {
 				vm.deleteVault(sender, sender.getName(), number);
 			} catch (IOException e) {
-				sender.sendMessage(pv+"There was an error deleting the vault!");
+				sender.sendMessage(pv+"There was an error deleting that vault!");
 			}
 		}
+	}
+	public static void deleteOtherVault(CommandSender sender, String user, String arg) {
+		if(sender.hasPermission("playervaults.delete")) {
+			if(arg.matches("^[0-9]{1,2}$")) {
+				int number = 0;
+				try {
+					number = Integer.parseInt(arg);
+				}
+				catch(NumberFormatException nfe) {
+					sender.sendMessage(pv+ChatColor.RED+"You need to specify a number!");
+				}
+				try {
+					vm.deleteVault(sender, user, number);
+				} catch (IOException e) {
+					sender.sendMessage(pv+"There was an error deleting that vault!");
+				}
+			}
+		}
+		else Feedback.noPerms(sender);
 	}
 
 	@SuppressWarnings("unused")
