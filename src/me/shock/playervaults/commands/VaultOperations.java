@@ -18,6 +18,7 @@ public class VaultOperations {
 	static String pv = ChatColor.DARK_RED + "[" + ChatColor.WHITE + "PlayerVaults" + 
 			ChatColor.DARK_RED + "]" + ChatColor.WHITE + ": ";
 
+	
 	public static boolean checkPerms(CommandSender cs, int number) {
 		if(cs.hasPermission("playervaults.amount."+String.valueOf(number))) return true;
 		for(int x = number; x <= 99;x++) {
@@ -25,28 +26,37 @@ public class VaultOperations {
 		}
 		return false;
 	}
-	
-	public static boolean openOwnVault(CommandSender sender, String arg) {
-		if(arg.matches("^[0-9]{1,2}$")) {
-			int number = 0;
-			try {
-				number = Integer.parseInt(arg);
+	/*
+	 * TODO: Chenge how permissions are checked here.
+	 */
+	public static boolean openOwnVault(Player sender, String arg) {
+		if(allowedWorld(sender)) {
+			if(arg.matches("^[0-9]{1,2}$")) {
+				int number = 0;
+				try {
+					number = Integer.parseInt(arg);
+				}
+				catch(NumberFormatException nfe) {
+					sender.sendMessage(pv+ChatColor.RED+"You need to specify a number!");
+					return false;
+				}
+				if(checkPerms(sender, number)) {
+					vm.loadVault(sender, sender.getName(), number);
+					sender.sendMessage(pv + "Opening vault " + ChatColor.GREEN + number);
+					return true;
+				} else {
+					Feedback.noPerms(sender);
+				}
 			}
-			catch(NumberFormatException nfe) {
-				sender.sendMessage(pv+ChatColor.RED+"You need to specify a number!");
-				return false;
-			}
-			if(checkPerms(sender, number)) {
-				vm.loadVault(sender, sender.getName(), number);
-				sender.sendMessage(pv + "Opening vault " + ChatColor.GREEN + number);
-				return true;
-			} else {
-				Feedback.noPerms(sender);
-			}
+		}
+		else {
+			Feedback.badWorld(sender);
 		}
 		return false;
 	}
-	public static boolean openOtherVault(CommandSender sender, String user, String arg) {
+	
+	
+	public static boolean openOtherVault(Player sender, String user, String arg) {
 		if(sender.hasPermission("playervaults.admin")) {
 			if(arg.matches("^[0-9]{1,2}$")) {
 				int number = 0;
@@ -66,7 +76,7 @@ public class VaultOperations {
 	}
 		return false;
 	}
-	public static void deleteOwnVault(CommandSender sender, String arg) {
+	public static void deleteOwnVault(Player sender, String arg) {
 		if(arg.matches("^[0-9]{1,2}$")) {
 			int number = 0;
 			try {
@@ -82,7 +92,7 @@ public class VaultOperations {
 			}
 		}
 	}
-	public static void deleteOtherVault(CommandSender sender, String user, String arg) {
+	public static void deleteOtherVault(Player sender, String user, String arg) {
 		if(sender.hasPermission("playervaults.delete")) {
 			if(arg.matches("^[0-9]{1,2}$")) {
 				int number = 0;
@@ -102,7 +112,6 @@ public class VaultOperations {
 		else Feedback.noPerms(sender);
 	}
 
-	@SuppressWarnings("unused")
 	private static boolean allowedWorld(Player player) {
 		World world = player.getWorld();
 		if(plugin.disabledWorlds().contains(world))

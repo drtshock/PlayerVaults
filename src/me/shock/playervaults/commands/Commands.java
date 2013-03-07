@@ -19,13 +19,14 @@ public class Commands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(cmd.getName().equalsIgnoreCase("pv")) {
 			if(sender instanceof Player) {
+				Player p = (Player) sender;
 				switch(args.length) {
 				case 1:
-					if(VaultOperations.openOwnVault(sender, args[0]))
+					if(VaultOperations.openOwnVault(p, args[0]))
 						inVault.put(sender.getName(), new VaultViewInfo(sender.getName(), Integer.parseInt(args[0])));
 					break;
 				case 2:
-					if(VaultOperations.openOtherVault(sender,args[0], args[1])) {
+					if(VaultOperations.openOtherVault(p,args[0], args[1])) {
 						inVault.put(sender.getName(), new VaultViewInfo(args[0], Integer.parseInt(args[1])));
 					}
 					break;
@@ -37,9 +38,10 @@ public class Commands implements CommandExecutor {
 		}
 		else if(cmd.getName().equalsIgnoreCase("pvdel")) {
 			if(sender instanceof Player) {
+				Player p = (Player) sender;
 				switch(args.length) {
 				case 1:
-					VaultOperations.deleteOwnVault(sender, args[0]);
+					VaultOperations.deleteOwnVault(p, args[0]);
 					break;
 				default:
 					Feedback.showHelp(sender, Feedback.Type.DELETE);

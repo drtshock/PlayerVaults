@@ -7,7 +7,6 @@ import me.shock.playervaults.Main;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -45,7 +44,7 @@ public class VaultManager {
 	 * 
 	 * TODO: Check to see if the path exists before we get it!
 	 */
-	public void loadVault(CommandSender sender, String holder, int number) {
+	public void loadVault(Player sender, String holder, int number) {
 		YamlConfiguration playerFile = playerVaultFile(holder);
 		String data = playerFile.getString("vault"+number);
 		Player player = (Player) sender;
@@ -58,7 +57,7 @@ public class VaultManager {
 		}
 	}
 
-	public void deleteVault(CommandSender sender, String target, int number) throws IOException {
+	public void deleteVault(Player sender, String target, int number) throws IOException {
 		String name = target.toLowerCase();
 		File file = new File(directory + name + ".yml");
 		FileConfiguration playerFile = YamlConfiguration.loadConfiguration(file);

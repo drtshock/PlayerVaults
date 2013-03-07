@@ -2,6 +2,7 @@ package me.shock.playervaults.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 
 public class Feedback {
@@ -31,7 +32,7 @@ public class Feedback {
 		}
 	}
 	
-	public static void badWorld(CommandSender sender) {
+	public static void badWorld(Player sender) {
 		sender.sendMessage(pv + "You can't use this in that world!");
 		return;
 	}
