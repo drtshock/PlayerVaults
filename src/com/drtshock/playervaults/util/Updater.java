@@ -1,11 +1,12 @@
-package me.shock.playervaults.util;
+package com.drtshock.playervaults.util;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.UnknownHostException;
 
-import me.shock.playervaults.Main;
+import com.drtshock.playervaults.Main;
+
 
 
 public class Updater extends Main {

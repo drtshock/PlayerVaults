@@ -1,9 +1,8 @@
-package me.shock.playervaults.util;
+package com.drtshock.playervaults.util;
 
 import java.io.File;
 import java.io.IOException;
 
-import me.shock.playervaults.Main;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,6 +11,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+
+import com.drtshock.playervaults.Main;
 
 public class VaultManager {
 

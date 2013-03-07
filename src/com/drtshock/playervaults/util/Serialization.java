@@ -1,4 +1,4 @@
-package me.shock.playervaults.util;
+package com.drtshock.playervaults.util;
  
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

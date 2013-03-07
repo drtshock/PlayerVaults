@@ -1,4 +1,4 @@
-package me.shock.playervaults;
+package com.drtshock.playervaults;
 
 
 import java.io.File;
@@ -8,13 +8,14 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.logging.Logger;
 
-import me.shock.playervaults.commands.Commands;
-import me.shock.playervaults.util.Metrics;
-import me.shock.playervaults.util.Updater;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.drtshock.playervaults.commands.Commands;
+import com.drtshock.playervaults.util.Metrics;
+import com.drtshock.playervaults.util.Updater;
 
 
 public class Main extends JavaPlugin {

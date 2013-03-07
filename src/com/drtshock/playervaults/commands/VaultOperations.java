@@ -1,14 +1,15 @@
-package me.shock.playervaults.commands;
+package com.drtshock.playervaults.commands;
 
 import java.io.IOException;
 
-import me.shock.playervaults.Main;
-import me.shock.playervaults.util.VaultManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import com.drtshock.playervaults.Main;
+import com.drtshock.playervaults.util.VaultManager;
 
 public class VaultOperations {
 

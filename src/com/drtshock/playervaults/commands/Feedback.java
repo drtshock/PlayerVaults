@@ -1,4 +1,4 @@
-package me.shock.playervaults.commands;
+package com.drtshock.playervaults.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

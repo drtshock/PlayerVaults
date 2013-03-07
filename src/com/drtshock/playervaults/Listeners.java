@@ -1,10 +1,7 @@
-package me.shock.playervaults;
+package com.drtshock.playervaults;
 
 import java.io.IOException;
 
-import me.shock.playervaults.commands.Commands;
-import me.shock.playervaults.commands.VaultViewInfo;
-import me.shock.playervaults.util.VaultManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -22,6 +19,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+
+import com.drtshock.playervaults.commands.Commands;
+import com.drtshock.playervaults.commands.VaultViewInfo;
+import com.drtshock.playervaults.util.VaultManager;
 
 public class Listeners implements Listener {
 

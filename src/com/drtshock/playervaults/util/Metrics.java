@@ -1,4 +1,4 @@
-package me.shock.playervaults.util;
+package com.drtshock.playervaults.util;
 
 /*
  * Copyright 2011 Tyler Blair. All rights reserved.

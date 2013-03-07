@@ -1,4 +1,4 @@
-package me.shock.playervaults.commands;
+package com.drtshock.playervaults.commands;
 
 public class VaultViewInfo {
 
