@@ -7,6 +7,5 @@ commands:
   pv:
     description: Open a vault with /vault <number>
     aliases: [vault, playervault, playervaults]
-permissions:
-  playervaults.amount.9:
-    default: op
+  pvdel:
+    description: Delete a vault.
