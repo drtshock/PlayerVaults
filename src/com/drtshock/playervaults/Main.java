@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -123,14 +122,6 @@ public class Main extends JavaPlugin {
 	 */
 	public boolean updateCheck() {
 		return getConfig().getBoolean("check-update");
-	}
-
-	/**
-	 * 
-	 * @return disabled worlds.
-	 */
-	public List<?> disabledWorlds() {
-		return getConfig().getList("disabled-worlds");
 	}
 
 	/**
