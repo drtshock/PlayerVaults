@@ -7,7 +7,6 @@ import java.io.IOException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -22,7 +21,9 @@ public class VaultManager {
 		this.plugin = instance;
 	}
 
-	String title;
+	String title = ChatColor.DARK_RED + "[" + ChatColor.WHITE + "PlayerVaults" + 
+			ChatColor.DARK_RED + "]" + ChatColor.WHITE + ": ";
+	
 	private final String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
 
 	/**
@@ -33,7 +34,6 @@ public class VaultManager {
 	 * @throws IOException 
 	 */
 	public void saveVault(Inventory inv, String player, int number) throws IOException {
-		// Get the player's file and serialize the inventory.
 		String ser = Serialization.toBase64(inv);
 		YamlConfiguration yaml = playerVaultFile(player);
 		yaml.set("vault" + number + "", ser);
@@ -48,10 +48,10 @@ public class VaultManager {
 	 */
 	public void loadVault(Player sender, String holder, int number) {
 		YamlConfiguration playerFile = playerVaultFile(holder);
-		String data = playerFile.getString("vault"+number);
+		String data = playerFile.getString("vault" + number);
 		Player player = (Player) sender;
 		if(data == null) {
-			Inventory inv = Bukkit.createInventory(player, 54, ChatColor.DARK_RED + "Vault #"+String.valueOf(number));
+			Inventory inv = Bukkit.createInventory(player, 54, ChatColor.DARK_RED + "Vault #" + String.valueOf(number));
 			player.openInventory(inv);
 		} else {
 			Inventory inv = Serialization.fromBase64(data);
@@ -61,15 +61,13 @@ public class VaultManager {
 
 	public void deleteVault(CommandSender sender, String target, int number) throws IOException {
 		String name = target.toLowerCase();
-		File file = new File(directory + name + ".yml");
+		File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
 		FileConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
 		if(file.exists()) {
-			ConfigurationSection section = playerFile.getConfigurationSection("vault" + number);
-			section.set(null, null);
+			playerFile.set("vault" + number, null);
 			sender.sendMessage(title + "Deleting " + ChatColor.GREEN + " " + number);
 			playerFile.save(file);
-		}
-		else {
+		} else {
 			sender.sendMessage(title + " That doesn't exist!");
 		}
 	}

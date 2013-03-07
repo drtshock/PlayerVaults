@@ -65,9 +65,9 @@ public class VaultOperations {
 				sender.sendMessage(pv + "Opening vault " + ChatColor.GREEN + number);
 				return true;
 			}
-			else {
-				Feedback.noPerms(sender);
-			}
+		}
+		else {
+			Feedback.noPerms(sender);
 		}
 		return false;
 	}
