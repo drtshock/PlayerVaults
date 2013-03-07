@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -20,7 +21,7 @@ public class VaultManager {
 	public VaultManager(Main instance) {
 		this.plugin = instance;
 	}
-	
+
 	String title;
 	private final String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
 
@@ -32,11 +33,11 @@ public class VaultManager {
 	 * @throws IOException 
 	 */
 	public void saveVault(Inventory inv, String player, int number) throws IOException {
-			// Get the player's file and serialize the inventory.
-			String ser = Serialization.toBase64(inv);
-			YamlConfiguration yaml = playerVaultFile(player);
-			yaml.set("vault" + number + "", ser);
-			saveFile(player, yaml);
+		// Get the player's file and serialize the inventory.
+		String ser = Serialization.toBase64(inv);
+		YamlConfiguration yaml = playerVaultFile(player);
+		yaml.set("vault" + number + "", ser);
+		saveFile(player, yaml);
 	}
 
 	/**
@@ -58,7 +59,7 @@ public class VaultManager {
 		}
 	}
 
-	public void deleteVault(Player sender, String target, int number) throws IOException {
+	public void deleteVault(CommandSender sender, String target, int number) throws IOException {
 		String name = target.toLowerCase();
 		File file = new File(directory + name + ".yml");
 		FileConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
@@ -89,7 +90,7 @@ public class VaultManager {
 		YamlConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
 		return playerFile;
 	}
-	
+
 	public void saveFile(String name, YamlConfiguration yaml) throws IOException {
 		File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
 		yaml.save(file);

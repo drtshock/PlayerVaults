@@ -36,18 +36,22 @@ public class Commands implements CommandExecutor {
 			}
 			else sender.sendMessage(pv + "Sorry but that can only be run by a player!");
 		}
+
 		else if(cmd.getName().equalsIgnoreCase("pvdel")) {
-			if(sender instanceof Player) {
-				Player p = (Player) sender;
-				switch(args.length) {
-				case 1:
+			switch(args.length) {
+			case 1:
+				if(sender instanceof Player) {
+					Player p = (Player) sender;
 					VaultOperations.deleteOwnVault(p, args[0]);
-					break;
-				default:
-					Feedback.showHelp(sender, Feedback.Type.DELETE);
 				}
+				else sender.sendMessage(pv + "Sorry but that can only be run by a player!");
+				break;
+			case 2:
+				VaultOperations.deleteOtherVault(sender, args[0], args[1]);
+				break;
+			default:
+				Feedback.showHelp(sender, Feedback.Type.DELETE);
 			}
-			else sender.sendMessage(pv + "Sorry but that can only be run by a player!");
 		}
 		return true;
 	}
