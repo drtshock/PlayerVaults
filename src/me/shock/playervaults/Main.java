@@ -31,6 +31,7 @@ public class Main extends JavaPlugin {
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new Listeners(this), this);
 		getCommand("pv").setExecutor(new Commands());
+		getCommand("pvdel").setExecutor(new Commands());
 		loadConfig();
 		loadLang();
 		startMetrics();

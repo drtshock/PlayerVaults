@@ -1,5 +1,7 @@
 package me.shock.playervaults.commands;
 
+import java.io.IOException;
+
 import me.shock.playervaults.Main;
 import me.shock.playervaults.util.VaultManager;
 
@@ -52,8 +54,7 @@ public class VaultOperations {
 				number = Integer.parseInt(arg);
 			}
 			catch(NumberFormatException nfe) {
-				//Yell at the player
-				//We should probably check perms first though
+				sender.sendMessage(pv+ChatColor.RED+"You need to specify a number!");
 			}
 			if(sender.hasPermission("playervaults.admin")) {
 				vm.loadVault(sender, user, number);
@@ -64,6 +65,22 @@ public class VaultOperations {
 			}
 		}
 		return false;
+	}
+	public static void deleteOwnVault(CommandSender sender, String arg) {
+		if(arg.matches("^[0-9]{1,2}$")) {
+			int number = 0;
+			try {
+				number = Integer.parseInt(arg);
+			}
+			catch(NumberFormatException nfe) {
+				sender.sendMessage(pv+ChatColor.RED+"You need to specify a number!");
+			}
+			try {
+				vm.deleteVault(sender, sender.getName(), number);
+			} catch (IOException e) {
+				sender.sendMessage(pv+"There was an error deleting the vault!");
+			}
+		}
 	}
 
 	@SuppressWarnings("unused")
