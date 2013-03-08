@@ -43,6 +43,8 @@ public class VaultOperations {
 			} else {
 				Feedback.noPerms(sender);
 			}
+		} else {
+			sender.sendMessage(Lang.TITLE + "" + Lang.MUST_BE_NUMBER);
 		}
 		return false;
 	}
@@ -61,6 +63,8 @@ public class VaultOperations {
 				vm.loadVault(sender, user, number);
 				sender.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", user));
 				return true;
+			} else {
+				sender.sendMessage(Lang.TITLE + "" + Lang.MUST_BE_NUMBER);
 			}
 		}
 		else {
@@ -82,6 +86,8 @@ public class VaultOperations {
 			} catch (IOException e) {
 				sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
 			}
+		} else {
+			sender.sendMessage(Lang.TITLE + "" + Lang.MUST_BE_NUMBER);
 		}
 	}
 	public static void deleteOtherVault(CommandSender sender, String user, String arg) {
@@ -99,6 +105,8 @@ public class VaultOperations {
 				} catch (IOException e) {
 					sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
 				}
+			} else {
+				sender.sendMessage(Lang.TITLE + "" + Lang.MUST_BE_NUMBER);
 			}
 		}
 		else Feedback.noPerms(sender);

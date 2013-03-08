@@ -1,6 +1,6 @@
 name: PlayerVaults
 main: com.drtshock.playervaults.Main
-authors: [drtshock, gomeow]
+authors: [drtshock, gomeow, chester]
 version: 2.0.0
 website: http://dev.bukkit.org/server-mods/PlayerVaults
 commands:

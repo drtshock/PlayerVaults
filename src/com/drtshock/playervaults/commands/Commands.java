@@ -26,9 +26,8 @@ public class Commands implements CommandExecutor {
 						inVault.put(sender.getName(), new VaultViewInfo(sender.getName(), Integer.parseInt(args[0])));
 					break;
 				case 2:
-					if(VaultOperations.openOtherVault(p,args[0], args[1])) {
+					if(VaultOperations.openOtherVault(p,args[0], args[1]))
 						inVault.put(sender.getName(), new VaultViewInfo(args[0], Integer.parseInt(args[1])));
-					}
 					break;
 				default:
 					Feedback.showHelp(sender, Feedback.Type.OPEN);
@@ -44,7 +43,8 @@ public class Commands implements CommandExecutor {
 					Player p = (Player) sender;
 					VaultOperations.deleteOwnVault(p, args[0]);
 				}
-				else sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.PLAYER_ONLY);
+				else 
+					sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.PLAYER_ONLY);
 				break;
 			case 2:
 				VaultOperations.deleteOtherVault(sender, args[0], args[1]);
