@@ -2,12 +2,12 @@ package com.drtshock.playervaults.commands;
 
 import java.io.IOException;
 
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.drtshock.playervaults.Main;
+import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.VaultManager;
 
 public class VaultOperations {
@@ -15,8 +15,7 @@ public class VaultOperations {
 	private static Main plugin;
 	private static VaultManager vm = new VaultManager(plugin);
 
-	static String pv = ChatColor.DARK_RED + "[" + ChatColor.WHITE + "PlayerVaults" + 
-			ChatColor.DARK_RED + "]" + ChatColor.WHITE + ": ";
+	static String pv = Lang.TITLE.toString();
 
 
 	public static boolean checkPerms(CommandSender cs, int number) {
