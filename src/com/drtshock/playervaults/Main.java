@@ -31,13 +31,16 @@ public class Main extends JavaPlugin {
 		loadConfig();
 		startMetrics();
 
-		Updater u = new Updater();
-		try {
-			if(u.getUpdate()) {
-				update = true;
-				name = u.getNewVersion();
-			}
-		} catch (Exception e) {}
+		if(getConfig().getBoolean("check-update")) {
+			Updater u = new Updater();
+			try {
+				if(u.getUpdate()) {
+					update = true;
+					name = u.getNewVersion();
+				}
+			} catch (Exception e) {}
+		}
+
 		commands = new Commands();
 		getCommand("pv").setExecutor(commands);
 		getCommand("pvdel").setExecutor(commands);
@@ -83,14 +86,4 @@ public class Main extends JavaPlugin {
 		Lang.setFile(conf);
 		return conf;
 	}
-
-	/**
-	 * Methods to get values from the config.
-	 * public so any class / plugin can get them.
-	 */
-
-	public boolean updateCheck() {
-		return getConfig().getBoolean("check-update");
-	}
-
 }
