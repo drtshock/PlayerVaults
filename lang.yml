@@ -11,3 +11,4 @@ player-only: "Sorry but that can only be run by a player!"
 must-be-number: "You need to specify a number"
 invalid-args: "&fInvalid args!"
 delete-vault-error:
+no-permissions: "&cYou don't have permission for that!"

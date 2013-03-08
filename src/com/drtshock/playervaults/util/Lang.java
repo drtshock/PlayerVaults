@@ -12,7 +12,8 @@ public enum Lang {
 	DELETE_OTHER_VAULT("delete-other-vault"),
 	PLAYER_ONLY("player-only"),
 	MUST_BE_NUMBER("must-be-number"),
-	DELETE_VAULT_ERROR("delete-vault-error");
+	DELETE_VAULT_ERROR("delete-vault-error"),
+	NO_PERMS("no-permissions");
 	
 	private String path = "";
 	private static YamlConfiguration lang;

@@ -1,7 +1,8 @@
 package com.drtshock.playervaults.commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+
+import com.drtshock.playervaults.util.Lang;
 
 
 public class Feedback {
@@ -11,23 +12,20 @@ public class Feedback {
 		WORKBENCH, //For later versions
 		FURNACE;
 	}
-	static String pv = ChatColor.DARK_RED + "[" + ChatColor.WHITE + "PlayerVaults" + 
-			ChatColor.DARK_RED + "]" + ChatColor.WHITE + ": ";
 
 	public static void noPerms(CommandSender sender) {
-		sender.sendMessage(pv + "You don't have permission for that!");
+		sender.sendMessage(Lang.TITLE + "" + Lang.NO_PERMS);
 		return;
 	}
 
-
 	public static void showHelp(CommandSender sender, Type t) {
 		if(t == Type.OPEN) {
-			sender.sendMessage(pv + "/pv <number>");
-			sender.sendMessage(pv + "/pv <player> <number>");
+			sender.sendMessage(Lang.TITLE + "/pv <number>");
+			sender.sendMessage(Lang.TITLE + "/pv <player> <number>");
 		}
 		else if(t == Type.DELETE) {
-			sender.sendMessage(pv + "/pvdel <number>");
-			sender.sendMessage(pv + "/pvdel <player> <number>");
+			sender.sendMessage(Lang.TITLE + "/pvdel <number>");
+			sender.sendMessage(Lang.TITLE + "/pvdel <player> <number>");
 		}
 	}
 }

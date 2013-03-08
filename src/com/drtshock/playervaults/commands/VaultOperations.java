@@ -39,7 +39,6 @@ public class VaultOperations {
 			if(checkPerms(sender, number)) {
 				vm.loadVault(sender, sender.getName(), number);
 				sender.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
-				sender.sendMessage(Lang.TITLE.toString() + "Opening vault " + ChatColor.GREEN + number);
 				return true;
 			} else {
 				Feedback.noPerms(sender);
@@ -76,12 +75,12 @@ public class VaultOperations {
 				number = Integer.parseInt(arg);
 			}
 			catch(NumberFormatException nfe) {
-				sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + "You need to specify a number!");
+				sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
 			}
 			try {
 				vm.deleteVault(sender, sender.getName(), number);
 			} catch (IOException e) {
-				sender.sendMessage(Lang.TITLE.toString() + "There was an error deleting that vault!");
+				sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
 			}
 		}
 	}
@@ -93,12 +92,12 @@ public class VaultOperations {
 					number = Integer.parseInt(arg);
 				}
 				catch(NumberFormatException nfe) {
-					sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + "You need to specify a number!");
+					sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
 				}
 				try {
 					vm.deleteVault(sender, user, number);
 				} catch (IOException e) {
-					sender.sendMessage(Lang.TITLE.toString() + "There was an error deleting that vault!");
+					sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
 				}
 			}
 		}
