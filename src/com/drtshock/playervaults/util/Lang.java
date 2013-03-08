@@ -1,5 +1,6 @@
 package com.drtshock.playervaults.util;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public enum Lang {
@@ -26,6 +27,6 @@ public enum Lang {
 	
 	@Override
 	public String toString() {
-		return lang.getString(this.path);
+		return ChatColor.translateAlternateColorCodes('&', lang.getString(this.path));
 	}
 }

@@ -21,16 +21,14 @@ public class Main extends JavaPlugin {
 	public Logger log;
 	public static boolean update = false;
 	public static String name = "";
-	Commands commands = new Commands();
+	Commands commands;
 
 	@Override
 	public void onEnable() {
+		loadLang();
 		log = getServer().getLogger();
 		getServer().getPluginManager().registerEvents(new Listeners(this), this);
-		getCommand("pv").setExecutor(commands);
-		getCommand("pvdel").setExecutor(commands);
 		loadConfig();
-		loadLang();
 		startMetrics();
 
 		Updater u = new Updater();
@@ -40,7 +38,9 @@ public class Main extends JavaPlugin {
 				name = u.getNewVersion();
 			}
 		} catch (Exception e) {}
-		
+		commands = new Commands();
+		getCommand("pv").setExecutor(commands);
+		getCommand("pvdel").setExecutor(commands);
 	}
 
 	public void startMetrics() {

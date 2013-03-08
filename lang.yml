@@ -2,12 +2,12 @@
 # %p is where the player name will get inserted.
 # %v is where the vault number will get inserted.
 # Made with love :)
-title-name: "&4[&fPlayerVaults&4]"
+title-name: "&4[&fPlayerVaults&4]: "
 open-vault: "&fOpening vault &a%v"
 open-other-vault: "&fOpening vault &a%v &fof &a%p"
 delete-vault: "&fDeleted vault &a%v"
 delete-other-vault: "&fDeleted vault &a%v &fof &a%p"
-player-only:
-must-be-number:
+player-only: "Sorry but that can only be run by a player!"
+must-be-number: "You need to specify a number"
 invalid-args: "&fInvalid args!"
 delete-vault-error:

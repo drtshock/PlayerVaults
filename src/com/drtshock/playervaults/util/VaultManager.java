@@ -3,7 +3,6 @@ package com.drtshock.playervaults.util;
 import java.io.File;
 import java.io.IOException;
 
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -20,9 +19,6 @@ public class VaultManager {
 	public VaultManager(Main instance) {
 		this.plugin = instance;
 	}
-
-	String title = ChatColor.DARK_RED + "[" + ChatColor.WHITE + "PlayerVaults" + 
-			ChatColor.DARK_RED + "]" + ChatColor.WHITE + ": ";
 	
 	private final String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
 
@@ -65,10 +61,10 @@ public class VaultManager {
 		FileConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
 		if(file.exists()) {
 			playerFile.set("vault" + number, null);
-			sender.sendMessage(title + "Deleting " + ChatColor.GREEN + " " + number);
+			sender.sendMessage(Lang.TITLE.toString() + "Deleting " + ChatColor.GREEN + " " + number);
 			playerFile.save(file);
 		} else {
-			sender.sendMessage(title + " That doesn't exist!");
+			sender.sendMessage(Lang.TITLE.toString() + " That doesn't exist!");
 		}
 	}
 

@@ -8,12 +8,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.drtshock.playervaults.util.Lang;
+
 
 public class Commands implements CommandExecutor {
 
 	public static HashMap<String, VaultViewInfo> inVault = new HashMap<String, VaultViewInfo>();
-	private final String pv = ChatColor.DARK_RED + "[" + ChatColor.WHITE + "PlayerVaults" + 
-			ChatColor.DARK_RED + "]" + ChatColor.WHITE + ": ";
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -34,7 +34,7 @@ public class Commands implements CommandExecutor {
 					Feedback.showHelp(sender, Feedback.Type.OPEN);
 				}
 			}
-			else sender.sendMessage(pv + "Sorry but that can only be run by a player!");
+			else sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.PLAYER_ONLY);
 		}
 
 		else if(cmd.getName().equalsIgnoreCase("pvdel")) {
@@ -44,7 +44,7 @@ public class Commands implements CommandExecutor {
 					Player p = (Player) sender;
 					VaultOperations.deleteOwnVault(p, args[0]);
 				}
-				else sender.sendMessage(pv + "Sorry but that can only be run by a player!");
+				else sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.PLAYER_ONLY);
 				break;
 			case 2:
 				VaultOperations.deleteOtherVault(sender, args[0], args[1]);
