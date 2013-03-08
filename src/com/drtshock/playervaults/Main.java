@@ -69,6 +69,7 @@ public class Main extends JavaPlugin {
 				if (defConfigStream != null) {
 					YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
 					defConfig.save(lang);
+					Lang.setFile(defConfig);
 					return defConfig;
 				}
 			} catch (IOException e) {
