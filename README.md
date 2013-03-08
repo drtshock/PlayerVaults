@@ -1,6 +1,6 @@
 PlayerVaults
 ============
 
-Virtual vaults for players!
+Virtual vaults for virtual players!
 
 Contribute if you feel so led.
