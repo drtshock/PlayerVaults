@@ -51,7 +51,7 @@ public class Main extends JavaPlugin {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void loadConfig() {
 		File config = new File(getDataFolder() + File.separator + "config.yml");
 		if(!config.exists()) {
@@ -66,11 +66,11 @@ public class Main extends JavaPlugin {
 				getDataFolder().mkdir();
 				lang.createNewFile();
 				InputStream defConfigStream = this.getResource("lang.yml");
-			    if (defConfigStream != null) {
-			        YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			       	defConfig.save(lang);
-			       	return defConfig;
-			    }
+				if (defConfigStream != null) {
+					YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+					defConfig.save(lang);
+					return defConfig;
+				}
 			} catch (IOException e) {
 				e.printStackTrace(); //So they notice
 				log.severe("[PlayerVaults] Couldn't create language file.");
@@ -82,7 +82,7 @@ public class Main extends JavaPlugin {
 		Lang.setFile(conf);
 		return conf;
 	}
-	
+
 	/**
 	 * Methods to get values from the config.
 	 * public so any class / plugin can get them.

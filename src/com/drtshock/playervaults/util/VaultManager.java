@@ -19,7 +19,7 @@ public class VaultManager {
 	public VaultManager(Main instance) {
 		this.plugin = instance;
 	}
-	
+
 	private final String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
 
 	/**

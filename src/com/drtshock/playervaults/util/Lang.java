@@ -14,18 +14,18 @@ public enum Lang {
 	MUST_BE_NUMBER("must-be-number"),
 	DELETE_VAULT_ERROR("delete-vault-error"),
 	NO_PERMS("no-permissions");
-	
+
 	private String path = "";
 	private static YamlConfiguration lang;
-	
+
 	Lang(String path) {
 		this.path = path;
 	}
-	
+
 	public static void setFile(YamlConfiguration yc) {
 		lang = yc;
 	}
-	
+
 	@Override
 	public String toString() {
 		return ChatColor.translateAlternateColorCodes('&', lang.getString(this.path));
