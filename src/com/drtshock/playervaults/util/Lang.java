@@ -13,7 +13,11 @@ public enum Lang {
 	PLAYER_ONLY("player-only"),
 	MUST_BE_NUMBER("must-be-number"),
 	DELETE_VAULT_ERROR("delete-vault-error"),
-	NO_PERMS("no-permissions");
+	NO_PERMS("no-permissions"),
+	INSUFFICIENT_FUNDS("insufficient-funds"),
+	REFUND_AMOUNT("refund-amount"),
+	COST_TO_CREATE("cost-to-create"),
+	COST_TO_OPEN("cost-to-open");
 
 	private String path = "";
 	private static YamlConfiguration lang;

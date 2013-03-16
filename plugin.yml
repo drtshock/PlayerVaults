@@ -1,8 +1,9 @@
 name: PlayerVaults
 main: com.drtshock.playervaults.Main
 authors: [drtshock, gomeow, chester]
-version: 2.1.0
+version: 2.1.1
 website: http://dev.bukkit.org/server-mods/PlayerVaults
+softdepend: Vault
 commands:
   pv:
     description: Open a vault with /vault <number>

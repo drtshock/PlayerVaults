@@ -4,3 +4,12 @@
 # Whether or not you want to check for updates.
 # Will not download an update, that is your job :)
 check-update: true
+
+# Settings here are for economy integration.
+economy:
+  enabled: false
+  
+# Cost to create a vault. You can give players playervaults.free to bypass this.
+  cost-to-create: 100
+  cost-to-open: 10
+  refund-on-delete: 50

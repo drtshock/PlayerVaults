@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
+import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.drtshock.playervaults.commands.Commands;
@@ -22,6 +25,7 @@ public class Main extends JavaPlugin {
 	public static boolean update = false;
 	public static String name = "";
 	Commands commands;
+	public static Economy econ = null;
 
 	@Override
 	public void onEnable() {
@@ -44,6 +48,7 @@ public class Main extends JavaPlugin {
 		commands = new Commands();
 		getCommand("pv").setExecutor(commands);
 		getCommand("pvdel").setExecutor(commands);
+		setupEconomy();
 	}
 
 	public void startMetrics() {
@@ -53,6 +58,18 @@ public class Main extends JavaPlugin {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private boolean setupEconomy() {
+		if (getServer().getPluginManager().getPlugin("Vault") == null) {
+			return false;
+		}
+		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+		if (rsp == null) {
+			return false;
+		}
+		econ = rsp.getProvider();
+		return econ != null;
 	}
 
 	public void loadConfig() {
