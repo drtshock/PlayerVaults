@@ -61,10 +61,13 @@ public class VaultManager {
 		FileConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
 		if(file.exists()) {
 			playerFile.set("vault" + number, null);
-			sender.sendMessage(Lang.TITLE.toString() + "Deleting " + ChatColor.GREEN + " " + number);
 			playerFile.save(file);
-		} else {
-			sender.sendMessage(Lang.TITLE.toString() + " That doesn't exist!");
+		}
+		if(sender.getName().equalsIgnoreCase(target)) {
+			sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT.toString().replace("%v", String.valueOf(number)));
+		}
+		else {
+			sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_OTHER_VAULT.toString().replace("%v", String.valueOf(number)).replace("%p", target));
 		}
 	}
 

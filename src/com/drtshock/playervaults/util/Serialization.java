@@ -5,13 +5,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-import net.minecraft.server.v1_4_R1.NBTBase;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
-import net.minecraft.server.v1_4_R1.NBTTagList;
+import net.minecraft.server.v1_5_R1.NBTBase;
+import net.minecraft.server.v1_5_R1.NBTTagCompound;
+import net.minecraft.server.v1_5_R1.NBTTagList;
 
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_4_R1.inventory.CraftInventoryCustom;
-import org.bukkit.craftbukkit.v1_4_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_5_R1.inventory.CraftInventoryCustom;
+import org.bukkit.craftbukkit.v1_5_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
@@ -50,7 +50,7 @@ public class Serialization {
             NBTTagCompound inputObject = (NBTTagCompound) itemList.get(i);
             
             if (!inputObject.isEmpty()) {
-                inventory.setItem(i, CraftItemStack.asCraftMirror(net.minecraft.server.v1_4_R1.ItemStack.createStack(inputObject)));
+                inventory.setItem(i, CraftItemStack.asCraftMirror(net.minecraft.server.v1_5_R1.ItemStack.createStack(inputObject)));
             }
         }
         

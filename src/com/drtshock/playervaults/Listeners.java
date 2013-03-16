@@ -2,7 +2,6 @@ package com.drtshock.playervaults;
 
 import java.io.IOException;
 
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -31,9 +30,10 @@ public class Listeners implements Listener {
 	public Listeners(Main instance) {
 		this.plugin = instance;
 	}
+	
 	VaultManager vm = new VaultManager(plugin);
 
-	public void doSaveStuff(Player p) {
+	public void saveVault(Player p) {
 		if(Commands.inVault.containsKey(p.getName())) {
 			Inventory inv = p.getOpenInventory().getTopInventory();
 			VaultViewInfo info = Commands.inVault.get(p.getName());
@@ -49,22 +49,21 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		doSaveStuff(player);
+		saveVault(player);
 	}
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		vm.playerVaultFile(player.getName());
-		if(player.isOp() && Main.update)
-		{
+		if(player.isOp() && Main.update) {
 			player.sendMessage(ChatColor.GREEN + "Version " + Main.name + " of PlayerVaults is up for download!");
-			player.sendMessage(ChatColor.GREEN + "http://dev.bukkit.org/server-mods/playervaults to view the changelog and download!");
+			player.sendMessage(ChatColor.GREEN + "http://dev.bukkit.org/server-mods/playervaults/ to view the changelog and download!");
 		}
 	}
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
-		doSaveStuff(player);
+		saveVault(player);
 	}
 
 	@EventHandler 
@@ -72,7 +71,7 @@ public class Listeners implements Listener {
 		HumanEntity he = event.getPlayer();
 		if(he instanceof Player) {
 			Player player = (Player) he;
-			doSaveStuff(player);
+			saveVault(player);
 		}
 	}
 
@@ -106,7 +105,6 @@ public class Listeners implements Listener {
 	/**
 	 * Don't let a player open a trading inventory OR a minecart
 	 * while he has his vault open.
-	 * @param event
 	 */
 	@EventHandler
 	public void onInteractEntity(PlayerInteractEntityEvent event) {
