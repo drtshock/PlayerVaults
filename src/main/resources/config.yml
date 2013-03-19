@@ -1,5 +1,6 @@
-# PlayerVaults by drsthock
+# PlayerVaults by drsthock and gomeow!
 # http://dev.bukkit.org/server-mods/playervaults
+# Made with love :3
 
 # Whether or not you want to check for updates.
 # Will not download an update, that is your job :)
@@ -21,4 +22,5 @@ drop-on-death:
   
 # Max amount of inventories you want to be dropped.
 # Set to 99 (or highest amount you give people) if you want all inventories to be dropped.
+# WARNING: This can cause a lot of items to be dropped on the ground. Use caution :3
   inventories: 1
