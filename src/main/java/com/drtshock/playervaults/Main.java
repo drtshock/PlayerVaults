@@ -37,7 +37,6 @@ public class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new Listeners(this), this);
 		loadConfig();
 		startMetrics();
-
 		if(getConfig().getBoolean("check-update")) {
 			Updater u = new Updater();
 			try {
