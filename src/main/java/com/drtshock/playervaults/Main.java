@@ -59,18 +59,18 @@ public class Main extends JavaPlugin {
 		}
 
 	}
-	
+
 	public void transferVaults() {
-		File f = new File(getDataFolder(),"vaults.yml");
-		if(f.exists() && !new File(getDataFolder(), "vaults").exists()) {
+		File f = new File(getDataFolder() + File.separator + "vaults.yml");
+		if(f.exists() && !new File(getDataFolder() + File.separator + "vaults").exists()) {
 			YamlConfiguration vaults = YamlConfiguration.loadConfiguration(f);
 			for(String key:vaults.getKeys(false)) {
 				YamlConfiguration newPerson = new YamlConfiguration();
 				for(String key2:vaults.getConfigurationSection(key).getKeys(false)) {
-					newPerson.set(key2, vaults.getString(key+"."+key2));
+					newPerson.set(key2, vaults.getString(key + "." + key2));
 				}
 				try {
-					newPerson.save(new File(getDataFolder()+File.separator+"vaults"+File.separator+key+".yml"));
+					newPerson.save(new File(getDataFolder() + File.separator + "vaults" + File.separator + key + ".yml"));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
