@@ -17,7 +17,12 @@ public class EconomyOperations {
 		EconomyOperations.config = plugin.getConfig();
 	}
 
-
+	/**
+	 * Have a player pay to open a vault.
+	 * Returns true if successful. Otherwise false.
+	 * @param player
+	 * @return transaction success
+	 */
 	public static boolean payToOpen(Player player) {
 		if(!config.getBoolean("economy.enabled") || player.hasPermission("playervaults.free"))
 			return true;
@@ -31,7 +36,13 @@ public class EconomyOperations {
 
 		return false;
 	}
-	
+
+	/**
+	 * Have a player pay to make a vault.
+	 * Returns true if successful. Otherwise false.
+	 * @param player
+	 * @return transaction success
+	 */
 	public static boolean payToMake(Player player) {
 		if(!config.getBoolean("economy.enabled") || player.hasPermission("playervaults.free"))
 			return true;
@@ -45,7 +56,13 @@ public class EconomyOperations {
 
 		return false;
 	}
-	
+
+	/**
+	 * Have a player get his money back when vault is deleted.
+	 * Returns true if successful. Otherwise false.
+	 * @param player
+	 * @return transaction success.
+	 */
 	public static boolean refundOnDelete(Player player) {
 		if(!config.getBoolean("economy.enabled") || player.hasPermission("playervaults.free"))
 			return true;

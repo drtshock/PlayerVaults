@@ -26,6 +26,8 @@ public class Main extends JavaPlugin {
 	public static String name = "";
 	Commands commands;
 	public static Economy econ = null;
+	public static boolean dropOnDeath = false;
+	public static int inventoriesToDrop = 0;
 
 	@Override
 	public void onEnable() {
@@ -50,6 +52,12 @@ public class Main extends JavaPlugin {
 		getCommand("pv").setExecutor(commands);
 		getCommand("pvdel").setExecutor(commands);
 		setupEconomy();
+
+		if(getConfig().getBoolean("drop-on-death.enabled")) {
+			dropOnDeath = true;
+			inventoriesToDrop = getConfig().getInt("drop-on-death.inventories");
+		}
+
 	}
 	
 	public void transferVaults() {

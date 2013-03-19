@@ -55,6 +55,32 @@ public class VaultManager {
 		}
 	}
 
+	/**
+	 * Gets an inventory without opening it.
+	 * Used for dropping a players inventories on death.
+	 * @param player
+	 * @param number
+	 * @return the inventory
+	 */
+	public Inventory getVault(Player player, int number) {
+		YamlConfiguration playerFile = playerVaultFile(player.getName());
+		String data = playerFile.getString("vault" + number);
+		if(data == null) {
+			Inventory inv = Bukkit.createInventory(player, 54, ChatColor.DARK_RED + "Vault #" + String.valueOf(number));
+			return inv;
+		} else {
+			Inventory inv = Serialization.fromBase64(data);
+			return inv;
+		}
+	}
+
+	/**
+	 * Deletes a players vault.
+	 * @param sender
+	 * @param target
+	 * @param number
+	 * @throws IOException
+	 */
 	public void deleteVault(CommandSender sender, String target, int number) throws IOException {
 		String name = target.toLowerCase();
 		File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
@@ -71,6 +97,12 @@ public class VaultManager {
 		}
 	}
 
+	/**
+	 * Get the player's vault file.
+	 * Create if doesn't exist.
+	 * @param player
+	 * @return playerVaultFile file.
+	 */
 	public YamlConfiguration playerVaultFile(String player) {
 		File folder = new File(directory);
 		if(!folder.exists()) {
@@ -88,6 +120,12 @@ public class VaultManager {
 		return playerFile;
 	}
 
+	/**
+	 * Save the players vault file.
+	 * @param name
+	 * @param yaml
+	 * @throws IOException
+	 */
 	public void saveFile(String name, YamlConfiguration yaml) throws IOException {
 		File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
 		yaml.save(file);

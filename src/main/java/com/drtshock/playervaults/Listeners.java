@@ -21,18 +21,24 @@ import org.bukkit.inventory.Inventory;
 
 import com.drtshock.playervaults.commands.Commands;
 import com.drtshock.playervaults.commands.VaultViewInfo;
+import com.drtshock.playervaults.util.DropOnDeath;
 import com.drtshock.playervaults.util.VaultManager;
 
 public class Listeners implements Listener {
 
 	public Main plugin;
-	
+
 	public Listeners(Main instance) {
 		this.plugin = instance;
 	}
-	
+
 	VaultManager vm = new VaultManager(plugin);
 
+	/**
+	 * Save a players vault.
+	 * Sends to method in VaultManager class.
+	 * @param Player p
+	 */
 	public void saveVault(Player p) {
 		if(Commands.inVault.containsKey(p.getName())) {
 			Inventory inv = p.getOpenInventory().getTopInventory();
@@ -45,12 +51,13 @@ public class Listeners implements Listener {
 			Commands.inVault.remove(p.getName());
 		}
 	}
-	
+
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		saveVault(player);
 	}
+
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
@@ -60,10 +67,14 @@ public class Listeners implements Listener {
 			player.sendMessage(ChatColor.GREEN + "http://dev.bukkit.org/server-mods/playervaults/ to view the changelog and download!");
 		}
 	}
+
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
 		saveVault(player);
+		if(Main.dropOnDeath && (!player.hasPermission("playervaults.ignore.drops"))) {
+			DropOnDeath.drop(event.getEntity());
+		}
 	}
 
 	@EventHandler 
@@ -79,7 +90,7 @@ public class Listeners implements Listener {
 	 * Check if a player is trying to do something while
 	 * in a vault.
 	 * Don't let them open up another chest.
-	 * @param event
+	 * @param PlayerInteractEvent
 	 */
 	@EventHandler
 	public void onInteract(PlayerInteractEvent event) {

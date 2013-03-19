@@ -24,9 +24,13 @@ public class VaultOperations {
 		}
 		return false;
 	}
-	
-	/*
-	 * TODO: Change how permissions are checked here.
+
+	/**
+	 * Open a player's own vault.
+	 * Return true if allowed. Otherwise false.
+	 * @param Sender sender
+	 * @param String arg
+	 * @return success
 	 */
 	public static boolean openOwnVault(Player sender, String arg) {
 		if(arg.matches("^[0-9]{1,2}$")) {
@@ -56,6 +60,14 @@ public class VaultOperations {
 		return false;
 	}
 
+	/**
+	 * Open another player's vault.
+	 * Return true if allowed. Otherwise false.
+	 * @param Sender sender
+	 * @param String user
+	 * @param String arg
+	 * @return success
+	 */
 	public static boolean openOtherVault(Player sender, String user, String arg) {
 		if(sender.hasPermission("playervaults.admin")) {
 			if(arg.matches("^[0-9]{1,2}$")) {
@@ -78,7 +90,13 @@ public class VaultOperations {
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Delete a player's own vault.
+	 * Return true if allowed. Otherwise false.
+	 * @param Sender sender
+	 * @param String arg
+	 */
 	public static void deleteOwnVault(Player sender, String arg) {
 		if(arg.matches("^[0-9]{1,2}$")) {
 			int number = 0;
@@ -100,7 +118,14 @@ public class VaultOperations {
 			sender.sendMessage(Lang.TITLE.toString()+ Lang.MUST_BE_NUMBER);
 		}
 	}
-	
+
+	/**
+	 * Delete another player's vault.
+	 * Return true if allowed. Otherwise false.
+	 * @param Sender sender
+	 * @param String user
+	 * @param String arg
+	 */
 	public static void deleteOtherVault(CommandSender sender, String user, String arg) {
 		if(sender.hasPermission("playervaults.delete")) {
 			if(arg.matches("^[0-9]{1,2}$")) {
