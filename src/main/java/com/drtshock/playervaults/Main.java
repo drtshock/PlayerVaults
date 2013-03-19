@@ -29,6 +29,7 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		transferVaults();
 		loadLang();
 		log = getServer().getLogger();
 		getServer().getPluginManager().registerEvents(new Listeners(this), this);
@@ -49,6 +50,25 @@ public class Main extends JavaPlugin {
 		getCommand("pv").setExecutor(commands);
 		getCommand("pvdel").setExecutor(commands);
 		setupEconomy();
+	}
+	
+	public void transferVaults() {
+		File f = new File(getDataFolder(),"vaults.yml");
+		if(f.exists() && !new File(getDataFolder(), "vaults").exists()) {
+			YamlConfiguration vaults = YamlConfiguration.loadConfiguration(f);
+			for(String key:vaults.getKeys(false)) {
+				YamlConfiguration newPerson = new YamlConfiguration();
+				for(String key2:vaults.getConfigurationSection(key).getKeys(false)) {
+					newPerson.set(key2, vaults.getString(key+"."+key2));
+				}
+				try {
+					newPerson.save(new File(getDataFolder()+File.separator+"vaults"+File.separator+key+".yml"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			getLogger().warning("Found old storage format used! Converting to new format!");
+		}
 	}
 
 	public void startMetrics() {
