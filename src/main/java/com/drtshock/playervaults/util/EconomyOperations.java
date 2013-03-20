@@ -24,7 +24,7 @@ public class EconomyOperations {
 	 * @return transaction success
 	 */
 	public static boolean payToOpen(Player player) {
-		if(!config.getBoolean("economy.enabled") || player.hasPermission("playervaults.free"))
+		if(!config.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !Main.useVault)
 			return true;
 
 		double cost = config.getDouble("economy.cost-to-open");
@@ -44,7 +44,7 @@ public class EconomyOperations {
 	 * @return transaction success
 	 */
 	public static boolean payToMake(Player player) {
-		if(!config.getBoolean("economy.enabled") || player.hasPermission("playervaults.free"))
+		if(!config.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !Main.useVault)
 			return true;
 
 		double cost = config.getDouble("economy.cost-to-create");
@@ -64,7 +64,7 @@ public class EconomyOperations {
 	 * @return transaction success.
 	 */
 	public static boolean refundOnDelete(Player player) {
-		if(!config.getBoolean("economy.enabled") || player.hasPermission("playervaults.free"))
+		if(!config.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !Main.useVault)
 			return true;
 
 		double cost = config.getDouble("economy.refund-on-delete");

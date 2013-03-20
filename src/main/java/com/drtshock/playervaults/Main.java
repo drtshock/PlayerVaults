@@ -28,6 +28,7 @@ public class Main extends JavaPlugin {
 	public static Economy econ = null;
 	public static boolean dropOnDeath = false;
 	public static int inventoriesToDrop = 0;
+	public static boolean useVault = false;
 
 	@Override
 	public void onEnable() {
@@ -96,6 +97,7 @@ public class Main extends JavaPlugin {
 			return false;
 		}
 		econ = rsp.getProvider();
+		useVault = true;
 		return econ != null;
 	}
 
