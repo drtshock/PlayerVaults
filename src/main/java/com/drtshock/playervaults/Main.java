@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,7 +21,7 @@ import com.drtshock.playervaults.util.Updater;
 
 public class Main extends JavaPlugin {
 
-	public Main plugin;
+	public static Main plugin;
 	public Logger log;
 	public static boolean update = false;
 	public static String name = "";
@@ -29,6 +30,7 @@ public class Main extends JavaPlugin {
 	public static boolean dropOnDeath = false;
 	public static int inventoriesToDrop = 0;
 	public static boolean useVault = false;
+	public static FileConfiguration config;
 
 	@Override
 	public void onEnable() {
@@ -57,6 +59,8 @@ public class Main extends JavaPlugin {
 			dropOnDeath = true;
 			inventoriesToDrop = getConfig().getInt("drop-on-death.inventories");
 		}
+		
+		config = getConfig();
 
 	}
 
