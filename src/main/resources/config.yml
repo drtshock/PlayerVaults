@@ -6,7 +6,7 @@
 # Will not download an update, that is your job :)
 check-update: true
 
-# Settings here are for economy integration.
+# Settings here are for economy integration. playervaults.free bypasses it.
 economy:
   enabled: false
   

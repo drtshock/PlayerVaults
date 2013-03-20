@@ -16,7 +16,6 @@ public enum Lang {
 	NO_PERMS("no-permissions"),
 	INSUFFICIENT_FUNDS("insufficient-funds"),
 	REFUND_AMOUNT("refund-amount"),
-	COST_TO_CREATE("cost-to-create"),
 	COST_TO_OPEN("cost-to-open");
 
 	private String path = "";

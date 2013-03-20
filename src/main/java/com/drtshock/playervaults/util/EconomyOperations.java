@@ -17,7 +17,7 @@ public class EconomyOperations {
 	private static String directory = "plugins" + File.separator + "PlayerVaults" + File.separator;
 	private static File configFile = new File(directory + "config.yml");
 	private static YamlConfiguration bukkitConfig = new YamlConfiguration();
-	
+
 	public Main plugin;
 	public EconomyOperations(Main instance) throws FileNotFoundException, IOException, InvalidConfigurationException {
 		this.plugin = instance;
@@ -30,33 +30,13 @@ public class EconomyOperations {
 	 * @return transaction success
 	 */
 	public static boolean payToOpen(Player player) {
-		if(bukkitConfig.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !Main.useVault)
+		if(!bukkitConfig.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !Main.useVault)
 			return true;
 
 		double cost = bukkitConfig.getDouble("economy.cost-to-open");
 		EconomyResponse resp = Main.econ.withdrawPlayer(player.getName(), cost);
 		if(resp.transactionSuccess()) {
-			player.sendMessage(Lang.TITLE.toString() + Lang.COST_TO_OPEN.toString());
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Have a player pay to make a vault.
-	 * Returns true if successful. Otherwise false.
-	 * @param player
-	 * @return transaction success
-	 */
-	public static boolean payToMake(Player player) {
-		if(!bukkitConfig.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !Main.useVault)
-			return true;
-
-		double cost = bukkitConfig.getDouble("economy.cost-to-create");
-		EconomyResponse resp = Main.econ.withdrawPlayer(player.getName(), cost);
-		if(resp.transactionSuccess()) {
-			player.sendMessage(Lang.TITLE.toString() + Lang.COST_TO_CREATE.toString());
+			player.sendMessage(Lang.TITLE.toString() + Lang.COST_TO_OPEN.toString().replaceAll("%price", "" + cost));
 			return true;
 		}
 
@@ -76,7 +56,7 @@ public class EconomyOperations {
 		double cost = bukkitConfig.getDouble("economy.refund-on-delete");
 		EconomyResponse resp = Main.econ.depositPlayer(player.getName(), cost);
 		if(resp.transactionSuccess()) {
-			player.sendMessage(Lang.TITLE.toString() + Lang.REFUND_AMOUNT.toString());
+			player.sendMessage(Lang.TITLE.toString() + Lang.REFUND_AMOUNT.toString().replaceAll("%price", "" + cost));
 			return true;
 		}
 
