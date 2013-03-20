@@ -68,7 +68,7 @@ public class VaultManager {
 			Inventory inv = Bukkit.createInventory(player, 54, ChatColor.GREEN + "Vault #" + String.valueOf(number));
 			return inv;
 		} else {
-			Inventory inv = Serialization.fromBase64(data);
+			Inventory inv = Serialization.fromBase64(data, number);
 			return inv;
 		}
 	}
