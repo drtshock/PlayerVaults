@@ -41,11 +41,10 @@ public class Serialization {
         return Base64Coder.encodeLines(outputStream.toByteArray());
     }
     
-    public static Inventory fromBase64(String data) {
+    public static Inventory fromBase64(String data, int number) {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
         NBTTagList itemList = (NBTTagList) NBTBase.b(new DataInputStream(inputStream));
-        Inventory inventory = new CraftInventoryCustom(null, itemList.size(), ChatColor.DARK_RED + "Vault");
- 
+        Inventory inventory = new CraftInventoryCustom(null, itemList.size(), ChatColor.DARK_RED + "Vault #" + String.valueOf(number));
         for (int i = 0; i < itemList.size(); i++) {
             NBTTagCompound inputObject = (NBTTagCompound) itemList.get(i);
             

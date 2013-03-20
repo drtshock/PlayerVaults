@@ -42,15 +42,14 @@ public class VaultManager {
 	 * 
 	 * TODO: Check to see if the path exists before we get it!
 	 */
-	public void loadVault(Player sender, String holder, int number) {
+	public void loadVault(Player player, String holder, int number) {
 		YamlConfiguration playerFile = playerVaultFile(holder);
 		String data = playerFile.getString("vault" + number);
-		Player player = (Player) sender;
 		if(data == null) {
 			Inventory inv = Bukkit.createInventory(player, 54, ChatColor.DARK_RED + "Vault #" + String.valueOf(number));
 			player.openInventory(inv);
 		} else {
-			Inventory inv = Serialization.fromBase64(data);
+			Inventory inv = Serialization.fromBase64(data, number);
 			player.openInventory(inv);
 		}
 	}
@@ -66,7 +65,7 @@ public class VaultManager {
 		YamlConfiguration playerFile = playerVaultFile(player.getName());
 		String data = playerFile.getString("vault" + number);
 		if(data == null) {
-			Inventory inv = Bukkit.createInventory(player, 54, ChatColor.DARK_RED + "Vault #" + String.valueOf(number));
+			Inventory inv = Bukkit.createInventory(player, 54, ChatColor.GREEN + "Vault #" + String.valueOf(number));
 			return inv;
 		} else {
 			Inventory inv = Serialization.fromBase64(data);
