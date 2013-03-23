@@ -127,6 +127,9 @@ public class VaultManager {
 	 */
 	public void saveFile(String name, YamlConfiguration yaml) throws IOException {
 		File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
+		if (file.exists()) {
+			file.renameTo(new File(directory + File.separator + name.toLowerCase() + ".yml.bak"));
+		}
 		yaml.save(file);
 	}
 }
