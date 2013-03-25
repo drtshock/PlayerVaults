@@ -107,7 +107,7 @@ public class VaultOperations {
 				sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
 			}
 			try {
-				if(EconomyOperations.refundOnDelete(sender)) {
+				if(EconomyOperations.refundOnDelete(sender, number)) {
 					vm.deleteVault(sender, sender.getName(), number);
 					return;
 				}
