@@ -16,9 +16,10 @@ public enum Lang {
 	NO_PERMS("no-permissions"),
 	INSUFFICIENT_FUNDS("insufficient-funds"),
 	REFUND_AMOUNT("refund-amount"),
-	COST_TO_OPEN("cost-to-open");
+	COST_TO_OPEN("cost-to-open"),
+	VAULT_DOES_NOT_EXIST("vault-does-not-exist");
 
-	private String path = "";
+	private String path;
 	private static YamlConfiguration lang;
 
 	Lang(String path) {

@@ -3,7 +3,7 @@
 # %v is where the vault number will get inserted.
 # %price is the price.
 # Made with love :)
-title-name: "&4[&fPlayerVaults&4]: "
+title-name: "&4[&fPlayerVaults&4]:"
 open-vault: "&fOpening vault &a%v"
 open-other-vault: "&fOpening vault &a%v &fof &a%p"
 delete-vault: "&fDeleted vault &a%v"

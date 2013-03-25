@@ -31,6 +31,8 @@ public class Main extends JavaPlugin {
 	public static int inventoriesToDrop = 0;
 	public static boolean useVault = false;
 	public static FileConfiguration config;
+	public static YamlConfiguration lang;
+	public static File langFile;
 
 	@Override
 	public void onEnable() {
@@ -134,6 +136,16 @@ public class Main extends JavaPlugin {
 		}
 		YamlConfiguration conf = YamlConfiguration.loadConfiguration(lang);
 		Lang.setFile(conf);
+		Main.lang = conf;
+		Main.langFile = lang;
 		return conf;
+	}
+
+	public YamlConfiguration getLang() {
+		return lang;
+	}
+	
+	public File getLangFile() {
+		return langFile;
 	}
 }
