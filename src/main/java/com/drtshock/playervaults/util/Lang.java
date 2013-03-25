@@ -32,6 +32,8 @@ public enum Lang {
 
 	@Override
 	public String toString() {
+		if(this == TITLE)
+			return ChatColor.translateAlternateColorCodes('&', lang.getString(this.path)) + " ";
 		return ChatColor.translateAlternateColorCodes('&', lang.getString(this.path));
 	}
 }

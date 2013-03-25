@@ -91,10 +91,9 @@ public class EconomyOperations {
 		double cost = bukkitConfig.getDouble("economy.refund-on-delete");
 		EconomyResponse resp = Main.econ.depositPlayer(player.getName(), cost);
 		if(resp.transactionSuccess()) {
-			player.sendMessage(Lang.TITLE.toString() + Lang.REFUND_AMOUNT.toString().replaceAll("%price", "" + cost));
+			player.sendMessage(Lang.TITLE.toString() + Lang.REFUND_AMOUNT.toString().replaceAll("%price", String.valueOf(cost)));
 			return true;
 		}
-		player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.INSUFFICIENT_FUNDS);
 		return false;
 	}
 
