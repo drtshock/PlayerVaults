@@ -13,12 +13,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 
 import com.drtshock.playervaults.commands.Commands;
@@ -88,16 +86,6 @@ public class Listeners implements Listener {
 		}
 	}
 
-	@EventHandler
-	public void onWorld(PlayerChangedWorldEvent event) {
-		saveVault(event.getPlayer());
-	}
-
-	@EventHandler
-	public void onTeleport(PlayerTeleportEvent event) {
-		saveVault(event.getPlayer());
-	}
-
 	/**
 	 * Check if a player is trying to do something while
 	 * in a vault.
@@ -114,7 +102,7 @@ public class Listeners implements Listener {
 			 * Different inventories that
 			 * we don't want the player to open.
 			 */
-			if(block.getType() == Material.CHEST
+			if(block.getType() == Material.CHEST 
 					|| block.getType() == Material.ENDER_CHEST
 					|| block.getType() == Material.FURNACE
 					|| block.getType() == Material.BURNING_FURNACE
@@ -133,12 +121,7 @@ public class Listeners implements Listener {
 	public void onInteractEntity(PlayerInteractEntityEvent event) {
 		Player player = event.getPlayer();
 		EntityType type = event.getRightClicked().getType();
-		if((type == EntityType.VILLAGER
-				|| type == EntityType.MINECART
-				|| type == EntityType.MINECART_CHEST
-				|| type == EntityType.MINECART_FURNACE
-				|| type == EntityType.MINECART_HOPPER) 
-				&& Commands.inVault.containsKey(player.getName())) {
+		if((type == EntityType.VILLAGER||type==EntityType.MINECART) && Commands.inVault.containsKey(player.getName())) {
 			event.setCancelled(true);
 		}
 	}
