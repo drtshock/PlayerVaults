@@ -2,6 +2,8 @@ package com.drtshock.playervaults.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -30,9 +32,14 @@ public class VaultManager {
 	 * @throws IOException 
 	 */
 	public void saveVault(Inventory inv, String player, int number) throws IOException {
-		String ser = Serialization.toBase64(inv);
 		YamlConfiguration yaml = playerVaultFile(player);
-		yaml.set("vault" + number + "", ser);
+		yaml.set("vault" + number, null);
+		List<String> list = Serialization.toString(inv);
+		String[] ser = list.toArray(new String[list.size()]);
+		for(int x = 0; x < ser.length; x++) {
+			if(!ser[x].equalsIgnoreCase("null"))
+				yaml.set("vault" + number + "." + x, ser[x]);
+		}
 		saveFile(player, yaml);
 	}
 
@@ -43,15 +50,29 @@ public class VaultManager {
 	 * TODO: Check to see if the path exists before we get it!
 	 */
 	public void loadVault(Player player, String holder, int number) {
+		Inventory inv = null;
 		YamlConfiguration playerFile = playerVaultFile(holder);
-		String data = playerFile.getString("vault" + number);
-		if(data == null) {
-			Inventory inv = Bukkit.createInventory(player, 54, ChatColor.DARK_RED + "Vault #" + String.valueOf(number));
-			player.openInventory(inv);
-		} else {
-			Inventory inv = Serialization.fromBase64(data, number);
-			player.openInventory(inv);
+		if(!playerFile.getString("vault" + number, "~").equals("~") && playerFile.getString("vault" + number, "~").trim().endsWith("=")) {
+			String data = playerFile.getString("vault" + number);
+			inv = BackwardsCompatibility.pre3_0_0ToCurrent(data);
 		}
+		else if(playerFile.getConfigurationSection("vault" + number) == null) {
+			inv = Bukkit.createInventory(player, 54, ChatColor.DARK_RED + "Vault #" + String.valueOf(number));
+		}
+		else {
+			List<String> data = new ArrayList<String>();
+			for(int x = 0; x < 54; x++) {
+				String line = playerFile.getString("vault" + number + "." + x);
+				if(line != null) {
+					data.add(line);
+				}
+				else {
+					data.add("null");
+				}
+			}
+			inv = Serialization.toInventory(data, number);
+		}
+		player.openInventory(inv);
 	}
 
 	/**
@@ -63,12 +84,12 @@ public class VaultManager {
 	 */
 	public Inventory getVault(Player player, int number) {
 		YamlConfiguration playerFile = playerVaultFile(player.getName());
-		String data = playerFile.getString("vault" + number);
+		List<String> data = playerFile.getStringList("vault" + number);
 		if(data == null) {
 			Inventory inv = Bukkit.createInventory(player, 54, ChatColor.GREEN + "Vault #" + String.valueOf(number));
 			return inv;
 		} else {
-			Inventory inv = Serialization.fromBase64(data, number);
+			Inventory inv = Serialization.toInventory(data, number);
 			return inv;
 		}
 	}
@@ -128,7 +149,7 @@ public class VaultManager {
 	public void saveFile(String name, YamlConfiguration yaml) throws IOException {
 		File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
 		if (file.exists()) {
-			file.renameTo(new File(directory + File.separator + name.toLowerCase() + ".yml.bak"));
+			file.renameTo(new File(directory + File.separator + "backups" + File.separator + name.toLowerCase() + ".yml"));
 		}
 		yaml.save(file);
 	}

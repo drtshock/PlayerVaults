@@ -4,18 +4,22 @@ package com.drtshock.playervaults;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.drtshock.playervaults.commands.Commands;
+import com.drtshock.playervaults.util.BackwardsCompatibility;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.Metrics;
+import com.drtshock.playervaults.util.Serialization;
 import com.drtshock.playervaults.util.Updater;
 
 
@@ -33,10 +37,16 @@ public class Main extends JavaPlugin {
 	public static FileConfiguration config;
 	public static YamlConfiguration lang;
 	public static File langFile;
+	public static String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
+
 
 	@Override
 	public void onEnable() {
-		transferVaults();
+		try {
+			transferVaults();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		loadLang();
 		log = getServer().getLogger();
 		getServer().getPluginManager().registerEvents(new Listeners(this), this);
@@ -62,24 +72,28 @@ public class Main extends JavaPlugin {
 			inventoriesToDrop = getConfig().getInt("drop-on-death.inventories");
 		}
 		
+		new File(directory + File.separator + "backups").mkdirs();
 		config = getConfig();
 
 	}
 
-	public void transferVaults() {
+	public void transferVaults() throws IOException {
 		File f = new File(getDataFolder() + File.separator + "vaults.yml");
 		if(f.exists() && !new File(getDataFolder() + File.separator + "vaults").exists()) {
 			YamlConfiguration vaults = YamlConfiguration.loadConfiguration(f);
-			for(String key:vaults.getKeys(false)) {
-				YamlConfiguration newPerson = new YamlConfiguration();
-				for(String key2:vaults.getConfigurationSection(key).getKeys(false)) {
-					newPerson.set(key2, vaults.getString(key + "." + key2));
+			for(String person:vaults.getKeys(false)) {
+				YamlConfiguration yaml = new YamlConfiguration();
+				for(String vault:vaults.getConfigurationSection(person).getKeys(false)) {
+					String data = vaults.getString(person + "." + vault);
+					Inventory inv = BackwardsCompatibility.pre2_0_0ToCurrent(data);
+					List<String> list = Serialization.toString(inv);
+					String[] ser = list.toArray(new String[list.size()]);
+					for(int x = 0; x < ser.length; x++) {
+						if(!ser[x].equalsIgnoreCase("null"))
+							yaml.set(vault + "." + x, ser[x]);
+					}
 				}
-				try {
-					newPerson.save(new File(getDataFolder() + File.separator + "vaults" + File.separator + key + ".yml"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				yaml.save(new File(directory + File.separator + person + ".yml"));
 			}
 			getLogger().warning("Found old storage format used! Converting to new format!");
 		}
