@@ -71,7 +71,7 @@ public class Main extends JavaPlugin {
 			dropOnDeath = true;
 			inventoriesToDrop = getConfig().getInt("drop-on-death.inventories");
 		}
-		
+
 		new File(directory + File.separator + "backups").mkdirs();
 		config = getConfig();
 
@@ -112,19 +112,56 @@ public class Main extends JavaPlugin {
 		if (getServer().getPluginManager().getPlugin("Vault") == null) {
 			return false;
 		}
+
 		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
 		if (rsp == null) {
 			return false;
 		}
+
 		econ = rsp.getProvider();
 		useVault = true;
+
 		return econ != null;
+	}
+
+	public void updateConfig() {
+		if(getConfig().get("check-update") == null) {
+			getConfig().set("check-update", true);
+		}
+
+		if(getConfig().get("economy.enabled") == null) {
+			getConfig().set("economy.enabled", false);
+		}
+
+		if(getConfig().get("economy.cost-to-create") == null) {
+			getConfig().set("economy.cost-to-create", 100);
+		}
+
+		if(getConfig().get("economy.cost-to-open") == null) {
+			getConfig().set("economy.cost-to-create", 10);
+		}
+
+		if(getConfig().get("economy.refund-on-delete") == null) {
+			getConfig().set("economy.refund-on-delete", 50);
+		}
+
+		if(getConfig().get("drop-on-death.enabled") == null) {
+			getConfig().set("drop-on-death.enabled", false);
+		}
+
+		if(getConfig().get("drop-on-death.inventories") == null) {
+			getConfig().set("drop-on-death.inventories", 1);
+		}
+
+		saveConfig();
 	}
 
 	public void loadConfig() {
 		File config = new File(getDataFolder() + File.separator + "config.yml");
 		if(!config.exists()) {
 			saveDefaultConfig();
+		} else {
+			updateConfig();
 		}
 	}
 
@@ -158,7 +195,7 @@ public class Main extends JavaPlugin {
 	public YamlConfiguration getLang() {
 		return lang;
 	}
-	
+
 	public File getLangFile() {
 		return langFile;
 	}

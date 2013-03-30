@@ -19,7 +19,7 @@ public class EconomyOperations {
 	private static YamlConfiguration bukkitConfig = new YamlConfiguration();
 
 	public static Main plugin;
-	
+
 	public EconomyOperations(Main instance) throws FileNotFoundException, IOException, InvalidConfigurationException {
 		plugin = instance;
 		configFile = new File(plugin.getDataFolder(), "config.yml");

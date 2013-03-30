@@ -1,0 +1,26 @@
+# PlayerVaults by drsthock and gomeow!
+# http://dev.bukkit.org/server-mods/playervaults
+# Made with love :3
+
+# Whether or not you want to check for updates.
+# Will not download an update, that is your job :)
+check-update: true
+
+# Settings here are for economy integration. playervaults.free bypasses it.
+economy:
+  enabled: false
+  
+# Cost to create a vault. You can give players playervaults.free to bypass this.
+  cost-to-create: 100
+  cost-to-open: 10
+  refund-on-delete: 50
+  
+# Configuration for dropping inventories on death.
+# Bypass with playervaults.ignore.drop
+drop-on-death:
+  enabled: false
+  
+# Max amount of inventories you want to be dropped.
+# Set to 99 (or highest amount you give people) if you want all inventories to be dropped.
+# WARNING: This can cause a lot of items to be dropped on the ground. Use caution :3
+  inventories: 1
