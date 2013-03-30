@@ -14,9 +14,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import com.drtshock.playervaults.Main;
 
 public class Updater extends Main {
-
+	
 	SortedMap<String, String> lang = new TreeMap<String, String>();
-
+	
 	public Updater() {
 		lang.put("title-name", "&4[&fPlayerVaults&4]:");
 		lang.put("open-vault", "&fOpening vault &a%v");
@@ -31,7 +31,7 @@ public class Updater extends Main {
 		lang.put("refund-amount", "&fYou were refunded &a%price &ffor deleting that vault.");
 		lang.put("cost-to-create", "&fYou were charged &c%price &ffor creating that vault.");
 		lang.put("cost-to-open", "&fYou were charged &c%price &ffor opening that vault.");
-
+		
 		YamlConfiguration langConf = super.getLang();
 		for(Entry<String, String> e:lang.entrySet()) {
 			if(langConf.getString(e.getKey()) == null) {
@@ -44,9 +44,9 @@ public class Updater extends Main {
 			e.printStackTrace();
 		}
 	}
-
+	
 	String newVersion = "";
-
+	
 	public String getNewVersion() {
 		return this.newVersion;
 	}
@@ -77,7 +77,7 @@ public class Updater extends Main {
 						return false; //They are using a FUTURE version!
 					}
 					else {
-						return false; //They are up to date!
+							return false; //They are up to date!
 					}
 				}
 				lineNum = lineNum + 1;

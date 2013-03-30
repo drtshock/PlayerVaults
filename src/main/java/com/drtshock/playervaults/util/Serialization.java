@@ -22,37 +22,37 @@ public class Serialization {
 	/*
 	 * All normal functions
 	 */
-
+	
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> toMap(JSONObject object) throws JSONException {
-		Map<String, Object> map = new HashMap<String, Object>();
-		Iterator<String> keys = object.keys();
-		while (keys.hasNext()) {
-			String key = (String) keys.next();
-			map.put(key, fromJson(object.get(key)));
-		}
-		return map;
-	}
+        Map<String, Object> map = new HashMap<String, Object>();
+        Iterator<String> keys = object.keys();
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            map.put(key, fromJson(object.get(key)));
+        }
+        return map;
+    }
 	private static Object fromJson(Object json) throws JSONException {
-		if (json == JSONObject.NULL) {
-			return null;
-		} else if (json instanceof JSONObject) {
-			return toMap((JSONObject) json);
-		} else if (json instanceof JSONArray) {
-			return toList((JSONArray) json);
-		} else {
-			return json;
-		}
-	}
-
+        if (json == JSONObject.NULL) {
+            return null;
+        } else if (json instanceof JSONObject) {
+            return toMap((JSONObject) json);
+        } else if (json instanceof JSONArray) {
+            return toList((JSONArray) json);
+        } else {
+            return json;
+        }
+    }
+	
 	public static List<Object> toList(JSONArray array) throws JSONException {
-		List<Object> list = new ArrayList<Object>();
-		for (int i = 0; i < array.length(); i++) {
-			list.add(fromJson(array.get(i)));
-		}
-		return list;
-	}
-
+        List<Object> list = new ArrayList<Object>();
+        for (int i = 0; i < array.length(); i++) {
+            list.add(fromJson(array.get(i)));
+        }
+        return list;
+    }
+	
 	public static List<String> toString(Inventory inv) {
 		List<String> result = new ArrayList<String>();
 		List<ConfigurationSerializable> items = new ArrayList<ConfigurationSerializable>();
@@ -69,7 +69,7 @@ public class Serialization {
 		}
 		return result;
 	}
-
+	
 	public static Inventory toInventory(List<String> stringItems, int number) {
 		Inventory inv = Bukkit.createInventory(null, 54, ChatColor.RED + "Vault #" + number);
 		List<ItemStack> contents = new ArrayList<ItemStack>();
@@ -93,37 +93,37 @@ public class Serialization {
 		return inv;
 	}
 
-	public static Map<String, Object> serialize(ConfigurationSerializable cs) {
-		Map<String, Object> serialized = recreateMap(cs.serialize());
-		for (Entry<String, Object> entry : serialized.entrySet()) {
-			if (entry.getValue() instanceof ConfigurationSerializable) {
-				entry.setValue(serialize((ConfigurationSerializable)entry.getValue()));
-			}
-		}
-		serialized.put(ConfigurationSerialization.SERIALIZED_TYPE_KEY, ConfigurationSerialization.getAlias(cs.getClass()));
-		return serialized;
-	}
-	public static Map<String, Object> recreateMap(Map<String, Object> original) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		for (Entry<String, Object> entry : original.entrySet()) {
-			map.put(entry.getKey(), entry.getValue());
-		}
-		return map;
-	}
+    public static Map<String, Object> serialize(ConfigurationSerializable cs) {
+        Map<String, Object> serialized = recreateMap(cs.serialize());
+        for (Entry<String, Object> entry : serialized.entrySet()) {
+            if (entry.getValue() instanceof ConfigurationSerializable) {
+                entry.setValue(serialize((ConfigurationSerializable)entry.getValue()));
+            }
+        }
+        serialized.put(ConfigurationSerialization.SERIALIZED_TYPE_KEY, ConfigurationSerialization.getAlias(cs.getClass()));
+        return serialized;
+    }
+    public static Map<String, Object> recreateMap(Map<String, Object> original) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        for (Entry<String, Object> entry : original.entrySet()) {
+            map.put(entry.getKey(), entry.getValue());
+        }
+        return map;
+    }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static ConfigurationSerializable deserialize(Map<String, Object> map) {
-		for (Entry<String, Object> entry : map.entrySet()) {
-			// Check if any of its sub-maps are ConfigurationSerializable.  They need to be done first.
-			if (entry.getValue() instanceof Map && ((Map)entry.getValue()).containsKey(ConfigurationSerialization.SERIALIZED_TYPE_KEY)) {
-				entry.setValue(deserialize((Map)entry.getValue()));
-			}
-		}
-		return ConfigurationSerialization.deserializeObject(map);
-	}
-
-	/*
-	 * All old methods for transferring
-	 */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static ConfigurationSerializable deserialize(Map<String, Object> map) {
+        for (Entry<String, Object> entry : map.entrySet()) {
+            // Check if any of its sub-maps are ConfigurationSerializable.  They need to be done first.
+            if (entry.getValue() instanceof Map && ((Map)entry.getValue()).containsKey(ConfigurationSerialization.SERIALIZED_TYPE_KEY)) {
+                entry.setValue(deserialize((Map)entry.getValue()));
+            }
+        }
+        return ConfigurationSerialization.deserializeObject(map);
+    }
+    
+    /*
+     * All old methods for transferring
+     */
 
 }
