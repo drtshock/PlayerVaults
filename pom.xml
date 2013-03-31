@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.drtshock</groupId>
 	<artifactId>PlayerVaults</artifactId>
-	<version>2.1.1</version>
+	<version>3.0.0</version>
 	<name>PlayerVaults</name>
 	<build>
 		<defaultGoal>clean package install</defaultGoal>
