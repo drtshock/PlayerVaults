@@ -83,6 +83,7 @@ public class BackwardsCompatibility {
 		return inventory;
 	}
 
+	@SuppressWarnings("unused")
 	private static CraftItemStack getCraftVersion(org.bukkit.inventory.ItemStack stack) {
 		if ((stack instanceof CraftItemStack))
 			return (CraftItemStack) stack;
