@@ -125,6 +125,8 @@ public class Main extends JavaPlugin {
 		File config = new File(getDataFolder() + File.separator + "config.yml");
 		if(!config.exists()) {
 			saveDefaultConfig();
+		} else {
+			updateConfig();
 		}
 	}
 
