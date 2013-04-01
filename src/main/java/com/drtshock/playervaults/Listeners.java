@@ -17,6 +17,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 
 import com.drtshock.playervaults.commands.Commands;
@@ -50,6 +51,11 @@ public class Listeners implements Listener {
 			}
 			Commands.inVault.remove(p.getName());
 		}
+	}
+
+	@EventHandler
+	public void onTeleport(PlayerTeleportEvent event) {
+		saveVault(event.getPlayer());
 	}
 
 	@EventHandler
