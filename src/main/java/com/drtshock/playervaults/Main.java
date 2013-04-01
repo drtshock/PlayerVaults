@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
@@ -45,6 +46,8 @@ public class Main extends JavaPlugin {
 		try {
 			transferVaults();
 		} catch (IOException e) {
+			log.log(Level.SEVERE, "PlayerVaults: Failed to check to transfer vaults.");
+			log.log(Level.SEVERE, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
 			e.printStackTrace();
 		}
 		loadLang();
@@ -59,7 +62,11 @@ public class Main extends JavaPlugin {
 					update = true;
 					name = u.getNewVersion();
 				}
-			} catch (Exception e) {}
+			} catch (Exception e) {
+				log.log(Level.SEVERE, "PlayerVaults: Failed to check for updates.");
+				log.log(Level.SEVERE, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
+				e.printStackTrace();
+			}
 		}
 
 		commands = new Commands();
