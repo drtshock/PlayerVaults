@@ -37,6 +37,8 @@ public class VaultOperations {
 			int number = 0;
 			try {
 				number = Integer.parseInt(arg);
+				if(number == 0)
+					return false;
 			}
 			catch(NumberFormatException nfe) {
 				sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
@@ -74,6 +76,8 @@ public class VaultOperations {
 				int number = 0;
 				try {
 					number = Integer.parseInt(arg);
+					if(number == 0)
+						return false;
 				}
 				catch(NumberFormatException nfe) {
 					sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
@@ -102,6 +106,9 @@ public class VaultOperations {
 			int number = 0;
 			try {
 				number = Integer.parseInt(arg);
+				if(number == 0)
+					sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+				return;
 			}
 			catch(NumberFormatException nfe) {
 				sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
@@ -132,6 +139,10 @@ public class VaultOperations {
 				int number = 0;
 				try {
 					number = Integer.parseInt(arg);
+					if(number == 0) {
+						sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+						return;
+					}
 				}
 				catch(NumberFormatException nfe) {
 					sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
