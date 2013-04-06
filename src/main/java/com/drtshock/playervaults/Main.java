@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -35,7 +34,6 @@ public class Main extends JavaPlugin {
 	public static boolean dropOnDeath = false;
 	public static int inventoriesToDrop = 0;
 	public static boolean useVault = false;
-	public static FileConfiguration config;
 	public static YamlConfiguration lang;
 	public static File langFile;
 	public static String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
@@ -80,7 +78,6 @@ public class Main extends JavaPlugin {
 		}
 
 		new File(directory + File.separator + "backups").mkdirs();
-		config = getConfig();
 
 	}
 
@@ -138,34 +135,27 @@ public class Main extends JavaPlugin {
 	}
 
 	public void updateConfig() {
-		if(getConfig().get("check-update") == null) {
-			getConfig().set("check-update", true);
-		}
-
-		if(getConfig().get("economy.enabled") == null) {
-			getConfig().set("economy.enabled", false);
-		}
-
-		if(getConfig().get("economy.cost-to-create") == null) {
-			getConfig().set("economy.cost-to-create", 100);
-		}
-
-		if(getConfig().get("economy.cost-to-open") == null) {
-			getConfig().set("economy.cost-to-create", 10);
-		}
-		if(getConfig().get("economy.refund-on-delete") == null) {
-			getConfig().set("economy.refund-on-delete", 50);
-		}
-
-		if(getConfig().get("drop-on-death.enabled") == null) {
-			getConfig().set("drop-on-death.enabled", false);
-		}
-
-		if(getConfig().get("drop-on-death.inventories") == null) {
-			getConfig().set("drop-on-death.inventories", 1);
-		}
-
+		boolean checkUpdate = getConfig().getBoolean("check-update", true);
+		boolean ecoEnabled = getConfig().getBoolean("economy.enabled", false);
+		int ecoCreate = getConfig().getInt("economy.cost-to-create", 100);
+		int ecoOpen = getConfig().getInt("economy.cost-to-open", 10);
+		int ecoDelete = getConfig().getInt("economy.refund-on-delete", 50);
+		boolean dropEnabled = getConfig().getBoolean("drop-on-death.enabled", false);
+		int dropInvs = getConfig().getInt("drop-on-death.inventories", 50);
+		new File("plugins" + File.separator + "PlayerVaults" + File.separator + "config.yml").delete();
+		saveDefaultConfig();
+		setInConfig("check-update", checkUpdate);
+		setInConfig("economy.enabled", ecoEnabled);
+		setInConfig("economy.cost-to-create", ecoCreate);
+		setInConfig("economy.cost-to-open", ecoOpen);
+		setInConfig("economy.refund-on-delete", ecoDelete);
+		setInConfig("drop-on-death.enabled", dropEnabled);
+		setInConfig("drop-on-death.inventories", dropInvs);
 		saveConfig();
+	}
+	
+	public <T> void setInConfig(String path, T object) {
+		getConfig().set(path, object);
 	}
 
 	public YamlConfiguration loadLang() {
