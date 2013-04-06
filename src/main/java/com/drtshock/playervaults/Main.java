@@ -55,16 +55,16 @@ public class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new Listeners(this), this);
 		loadConfig();
 		startMetrics();
+		Updater u = new Updater(getDescription().getVersion());
 		if(getConfig().getBoolean("check-update")) {
-			Updater u = new Updater();
 			try {
 				if(u.getUpdate()) {
 					update = true;
 					name = u.getNewVersion();
 				}
 			} catch (Exception e) {
-				log.log(Level.SEVERE, "PlayerVaults: Failed to check for updates.");
-				log.log(Level.SEVERE, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
+				log.log(Level.WARNING, "PlayerVaults: Failed to check for updates.");
+				log.log(Level.WARNING, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
 				e.printStackTrace();
 			}
 		}

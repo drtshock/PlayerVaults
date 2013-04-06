@@ -16,8 +16,10 @@ import com.drtshock.playervaults.Main;
 public class Updater extends Main {
 	
 	SortedMap<String, String> lang = new TreeMap<String, String>();
+	String version;
 	
-	public Updater() {
+	public Updater(String version) {
+		this.version = version;
 		lang.put("title-name", "&4[&fPlayerVaults&4]:");
 		lang.put("open-vault", "&fOpening vault &a%v");
 		lang.put("open-other-vault", "&fOpening vault &a%v &fof &a%p");
@@ -51,7 +53,7 @@ public class Updater extends Main {
 		return this.newVersion;
 	}
 	public boolean getUpdate() throws Exception {
-		String version = getDescription().getVersion();
+		String version = this.version;
 		URL url = new URL("http://dev.bukkit.org/server-mods/playervaults/files.rss");
 		InputStreamReader isr = null;
 		try {
