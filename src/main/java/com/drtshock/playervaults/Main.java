@@ -4,22 +4,18 @@ package com.drtshock.playervaults;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.drtshock.playervaults.commands.Commands;
-import com.drtshock.playervaults.util.BackwardsCompatibility;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.Metrics;
-import com.drtshock.playervaults.util.Serialization;
 import com.drtshock.playervaults.util.Updater;
 
 
@@ -41,13 +37,6 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		try {
-			transferVaults();
-		} catch (IOException e) {
-			log.log(Level.SEVERE, "PlayerVaults: Failed to check to transfer vaults.");
-			log.log(Level.SEVERE, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
-			e.printStackTrace();
-		}
 		loadLang();
 		log = getServer().getLogger();
 		getServer().getPluginManager().registerEvents(new Listeners(this), this);
@@ -79,28 +68,6 @@ public class Main extends JavaPlugin {
 
 		new File(directory + File.separator + "backups").mkdirs();
 
-	}
-
-	public void transferVaults() throws IOException {
-		File f = new File(getDataFolder() + File.separator + "vaults.yml");
-		if(f.exists() && !new File(getDataFolder() + File.separator + "vaults").exists()) {
-			YamlConfiguration vaults = YamlConfiguration.loadConfiguration(f);
-			for(String person:vaults.getKeys(false)) {
-				YamlConfiguration yaml = new YamlConfiguration();
-				for(String vault:vaults.getConfigurationSection(person).getKeys(false)) {
-					String data = vaults.getString(person + "." + vault);
-					Inventory inv = BackwardsCompatibility.pre2_0_0ToCurrent(data);
-					List<String> list = Serialization.toString(inv);
-					String[] ser = list.toArray(new String[list.size()]);
-					for(int x = 0; x < ser.length; x++) {
-						if(!ser[x].equalsIgnoreCase("null"))
-							yaml.set(vault + "." + x, ser[x]);
-					}
-				}
-				yaml.save(new File(directory + File.separator + person + ".yml"));
-			}
-			getLogger().warning("Found old storage format used! Converting to new format!");
-		}
 	}
 
 	public void startMetrics() {

@@ -52,11 +52,7 @@ public class VaultManager {
 	public void loadVault(Player player, String holder, int number) {
 		Inventory inv = null;
 		YamlConfiguration playerFile = playerVaultFile(holder);
-		if(!playerFile.getString("vault" + number, "~").equals("~") && playerFile.getString("vault" + number, "~").trim().endsWith("=")) {
-			String data = playerFile.getString("vault" + number);
-			inv = BackwardsCompatibility.pre3_0_0ToCurrent(data);
-		}
-		else if(playerFile.getConfigurationSection("vault" + number) == null) {
+		if(playerFile.getConfigurationSection("vault" + number) == null) {
 			inv = Bukkit.createInventory(player, 54, ChatColor.DARK_RED + "Vault #" + String.valueOf(number));
 		}
 		else {
