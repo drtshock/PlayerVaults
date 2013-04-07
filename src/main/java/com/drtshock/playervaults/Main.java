@@ -1,6 +1,5 @@
 package com.drtshock.playervaults;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +17,6 @@ import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.Metrics;
 import com.drtshock.playervaults.util.Updater;
 
-
 public class Main extends JavaPlugin {
 
 	public static Main plugin;
@@ -33,7 +31,6 @@ public class Main extends JavaPlugin {
 	public static YamlConfiguration lang;
 	public static File langFile;
 	public static String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
-
 
 	@Override
 	public void onEnable() {
@@ -80,11 +77,11 @@ public class Main extends JavaPlugin {
 	}
 
 	private boolean setupEconomy() {
-		if (getServer().getPluginManager().getPlugin("Vault") == null) {
+		if(getServer().getPluginManager().getPlugin("Vault") == null) {
 			return false;
 		}
 		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-		if (rsp == null) {
+		if(rsp == null) {
 			return false;
 		}
 		econ = rsp.getProvider();
@@ -109,41 +106,46 @@ public class Main extends JavaPlugin {
 		int ecoDelete = getConfig().getInt("economy.refund-on-delete", 50);
 		boolean dropEnabled = getConfig().getBoolean("drop-on-death.enabled", false);
 		int dropInvs = getConfig().getInt("drop-on-death.inventories", 50);
-		new File("plugins" + File.separator + "PlayerVaults" + File.separator + "config.yml").delete();
-		saveDefaultConfig();
-		setInConfig("check-update", checkUpdate);
-		setInConfig("economy.enabled", ecoEnabled);
-		setInConfig("economy.cost-to-create", ecoCreate);
-		setInConfig("economy.cost-to-open", ecoOpen);
-		setInConfig("economy.refund-on-delete", ecoDelete);
-		setInConfig("drop-on-death.enabled", dropEnabled);
-		setInConfig("drop-on-death.inventories", dropInvs);
-		saveConfig();
+		File configFile = new File(getDataFolder(), "config.yml");
+		configFile.delete();
+		YamlConfiguration conf = YamlConfiguration.loadConfiguration(getResource("config.yml"));
+		setInConfig("check-update", checkUpdate, conf);
+		setInConfig("economy.enabled", ecoEnabled, conf);
+		setInConfig("economy.cost-to-create", ecoCreate, conf);
+		setInConfig("economy.cost-to-open", ecoOpen, conf);
+		setInConfig("economy.refund-on-delete", ecoDelete, conf);
+		setInConfig("drop-on-death.enabled", dropEnabled, conf);
+		setInConfig("drop-on-death.inventories", dropInvs, conf);
+		try {
+			conf.save(configFile);
+		} catch (IOException e) { 
+			e.printStackTrace();
+		}
 	}
-	
-	public <T> void setInConfig(String path, T object) {
-		getConfig().set(path, object);
+
+	public <T> void setInConfig(String path, T object, YamlConfiguration conf) {
+		conf.set(path, object);
 	}
 
 	public YamlConfiguration loadLang() {
 		File lang = new File(getDataFolder(), "lang.yml");
 		if(!lang.exists()) {
-			try{
+			try {
 				getDataFolder().mkdir();
 				lang.createNewFile();
 				InputStream defConfigStream = this.getResource("lang.yml");
-				if (defConfigStream != null) {
+				if(defConfigStream != null) {
 					YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
 					defConfig.save(lang);
 					Lang.setFile(defConfig);
 					return defConfig;
 				}
 			} catch (IOException e) {
-				e.printStackTrace(); //So they notice
+				e.printStackTrace(); // So they notice
 				log.severe("[PlayerVaults] Couldn't create language file.");
 				log.severe("[PlayerVaults] This is a fatal error. Now disabling");
-				this.setEnabled(false); //Without it loaded, we can't send them messages
-			}	
+				this.setEnabled(false); // Without it loaded, we can't send them messages
+			}
 		}
 		YamlConfiguration conf = YamlConfiguration.loadConfiguration(lang);
 		Lang.setFile(conf);
