@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.logging.Level;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -20,29 +20,17 @@ public class Updater extends Main {
 	
 	public Updater(String version) {
 		this.version = version;
-		lang.put("title-name", "&4[&fPlayerVaults&4]:");
-		lang.put("open-vault", "&fOpening vault &a%v");
-		lang.put("open-other-vault", "&fOpening vault &a%v &fof &a%p");
-		lang.put("delete-other-vault", "&fDeleted vault &a%v &fof &a%p");
-		lang.put("player-only", "Sorry but that can only be run by a player!");
-		lang.put("must-be-number", "&cYou need to specify a number between 1-99");
-		lang.put("invalid-args", "&cInvalid args!");
-		lang.put("delete-vault-error", "&cError deleting vault :(");
-		lang.put("no-permissions", "&cYou don't have permission for that!");
-		lang.put("insufficient-funds", "&cYou don't have enough money for that");
-		lang.put("refund-amount", "&fYou were refunded &a%price &ffor deleting that vault.");
-		lang.put("cost-to-create", "&fYou were charged &c%price &ffor creating that vault.");
-		lang.put("cost-to-open", "&fYou were charged &c%price &ffor opening that vault.");
-		
 		YamlConfiguration langConf = super.getLang();
-		for(Entry<String, String> e:lang.entrySet()) {
-			if(langConf.getString(e.getKey()) == null) {
-				langConf.set(e.getKey(), e.getValue());
+		for(Lang item:Lang.values()) {
+			if(langConf.getString(item.getPath()) == null) {
+				langConf.set(item.getPath(), item.getDefault());
 			}
 		}
 		try {
 			langConf.save(super.getLangFile());
 		} catch (IOException e) {
+			log.log(Level.WARNING, "PlayerVaults: Failed to save lang.yml.");
+			log.log(Level.WARNING, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
 			e.printStackTrace();
 		}
 	}

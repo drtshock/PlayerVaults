@@ -57,7 +57,7 @@ public class EconomyOperations {
 		double cost = bukkitConfig.getDouble("economy.cost-to-create", 100);
 		EconomyResponse resp = Main.econ.withdrawPlayer(player.getName(), cost);
 		if(resp.transactionSuccess()) {
-			player.sendMessage(Lang.TITLE.toString() + Lang.COST_TO_OPEN.toString().replaceAll("%price", "" + cost));
+			player.sendMessage(Lang.TITLE.toString() + Lang.COST_TO_CREATE.toString().replaceAll("%price", "" + cost));
 			return true;
 		}
 
