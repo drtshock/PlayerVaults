@@ -56,6 +56,7 @@ public class Main extends JavaPlugin {
 		commands = new Commands();
 		getCommand("pv").setExecutor(commands);
 		getCommand("pvdel").setExecutor(commands);
+		getCommand("workbench").setExecutor(commands);
 		setupEconomy();
 
 		if(getConfig().getBoolean("drop-on-death.enabled")) {

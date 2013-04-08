@@ -11,3 +11,5 @@ commands:
   pvdel:
     description: Delete a vault.
     aliases: [vaultdel]
+  workbench:
+    description: Opens a workbench.
