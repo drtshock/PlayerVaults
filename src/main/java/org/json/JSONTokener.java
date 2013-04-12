@@ -29,7 +29,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-*/
+ */
 
 /**
  * A JSONTokener takes a source string and extracts characters and tokens from
@@ -56,8 +56,8 @@ public class JSONTokener {
      */
     public JSONTokener(Reader reader) {
         this.reader = reader.markSupported()
-            ? reader
-            : new BufferedReader(reader);
+                ? reader
+                        : new BufferedReader(reader);
         this.eof = false;
         this.usePrevious = false;
         this.previous = 0;
@@ -203,23 +203,23 @@ public class JSONTokener {
      *   Substring bounds error if there are not
      *   n characters remaining in the source string.
      */
-     public String next(int n) throws JSONException {
-         if (n == 0) {
-             return "";
-         }
+    public String next(int n) throws JSONException {
+        if (n == 0) {
+            return "";
+        }
 
-         char[] chars = new char[n];
-         int pos = 0;
+        char[] chars = new char[n];
+        int pos = 0;
 
-         while (pos < n) {
-             chars[pos] = this.next();
-             if (this.end()) {
-                 throw this.syntaxError("Substring bounds error");
-             }
-             pos += 1;
-         }
-         return new String(chars);
-     }
+        while (pos < n) {
+            chars[pos] = this.next();
+            if (this.end()) {
+                throw this.syntaxError("Substring bounds error");
+            }
+            pos += 1;
+        }
+        return new String(chars);
+    }
 
 
     /**
@@ -355,15 +355,15 @@ public class JSONTokener {
         String string;
 
         switch (c) {
-            case '"':
-            case '\'':
-                return this.nextString(c);
-            case '{':
-                this.back();
-                return new JSONObject(this);
-            case '[':
-                this.back();
-                return new JSONArray(this);
+        case '"':
+        case '\'':
+            return this.nextString(c);
+        case '{':
+            this.back();
+            return new JSONObject(this);
+        case '[':
+            this.back();
+            return new JSONArray(this);
         }
 
         /*
@@ -441,6 +441,6 @@ public class JSONTokener {
      */
     public String toString() {
         return " at " + this.index + " [character " + this.character + " line " +
-            this.line + "]";
+                this.line + "]";
     }
 }

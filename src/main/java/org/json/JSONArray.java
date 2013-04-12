@@ -22,7 +22,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-*/
+ */
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -173,7 +173,7 @@ public class JSONArray {
             }
         } else {
             throw new JSONException(
-"JSONArray initial value should be a string or collection or array.");
+                    "JSONArray initial value should be a string or collection or array.");
         }
     }
 
@@ -207,11 +207,11 @@ public class JSONArray {
         Object object = this.get(index);
         if (object.equals(Boolean.FALSE) ||
                 (object instanceof String &&
-                ((String)object).equalsIgnoreCase("false"))) {
+                        ((String)object).equalsIgnoreCase("false"))) {
             return false;
         } else if (object.equals(Boolean.TRUE) ||
                 (object instanceof String &&
-                ((String)object).equalsIgnoreCase("true"))) {
+                        ((String)object).equalsIgnoreCase("true"))) {
             return true;
         }
         throw new JSONException("JSONArray[" + index + "] is not a boolean.");
@@ -230,11 +230,11 @@ public class JSONArray {
         Object object = this.get(index);
         try {
             return object instanceof Number
-                ? ((Number)object).doubleValue()
-                : Double.parseDouble((String)object);
+                    ? ((Number)object).doubleValue()
+                            : Double.parseDouble((String)object);
         } catch (Exception e) {
             throw new JSONException("JSONArray[" + index +
-                "] is not a number.");
+                    "] is not a number.");
         }
     }
 
@@ -250,11 +250,11 @@ public class JSONArray {
         Object object = this.get(index);
         try {
             return object instanceof Number
-                ? ((Number)object).intValue()
-                : Integer.parseInt((String)object);
+                    ? ((Number)object).intValue()
+                            : Integer.parseInt((String)object);
         } catch (Exception e) {
             throw new JSONException("JSONArray[" + index +
-                "] is not a number.");
+                    "] is not a number.");
         }
     }
 
@@ -289,7 +289,7 @@ public class JSONArray {
             return (JSONObject)object;
         }
         throw new JSONException("JSONArray[" + index +
-            "] is not a JSONObject.");
+                "] is not a JSONObject.");
     }
 
 
@@ -305,11 +305,11 @@ public class JSONArray {
         Object object = this.get(index);
         try {
             return object instanceof Number
-                ? ((Number)object).longValue()
-                : Long.parseLong((String)object);
+                    ? ((Number)object).longValue()
+                            : Long.parseLong((String)object);
         } catch (Exception e) {
             throw new JSONException("JSONArray[" + index +
-                "] is not a number.");
+                    "] is not a number.");
         }
     }
 
@@ -379,8 +379,8 @@ public class JSONArray {
      */
     public Object opt(int index) {
         return (index < 0 || index >= this.length())
-            ? null
-            : this.myArrayList.get(index);
+                ? null
+                        : this.myArrayList.get(index);
     }
 
 
@@ -556,8 +556,8 @@ public class JSONArray {
     public String optString(int index, String defaultValue) {
         Object object = this.opt(index);
         return JSONObject.NULL.equals(object)
-            ? defaultValue
-            : object.toString();
+                ? defaultValue
+                        : object.toString();
     }
 
 
@@ -900,7 +900,7 @@ public class JSONArray {
             writer.write(']');
             return writer;
         } catch (IOException e) {
-           throw new JSONException(e);
+            throw new JSONException(e);
         }
     }
 }

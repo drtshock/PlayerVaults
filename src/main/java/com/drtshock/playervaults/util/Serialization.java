@@ -19,12 +19,12 @@ import org.json.JSONObject;
 
 public class Serialization {
 
-	/*
-	 * All normal functions
-	 */
-	
-	@SuppressWarnings("unchecked")
-	public static Map<String, Object> toMap(JSONObject object) throws JSONException {
+    /*
+     * All normal functions
+     */
+
+    @SuppressWarnings("unchecked")
+    public static Map<String, Object> toMap(JSONObject object) throws JSONException {
         Map<String, Object> map = new HashMap<String, Object>();
         Iterator<String> keys = object.keys();
         while (keys.hasNext()) {
@@ -33,7 +33,7 @@ public class Serialization {
         }
         return map;
     }
-	private static Object fromJson(Object json) throws JSONException {
+    private static Object fromJson(Object json) throws JSONException {
         if (json == JSONObject.NULL) {
             return null;
         } else if (json instanceof JSONObject) {
@@ -44,54 +44,54 @@ public class Serialization {
             return json;
         }
     }
-	
-	public static List<Object> toList(JSONArray array) throws JSONException {
+
+    public static List<Object> toList(JSONArray array) throws JSONException {
         List<Object> list = new ArrayList<Object>();
         for (int i = 0; i < array.length(); i++) {
             list.add(fromJson(array.get(i)));
         }
         return list;
     }
-	
-	public static List<String> toString(Inventory inv) {
-		List<String> result = new ArrayList<String>();
-		List<ConfigurationSerializable> items = new ArrayList<ConfigurationSerializable>();
-		for(ItemStack is:inv.getContents()) {
-			items.add(is);
-		}
-		for(ConfigurationSerializable cs:items) {
-			if(cs == null) {
-				result.add("null");
-			}
-			else {
-				result.add(new JSONObject(serialize(cs)).toString());
-			}
-		}
-		return result;
-	}
-	
-	public static Inventory toInventory(List<String> stringItems, int number) {
-		Inventory inv = Bukkit.createInventory(null, 54, ChatColor.RED + "Vault #" + number);
-		List<ItemStack> contents = new ArrayList<ItemStack>();
-		for(String piece:stringItems) {
-			if(piece.equalsIgnoreCase("null")) {
-				contents.add(null);
-			}
-			else {
-				try {
-					ItemStack item = (ItemStack) deserialize(toMap(new JSONObject(piece)));
-					contents.add(item);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		ItemStack[] items = new ItemStack[contents.size()];
-		for(int x = 0; x < contents.size(); x++)
-			items[x] = contents.get(x);
-		inv.setContents(items);
-		return inv;
-	}
+
+    public static List<String> toString(Inventory inv) {
+        List<String> result = new ArrayList<String>();
+        List<ConfigurationSerializable> items = new ArrayList<ConfigurationSerializable>();
+        for(ItemStack is:inv.getContents()) {
+            items.add(is);
+        }
+        for(ConfigurationSerializable cs:items) {
+            if(cs == null) {
+                result.add("null");
+            }
+            else {
+                result.add(new JSONObject(serialize(cs)).toString());
+            }
+        }
+        return result;
+    }
+
+    public static Inventory toInventory(List<String> stringItems, int number) {
+        Inventory inv = Bukkit.createInventory(null, 54, ChatColor.RED + "Vault #" + number);
+        List<ItemStack> contents = new ArrayList<ItemStack>();
+        for(String piece:stringItems) {
+            if(piece.equalsIgnoreCase("null")) {
+                contents.add(null);
+            }
+            else {
+                try {
+                    ItemStack item = (ItemStack) deserialize(toMap(new JSONObject(piece)));
+                    contents.add(item);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        ItemStack[] items = new ItemStack[contents.size()];
+        for(int x = 0; x < contents.size(); x++)
+            items[x] = contents.get(x);
+        inv.setContents(items);
+        return inv;
+    }
 
     public static Map<String, Object> serialize(ConfigurationSerializable cs) {
         Map<String, Object> serialized = recreateMap(cs.serialize());
@@ -121,7 +121,7 @@ public class Serialization {
         }
         return ConfigurationSerialization.deserializeObject(map);
     }
-    
+
     /*
      * All old methods for transferring
      */

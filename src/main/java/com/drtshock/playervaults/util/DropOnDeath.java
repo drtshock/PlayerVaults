@@ -9,27 +9,27 @@ import com.drtshock.playervaults.Main;
 
 public class DropOnDeath {
 
-	public static Main plugin;
-	public DropOnDeath(Main instance) {
-		DropOnDeath.plugin = instance;
-	}
+    public static Main plugin;
+    public DropOnDeath(Main instance) {
+        DropOnDeath.plugin = instance;
+    }
 
-	static VaultManager vm = new VaultManager(plugin);
+    static VaultManager vm = new VaultManager(plugin);
 
-	/**
-	 * Drops all items when a player dies.
-	 * @param player
-	 */
-	public static void drop(Player player) {
-		Location loc = player.getLocation();
+    /**
+     * Drops all items when a player dies.
+     * @param player
+     */
+    public static void drop(Player player) {
+        Location loc = player.getLocation();
 
-		for(int count = 1; count <= Main.inventoriesToDrop; count++) {
-			Inventory inv = vm.getVault(player, count);
-			ItemStack[] stack = inv.getContents();
-			for(ItemStack is : stack) {
-				loc.getWorld().dropItemNaturally(loc, is);
-			}
-		}
-	}
+        for(int count = 1; count <= Main.inventoriesToDrop; count++) {
+            Inventory inv = vm.getVault(player, count);
+            ItemStack[] stack = inv.getContents();
+            for(ItemStack is : stack) {
+                loc.getWorld().dropItemNaturally(loc, is);
+            }
+        }
+    }
 
 }
