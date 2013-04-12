@@ -4,12 +4,11 @@ import org.bukkit.command.CommandSender;
 
 import com.drtshock.playervaults.util.Lang;
 
-
 public class Feedback {
     public enum Type {
         OPEN,
         DELETE,
-        WORKBENCH, //For later versions
+        WORKBENCH, // For later versions
         FURNACE;
     }
 

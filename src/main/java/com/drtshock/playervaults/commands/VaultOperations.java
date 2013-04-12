@@ -16,10 +16,9 @@ public class VaultOperations {
     private static Main plugin;
     private static VaultManager vm = new VaultManager(plugin);
 
-
     public static boolean checkPerms(CommandSender cs, int number) {
         if(cs.hasPermission("playervaults.amount." + String.valueOf(number))) return true;
-        for(int x = number; x <= 99;x++) {
+        for(int x = number; x <= 99; x++) {
             if(cs.hasPermission("playervaults.amount." + String.valueOf(x))) return true;
         }
         return false;
@@ -39,8 +38,7 @@ public class VaultOperations {
                 number = Integer.parseInt(arg);
                 if(number == 0)
                     return false;
-            }
-            catch(NumberFormatException nfe) {
+            } catch(NumberFormatException nfe) {
                 sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 return false;
             }
@@ -78,8 +76,7 @@ public class VaultOperations {
                     number = Integer.parseInt(arg);
                     if(number == 0)
                         return false;
-                }
-                catch(NumberFormatException nfe) {
+                } catch(NumberFormatException nfe) {
                     sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
                 vm.loadVault(sender, user, number);
@@ -109,8 +106,7 @@ public class VaultOperations {
                 if(number == 0)
                     sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 return;
-            }
-            catch(NumberFormatException nfe) {
+            } catch(NumberFormatException nfe) {
                 sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
             }
             try {
@@ -118,11 +114,11 @@ public class VaultOperations {
                     vm.deleteVault(sender, sender.getName(), number);
                     return;
                 }
-            } catch (IOException e) {
+            } catch(IOException e) {
                 sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
             }
         } else {
-            sender.sendMessage(Lang.TITLE.toString()+ Lang.MUST_BE_NUMBER);
+            sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
         }
     }
 
@@ -143,13 +139,12 @@ public class VaultOperations {
                         sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                         return;
                     }
-                }
-                catch(NumberFormatException nfe) {
+                } catch(NumberFormatException nfe) {
                     sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
                 try {
                     vm.deleteVault(sender, user, number);
-                } catch (IOException e) {
+                } catch(IOException e) {
                     sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
                 }
             } else {

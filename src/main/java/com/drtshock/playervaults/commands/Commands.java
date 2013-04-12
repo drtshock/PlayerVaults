@@ -57,7 +57,7 @@ public class Commands implements CommandExecutor {
             if(sender.hasPermission("playervaults.workbench")) {
                 if(sender instanceof Player) {
                     Inventory workbench = Bukkit.createInventory(null, InventoryType.WORKBENCH);
-                    ((Player)sender).openInventory(workbench);
+                    ((Player) sender).openInventory(workbench);
                     sender.sendMessage(Lang.TITLE.toString() + Lang.OPEN_WORKBENCH);
                 } else {
                     sender.sendMessage(Lang.TITLE.toString() + Lang.PLAYER_ONLY);

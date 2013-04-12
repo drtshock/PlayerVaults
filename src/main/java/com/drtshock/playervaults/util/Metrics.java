@@ -2,17 +2,17 @@ package com.drtshock.playervaults.util;
 
 /*
  * Copyright 2011 Tyler Blair. All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
- *
- *    1. Redistributions of source code must retain the above copyright notice, this list of
- *       conditions and the following disclaimer.
- *
- *    2. Redistributions in binary form must reproduce the above copyright notice, this list
- *       of conditions and the following disclaimer in the documentation and/or other materials
- *       provided with the distribution.
- *
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice, this list of
+ * conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright notice, this list
+ * of conditions and the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ''AS IS'' AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR
@@ -22,7 +22,7 @@ package com.drtshock.playervaults.util;
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * 
  * The views and conclusions contained in the software and documentation are those of the
  * authors and contributors and should not be interpreted as representing official policies,
  * either expressed or implied, of anybody else.
@@ -134,7 +134,7 @@ public class Metrics {
     private volatile int taskId = -1;
 
     public Metrics(final Plugin plugin) throws IOException {
-        if (plugin == null) {
+        if(plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
         }
 
@@ -149,7 +149,7 @@ public class Metrics {
         configuration.addDefault("guid", UUID.randomUUID().toString());
 
         // Do we need to create the file?
-        if (configuration.get("guid", null) == null) {
+        if(configuration.get("guid", null) == null) {
             configuration.options().header("http://mcstats.org").copyDefaults(true);
             configuration.save(configurationFile);
         }
@@ -166,7 +166,7 @@ public class Metrics {
      * @return Graph object created. Will never return NULL under normal circumstances unless bad parameters are given
      */
     public Graph createGraph(final String name) {
-        if (name == null) {
+        if(name == null) {
             throw new IllegalArgumentException("Graph name cannot be null");
         }
 
@@ -186,7 +186,7 @@ public class Metrics {
      * @param graph The name of the graph
      */
     public void addGraph(final Graph graph) {
-        if (graph == null) {
+        if(graph == null) {
             throw new IllegalArgumentException("Graph cannot be null");
         }
 
@@ -199,7 +199,7 @@ public class Metrics {
      * @param plotter The plotter to use to plot custom data
      */
     public void addCustomData(final Plotter plotter) {
-        if (plotter == null) {
+        if(plotter == null) {
             throw new IllegalArgumentException("Plotter cannot be null");
         }
 
@@ -221,12 +221,12 @@ public class Metrics {
     public boolean start() {
         synchronized (optOutLock) {
             // Did we opt out?
-            if (isOptOut()) {
+            if(isOptOut()) {
                 return false;
             }
 
             // Is metrics already running?
-            if (taskId >= 0) {
+            if(taskId >= 0) {
                 return true;
             }
 
@@ -239,18 +239,20 @@ public class Metrics {
                     try {
                         // This has to be synchronized or it can collide with the disable method.
                         synchronized (optOutLock) {
-                            // Disable Task, if it is running and the server owner decided to opt-out
-                            if (isOptOut() && taskId > 0) {
+                            // Disable Task, if it is running and the server owner decided to
+                            // opt-out
+                            if(isOptOut() && taskId > 0) {
                                 plugin.getServer().getScheduler().cancelTask(taskId);
                                 taskId = -1;
                                 // Tell all plotters to stop gathering information.
-                                for (Graph graph : graphs){
+                                for(Graph graph:graphs) {
                                     graph.onOptOut();
                                 }
                             }
                         }
 
-                        // We use the inverse of firstPost because if it is the first time we are posting,
+                        // We use the inverse of firstPost because if it is the first time we are
+                        // posting,
                         // it is not a interval ping, so it evaluates to FALSE
                         // Each time thereafter it will evaluate to TRUE, i.e PING!
                         postPlugin(!firstPost);
@@ -258,7 +260,7 @@ public class Metrics {
                         // After the first post we set firstPost to false
                         // Each post thereafter will be a ping
                         firstPost = false;
-                    } catch (IOException e) {
+                    } catch(IOException e) {
                         Bukkit.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
                     }
                 }
@@ -274,14 +276,14 @@ public class Metrics {
      * @return true if metrics should be opted out of it
      */
     public boolean isOptOut() {
-        synchronized(optOutLock) {
+        synchronized (optOutLock) {
             try {
                 // Reload the metrics file
                 configuration.load(getConfigFile());
-            } catch (IOException ex) {
+            } catch(IOException ex) {
                 Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
                 return true;
-            } catch (InvalidConfigurationException ex) {
+            } catch(InvalidConfigurationException ex) {
                 Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
                 return true;
             }
@@ -298,13 +300,13 @@ public class Metrics {
         // This has to be synchronized or it can collide with the check in the task.
         synchronized (optOutLock) {
             // Check if the server owner has already set opt-out, if not, set it.
-            if (isOptOut()) {
+            if(isOptOut()) {
                 configuration.set("opt-out", false);
                 configuration.save(configurationFile);
             }
 
             // Enable Task, if it is not running
-            if (taskId < 0) {
+            if(taskId < 0) {
                 start();
             }
         }
@@ -319,13 +321,13 @@ public class Metrics {
         // This has to be synchronized or it can collide with the check in the task.
         synchronized (optOutLock) {
             // Check if the server owner has already set opt-out, if not, set it.
-            if (!isOptOut()) {
+            if(!isOptOut()) {
                 configuration.set("opt-out", true);
                 configuration.save(configurationFile);
             }
 
             // Disable Task, if it is running
-            if (taskId > 0) {
+            if(taskId > 0) {
                 this.plugin.getServer().getScheduler().cancelTask(taskId);
                 taskId = -1;
             }
@@ -338,7 +340,8 @@ public class Metrics {
      * @return the File object for the config file
      */
     public File getConfigFile() {
-        // I believe the easiest way to get the base folder (e.g craftbukkit set via -P) for plugins to use
+        // I believe the easiest way to get the base folder (e.g craftbukkit set via -P) for plugins
+        // to use
         // is to abuse the plugin object we already have
         // plugin.getDataFolder() => base/plugins/PluginA/
         // pluginsFolder => base/plugins/
@@ -353,7 +356,8 @@ public class Metrics {
      * Generic method that posts a plugin to the metrics website
      */
     private void postPlugin(final boolean isPing) throws IOException {
-        // The plugin's description file containg all of the plugin data such as name, version, author, etc
+        // The plugin's description file containg all of the plugin data such as name, version,
+        // author, etc
         final PluginDescriptionFile description = plugin.getDescription();
 
         // Construct the post data
@@ -365,7 +369,7 @@ public class Metrics {
         encodeDataPair(data, "revision", String.valueOf(REVISION));
 
         // If we're pinging, append it
-        if (isPing) {
+        if(isPing) {
             encodeDataPair(data, "ping", "true");
         }
 
@@ -377,7 +381,7 @@ public class Metrics {
             while (iter.hasNext()) {
                 final Graph graph = iter.next();
 
-                for (Plotter plotter : graph.getPlotters()) {
+                for(Plotter plotter:graph.getPlotters()) {
                     // The key name to send to the metrics server
                     // The format is C-GRAPHNAME-PLOTTERNAME where separator - is defined at the top
                     // Legacy (R4) submitters use the format Custom%s, or CustomPLOTTERNAME
@@ -401,7 +405,7 @@ public class Metrics {
 
         // Mineshafter creates a socks proxy, so we can safely bypass it
         // It does not reroute POST requests so we need to go around it
-        if (isMineshafterPresent()) {
+        if(isMineshafterPresent()) {
             connection = url.openConnection(Proxy.NO_PROXY);
         } else {
             connection = url.openConnection();
@@ -422,18 +426,18 @@ public class Metrics {
         writer.close();
         reader.close();
 
-        if (response == null || response.startsWith("ERR")) {
-            throw new IOException(response); //Throw the exception
+        if(response == null || response.startsWith("ERR")) {
+            throw new IOException(response); // Throw the exception
         } else {
             // Is this the first update this hour?
-            if (response.contains("OK This is your first update this hour")) {
+            if(response.contains("OK This is your first update this hour")) {
                 synchronized (graphs) {
                     final Iterator<Graph> iter = graphs.iterator();
 
                     while (iter.hasNext()) {
                         final Graph graph = iter.next();
 
-                        for (Plotter plotter : graph.getPlotters()) {
+                        for(Plotter plotter:graph.getPlotters()) {
                             plotter.reset();
                         }
                     }
@@ -451,7 +455,7 @@ public class Metrics {
         try {
             Class.forName("mineshafter.MineServer");
             return true;
-        } catch (Exception e) {
+        } catch(Exception e) {
             return false;
         }
     }
@@ -546,7 +550,7 @@ public class Metrics {
 
         @Override
         public boolean equals(final Object object) {
-            if (!(object instanceof Graph)) {
+            if(!(object instanceof Graph)) {
                 return false;
             }
 
@@ -620,7 +624,7 @@ public class Metrics {
 
         @Override
         public boolean equals(final Object object) {
-            if (!(object instanceof Plotter)) {
+            if(!(object instanceof Plotter)) {
                 return false;
             }
 
@@ -631,4 +635,3 @@ public class Metrics {
     }
 
 }
-

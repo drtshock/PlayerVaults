@@ -46,7 +46,7 @@ public class Main extends JavaPlugin {
                     update = true;
                     name = u.getNewVersion();
                 }
-            } catch (Exception e) {
+            } catch(Exception e) {
                 log.log(Level.WARNING, "PlayerVaults: Failed to check for updates.");
                 log.log(Level.WARNING, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
                 e.printStackTrace();
@@ -72,7 +72,7 @@ public class Main extends JavaPlugin {
         try {
             Metrics metrics = new Metrics(this);
             metrics.start();
-        } catch (IOException e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }
@@ -119,7 +119,7 @@ public class Main extends JavaPlugin {
         setInConfig("drop-on-death.inventories", dropInvs, conf);
         try {
             conf.save(configFile);
-        } catch (IOException e) { 
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }
@@ -141,7 +141,7 @@ public class Main extends JavaPlugin {
                     Lang.setFile(defConfig);
                     return defConfig;
                 }
-            } catch (IOException e) {
+            } catch(IOException e) {
                 e.printStackTrace(); // So they notice
                 log.severe("[PlayerVaults] Couldn't create language file.");
                 log.severe("[PlayerVaults] This is a fatal error. Now disabling");

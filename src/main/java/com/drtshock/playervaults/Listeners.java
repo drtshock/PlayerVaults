@@ -46,7 +46,7 @@ public class Listeners implements Listener {
             VaultViewInfo info = Commands.inVault.get(p.getName());
             try {
                 vm.saveVault(inv, info.getHolder(), info.getNumber());
-            } catch (IOException e) {
+            } catch(IOException e) {
                 e.printStackTrace();
             }
             Commands.inVault.remove(p.getName());
@@ -83,7 +83,7 @@ public class Listeners implements Listener {
         }
     }
 
-    @EventHandler 
+    @EventHandler
     public void onClose(InventoryCloseEvent event) {
         HumanEntity he = event.getPlayer();
         if(he instanceof Player) {
@@ -108,7 +108,7 @@ public class Listeners implements Listener {
              * Different inventories that
              * we don't want the player to open.
              */
-            if(block.getType() == Material.CHEST 
+            if(block.getType() == Material.CHEST
                     || block.getType() == Material.ENDER_CHEST
                     || block.getType() == Material.FURNACE
                     || block.getType() == Material.BURNING_FURNACE
@@ -127,7 +127,7 @@ public class Listeners implements Listener {
     public void onInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         EntityType type = event.getRightClicked().getType();
-        if((type == EntityType.VILLAGER||type==EntityType.MINECART) && Commands.inVault.containsKey(player.getName())) {
+        if((type == EntityType.VILLAGER || type == EntityType.MINECART) && Commands.inVault.containsKey(player.getName())) {
             event.setCancelled(true);
         }
     }

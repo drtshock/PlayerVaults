@@ -25,6 +25,7 @@ public class EconomyOperations {
         configFile = new File(plugin.getDataFolder(), "config.yml");
         bukkitConfig.load(configFile);
     }
+
     /**
      * Have a player pay to open a vault.
      * Returns true if successful. Otherwise false.
@@ -32,7 +33,7 @@ public class EconomyOperations {
      * @return transaction success
      */
     public static boolean payToOpen(Player player) {
-        if(!bukkitConfig.getBoolean("economy.enabled") || /*player.hasPermission("playervaults.free") || */!Main.useVault)
+        if(!bukkitConfig.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !Main.useVault)
             return true;
 
         double cost = bukkitConfig.getDouble("economy.cost-to-open", 10);
@@ -44,6 +45,7 @@ public class EconomyOperations {
 
         return false;
     }
+
     /**
      * Have a player pay to create a vault.
      * Returns true if successful. Otherwise false.
@@ -51,7 +53,7 @@ public class EconomyOperations {
      * @return transaction success
      */
     public static boolean payToCreate(Player player) {
-        if(!bukkitConfig.getBoolean("economy.enabled") || /*player.hasPermission("playervaults.free") || */!Main.useVault)
+        if(!bukkitConfig.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !Main.useVault)
             return true;
 
         double cost = bukkitConfig.getDouble("economy.cost-to-create", 100);
@@ -79,7 +81,7 @@ public class EconomyOperations {
         File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
         YamlConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
         if(file.exists()) {
-            if(playerFile.getString("vault"+number) == null) {
+            if(playerFile.getString("vault" + number) == null) {
                 player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.VAULT_DOES_NOT_EXIST);
                 return false;
             }

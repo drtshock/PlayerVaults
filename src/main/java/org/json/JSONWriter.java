@@ -4,27 +4,27 @@ import java.io.IOException;
 import java.io.Writer;
 
 /*
-Copyright (c) 2006 JSON.org
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-The Software shall be used for Good, not Evil.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+ * Copyright (c) 2006 JSON.org
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * The Software shall be used for Good, not Evil.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 /**
@@ -108,19 +108,19 @@ public class JSONWriter {
      * @throws JSONException If the value is out of sequence.
      */
     private JSONWriter append(String string) throws JSONException {
-        if (string == null) {
+        if(string == null) {
             throw new JSONException("Null pointer");
         }
-        if (this.mode == 'o' || this.mode == 'a') {
+        if(this.mode == 'o' || this.mode == 'a') {
             try {
-                if (this.comma && this.mode == 'a') {
+                if(this.comma && this.mode == 'a') {
                     this.writer.write(',');
                 }
                 this.writer.write(string);
-            } catch (IOException e) {
+            } catch(IOException e) {
                 throw new JSONException(e);
             }
-            if (this.mode == 'o') {
+            if(this.mode == 'o') {
                 this.mode = 'k';
             }
             this.comma = true;
@@ -139,7 +139,7 @@ public class JSONWriter {
      * outermost array or object).
      */
     public JSONWriter array() throws JSONException {
-        if (this.mode == 'i' || this.mode == 'o' || this.mode == 'a') {
+        if(this.mode == 'i' || this.mode == 'o' || this.mode == 'a') {
             this.push(null);
             this.append("[");
             this.comma = false;
@@ -156,15 +156,15 @@ public class JSONWriter {
      * @throws JSONException If unbalanced.
      */
     private JSONWriter end(char mode, char c) throws JSONException {
-        if (this.mode != mode) {
+        if(this.mode != mode) {
             throw new JSONException(mode == 'a'
                     ? "Misplaced endArray."
-                            : "Misplaced endObject.");
+                    : "Misplaced endObject.");
         }
         this.pop(mode);
         try {
             this.writer.write(c);
-        } catch (IOException e) {
+        } catch(IOException e) {
             throw new JSONException(e);
         }
         this.comma = true;
@@ -200,13 +200,13 @@ public class JSONWriter {
      *  do not belong in arrays or if the key is null.
      */
     public JSONWriter key(String string) throws JSONException {
-        if (string == null) {
+        if(string == null) {
             throw new JSONException("Null key.");
         }
-        if (this.mode == 'k') {
+        if(this.mode == 'k') {
             try {
                 this.stack[this.top - 1].putOnce(string, Boolean.TRUE);
-                if (this.comma) {
+                if(this.comma) {
                     this.writer.write(',');
                 }
                 this.writer.write(JSONObject.quote(string));
@@ -214,13 +214,12 @@ public class JSONWriter {
                 this.comma = false;
                 this.mode = 'o';
                 return this;
-            } catch (IOException e) {
+            } catch(IOException e) {
                 throw new JSONException(e);
             }
         }
         throw new JSONException("Misplaced key.");
     }
-
 
     /**
      * Begin appending a new object. All keys and values until the balancing
@@ -232,10 +231,10 @@ public class JSONWriter {
      * outermost array or object).
      */
     public JSONWriter object() throws JSONException {
-        if (this.mode == 'i') {
+        if(this.mode == 'i') {
             this.mode = 'o';
         }
-        if (this.mode == 'o' || this.mode == 'a') {
+        if(this.mode == 'o' || this.mode == 'a') {
             this.append("{");
             this.push(new JSONObject());
             this.comma = false;
@@ -245,26 +244,25 @@ public class JSONWriter {
 
     }
 
-
     /**
      * Pop an array or object scope.
      * @param c The scope to close.
      * @throws JSONException If nesting is wrong.
      */
     private void pop(char c) throws JSONException {
-        if (this.top <= 0) {
+        if(this.top <= 0) {
             throw new JSONException("Nesting error.");
         }
         char m = this.stack[this.top - 1] == null ? 'a' : 'k';
-        if (m != c) {
+        if(m != c) {
             throw new JSONException("Nesting error.");
         }
         this.top -= 1;
         this.mode = this.top == 0
                 ? 'd'
-                        : this.stack[this.top - 1] == null
+                : this.stack[this.top - 1] == null
                         ? 'a'
-                                : 'k';
+                        : 'k';
     }
 
     /**
@@ -273,14 +271,13 @@ public class JSONWriter {
      * @throws JSONException If nesting is too deep.
      */
     private void push(JSONObject jo) throws JSONException {
-        if (this.top >= maxdepth) {
+        if(this.top >= maxdepth) {
             throw new JSONException("Nesting too deep.");
         }
         this.stack[this.top] = jo;
         this.mode = jo == null ? 'a' : 'k';
         this.top += 1;
     }
-
 
     /**
      * Append either the value <code>true</code> or the value
@@ -312,7 +309,6 @@ public class JSONWriter {
     public JSONWriter value(long l) throws JSONException {
         return this.append(Long.toString(l));
     }
-
 
     /**
      * Append an object value.

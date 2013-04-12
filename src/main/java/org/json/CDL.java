@@ -1,27 +1,27 @@
 package org.json;
 
 /*
-Copyright (c) 2002 JSON.org
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-The Software shall be used for Good, not Evil.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+ * Copyright (c) 2002 JSON.org
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * The Software shall be used for Good, not Evil.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 /**
@@ -66,12 +66,12 @@ public class CDL {
         case '\'':
             q = c;
             sb = new StringBuffer();
-            for (;;) {
+            for(;;) {
                 c = x.next();
-                if (c == q) {
+                if(c == q) {
                     break;
                 }
-                if (c == 0 || c == '\n' || c == '\r') {
+                if(c == 0 || c == '\n' || c == '\r') {
                     throw x.syntaxError("Missing close quote '" + q + "'.");
                 }
                 sb.append(c);
@@ -94,24 +94,24 @@ public class CDL {
      */
     public static JSONArray rowToJSONArray(JSONTokener x) throws JSONException {
         JSONArray ja = new JSONArray();
-        for (;;) {
+        for(;;) {
             String value = getValue(x);
             char c = x.next();
-            if (value == null ||
+            if(value == null ||
                     (ja.length() == 0 && value.length() == 0 && c != ',')) {
                 return null;
             }
             ja.put(value);
-            for (;;) {
-                if (c == ',') {
+            for(;;) {
+                if(c == ',') {
                     break;
                 }
-                if (c != ' ') {
-                    if (c == '\n' || c == '\r' || c == 0) {
+                if(c != ' ') {
+                    if(c == '\n' || c == '\r' || c == 0) {
                         return ja;
                     }
                     throw x.syntaxError("Bad character '" + c + "' (" +
-                            (int)c + ").");
+                            (int) c + ").");
                 }
                 c = x.next();
             }
@@ -131,7 +131,7 @@ public class CDL {
     public static JSONObject rowToJSONObject(JSONArray names, JSONTokener x)
             throws JSONException {
         JSONArray ja = rowToJSONArray(x);
-        return ja != null ? ja.toJSONObject(names) :  null;
+        return ja != null ? ja.toJSONObject(names) : null;
     }
 
     /**
@@ -143,21 +143,21 @@ public class CDL {
      */
     public static String rowToString(JSONArray ja) {
         StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < ja.length(); i += 1) {
-            if (i > 0) {
+        for(int i = 0; i < ja.length(); i += 1) {
+            if(i > 0) {
                 sb.append(',');
             }
             Object object = ja.opt(i);
-            if (object != null) {
+            if(object != null) {
                 String string = object.toString();
-                if (string.length() > 0 && (string.indexOf(',') >= 0 ||
+                if(string.length() > 0 && (string.indexOf(',') >= 0 ||
                         string.indexOf('\n') >= 0 || string.indexOf('\r') >= 0 ||
                         string.indexOf(0) >= 0 || string.charAt(0) == '"')) {
                     sb.append('"');
                     int length = string.length();
-                    for (int j = 0; j < length; j += 1) {
+                    for(int j = 0; j < length; j += 1) {
                         char c = string.charAt(j);
-                        if (c >= ' ' && c != '"') {
+                        if(c >= ' ' && c != '"') {
                             sb.append(c);
                         }
                     }
@@ -216,23 +216,22 @@ public class CDL {
      */
     public static JSONArray toJSONArray(JSONArray names, JSONTokener x)
             throws JSONException {
-        if (names == null || names.length() == 0) {
+        if(names == null || names.length() == 0) {
             return null;
         }
         JSONArray ja = new JSONArray();
-        for (;;) {
+        for(;;) {
             JSONObject jo = rowToJSONObject(names, x);
-            if (jo == null) {
+            if(jo == null) {
                 break;
             }
             ja.put(jo);
         }
-        if (ja.length() == 0) {
+        if(ja.length() == 0) {
             return null;
         }
         return ja;
     }
-
 
     /**
      * Produce a comma delimited text from a JSONArray of JSONObjects. The
@@ -244,9 +243,9 @@ public class CDL {
      */
     public static String toString(JSONArray ja) throws JSONException {
         JSONObject jo = ja.optJSONObject(0);
-        if (jo != null) {
+        if(jo != null) {
             JSONArray names = jo.names();
-            if (names != null) {
+            if(names != null) {
                 return rowToString(names) + toString(names, ja);
             }
         }
@@ -264,13 +263,13 @@ public class CDL {
      */
     public static String toString(JSONArray names, JSONArray ja)
             throws JSONException {
-        if (names == null || names.length() == 0) {
+        if(names == null || names.length() == 0) {
             return null;
         }
         StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < ja.length(); i += 1) {
+        for(int i = 0; i < ja.length(); i += 1) {
             JSONObject jo = ja.optJSONObject(i);
-            if (jo != null) {
+            if(jo != null) {
                 sb.append(rowToString(jo.toJSONArray(names)));
             }
         }

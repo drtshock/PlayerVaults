@@ -18,6 +18,7 @@ import com.drtshock.playervaults.Main;
 public class VaultManager {
 
     public Main plugin;
+
     public VaultManager(Main instance) {
         this.plugin = instance;
     }
@@ -128,7 +129,7 @@ public class VaultManager {
         if(!file.exists()) {
             try {
                 file.createNewFile();
-            } catch (IOException e) {
+            } catch(IOException e) {
                 e.printStackTrace();
             }
         }
@@ -144,7 +145,7 @@ public class VaultManager {
      */
     public void saveFile(String name, YamlConfiguration yaml) throws IOException {
         File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
-        if (file.exists()) {
+        if(file.exists()) {
             file.renameTo(new File(directory + File.separator + "backups" + File.separator + name.toLowerCase() + ".yml"));
         }
         yaml.save(file);

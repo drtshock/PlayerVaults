@@ -10,6 +10,7 @@ import com.drtshock.playervaults.Main;
 public class DropOnDeath {
 
     public static Main plugin;
+
     public DropOnDeath(Main instance) {
         DropOnDeath.plugin = instance;
     }
@@ -26,7 +27,7 @@ public class DropOnDeath {
         for(int count = 1; count <= Main.inventoriesToDrop; count++) {
             Inventory inv = vm.getVault(player, count);
             ItemStack[] stack = inv.getContents();
-            for(ItemStack is : stack) {
+            for(ItemStack is:stack) {
                 loc.getWorld().dropItemNaturally(loc, is);
             }
         }
