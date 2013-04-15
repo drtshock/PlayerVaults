@@ -17,20 +17,20 @@ import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.Metrics;
 import com.drtshock.playervaults.util.Updater;
 
-public class Main extends JavaPlugin {
+public class PlayerVaults extends JavaPlugin {
 
-    public static Main plugin;
+    public static PlayerVaults PLUGIN;
     public Logger log;
-    public static boolean update = false;
-    public static String name = "";
+    public static boolean UPDATE = false;
+    public static String NAME = "";
     Commands commands;
-    public static Economy econ = null;
-    public static boolean dropOnDeath = false;
-    public static int inventoriesToDrop = 0;
-    public static boolean useVault = false;
-    public static YamlConfiguration lang;
-    public static File langFile;
-    public static String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
+    public static Economy ECON = null;
+    public static boolean DROP_ON_DEATH = false;
+    public static int INVENTORIES_TO_DROP = 0;
+    public static boolean USE_VAULT = false;
+    public static YamlConfiguration LANG;
+    public static File LANG_FILE;
+    public static String DIRECTORY = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
 
     @Override
     public void onEnable() {
@@ -43,8 +43,8 @@ public class Main extends JavaPlugin {
         if(getConfig().getBoolean("check-update")) {
             try {
                 if(u.getUpdate()) {
-                    update = true;
-                    name = u.getNewVersion();
+                    UPDATE = true;
+                    NAME = u.getNewVersion();
                 }
             } catch(Exception e) {
                 log.log(Level.WARNING, "PlayerVaults: Failed to check for updates.");
@@ -60,11 +60,11 @@ public class Main extends JavaPlugin {
         setupEconomy();
 
         if(getConfig().getBoolean("drop-on-death.enabled")) {
-            dropOnDeath = true;
-            inventoriesToDrop = getConfig().getInt("drop-on-death.inventories");
+            DROP_ON_DEATH = true;
+            INVENTORIES_TO_DROP = getConfig().getInt("drop-on-death.inventories");
         }
 
-        new File(directory + File.separator + "backups").mkdirs();
+        new File(DIRECTORY + File.separator + "backups").mkdirs();
 
     }
 
@@ -85,9 +85,9 @@ public class Main extends JavaPlugin {
         if(rsp == null) {
             return false;
         }
-        econ = rsp.getProvider();
-        useVault = true;
-        return econ != null;
+        ECON = rsp.getProvider();
+        USE_VAULT = true;
+        return ECON != null;
     }
 
     public void loadConfig() {
@@ -150,16 +150,16 @@ public class Main extends JavaPlugin {
         }
         YamlConfiguration conf = YamlConfiguration.loadConfiguration(lang);
         Lang.setFile(conf);
-        Main.lang = conf;
-        Main.langFile = lang;
+        PlayerVaults.LANG = conf;
+        PlayerVaults.LANG_FILE = lang;
         return conf;
     }
 
     public YamlConfiguration getLang() {
-        return lang;
+        return LANG;
     }
 
     public File getLangFile() {
-        return langFile;
+        return LANG_FILE;
     }
 }

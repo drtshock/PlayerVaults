@@ -11,9 +11,9 @@ import java.util.logging.Level;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.drtshock.playervaults.Main;
+import com.drtshock.playervaults.PlayerVaults;
 
-public class Updater extends Main {
+public class Updater extends PlayerVaults {
 
     SortedMap<String, String> lang = new TreeMap<String, String>();
     String version;

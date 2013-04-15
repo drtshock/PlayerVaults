@@ -5,17 +5,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.drtshock.playervaults.Main;
+import com.drtshock.playervaults.PlayerVaults;
 
 public class DropOnDeath {
 
-    public static Main plugin;
+    public static PlayerVaults PLUGIN;
 
-    public DropOnDeath(Main instance) {
-        DropOnDeath.plugin = instance;
+    public DropOnDeath(PlayerVaults instance) {
+        DropOnDeath.PLUGIN = instance;
     }
 
-    static VaultManager vm = new VaultManager(plugin);
+    static VaultManager VAULT_MANAGER = new VaultManager(PLUGIN);
 
     /**
      * Drops all items when a player dies.
@@ -24,8 +24,8 @@ public class DropOnDeath {
     public static void drop(Player player) {
         Location loc = player.getLocation();
 
-        for(int count = 1; count <= Main.inventoriesToDrop; count++) {
-            Inventory inv = vm.getVault(player, count);
+        for(int count = 1; count <= PlayerVaults.INVENTORIES_TO_DROP; count++) {
+            Inventory inv = VAULT_MANAGER.getVault(player, count);
             ItemStack[] stack = inv.getContents();
             for(ItemStack is:stack) {
                 loc.getWorld().dropItemNaturally(loc, is);

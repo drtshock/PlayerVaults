@@ -23,7 +23,7 @@ public enum Lang {
 
     private String path;
     private String def; // Default string
-    private static YamlConfiguration lang;
+    private static YamlConfiguration LANG;
 
     Lang(String path, String start) {
         this.path = path;
@@ -31,14 +31,14 @@ public enum Lang {
     }
 
     public static void setFile(YamlConfiguration yc) {
-        lang = yc;
+        LANG = yc;
     }
 
     @Override
     public String toString() {
         if(this == TITLE)
-            return ChatColor.translateAlternateColorCodes('&', lang.getString(this.path, def)) + " ";
-        return ChatColor.translateAlternateColorCodes('&', lang.getString(this.path, def));
+            return ChatColor.translateAlternateColorCodes('&', LANG.getString(this.path, def)) + " ";
+        return ChatColor.translateAlternateColorCodes('&', LANG.getString(this.path, def));
     }
 
     public String getDefault() {

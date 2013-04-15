@@ -13,13 +13,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import com.drtshock.playervaults.Main;
+import com.drtshock.playervaults.PlayerVaults;
 
 public class VaultManager {
 
-    public Main plugin;
+    public PlayerVaults plugin;
 
-    public VaultManager(Main instance) {
+    public VaultManager(PlayerVaults instance) {
         this.plugin = instance;
     }
 

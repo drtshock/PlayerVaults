@@ -15,7 +15,7 @@ import com.drtshock.playervaults.util.Lang;
 
 public class Commands implements CommandExecutor {
 
-    public static HashMap<String, VaultViewInfo> inVault = new HashMap<String, VaultViewInfo>();
+    public static HashMap<String, VaultViewInfo> IN_VAULT = new HashMap<String, VaultViewInfo>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -25,11 +25,11 @@ public class Commands implements CommandExecutor {
                 switch (args.length) {
                 case 1:
                     if(VaultOperations.openOwnVault(p, args[0]))
-                        inVault.put(sender.getName(), new VaultViewInfo(sender.getName(), Integer.parseInt(args[0])));
+                        IN_VAULT.put(sender.getName(), new VaultViewInfo(sender.getName(), Integer.parseInt(args[0])));
                     break;
                 case 2:
                     if(VaultOperations.openOtherVault(p, args[0], args[1]))
-                        inVault.put(sender.getName(), new VaultViewInfo(args[0], Integer.parseInt(args[1])));
+                        IN_VAULT.put(sender.getName(), new VaultViewInfo(args[0], Integer.parseInt(args[1])));
                     break;
                 default:
                     Feedback.showHelp(sender, Feedback.Type.OPEN);

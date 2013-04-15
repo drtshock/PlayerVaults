@@ -27,10 +27,10 @@ import com.drtshock.playervaults.util.VaultManager;
 
 public class Listeners implements Listener {
 
-    public Main plugin;
+    public PlayerVaults plugin;
 
-    public Listeners(Main instance) {
-        this.plugin = instance;
+    public Listeners(PlayerVaults playerVaults) {
+        this.plugin = playerVaults;
     }
 
     VaultManager vm = new VaultManager(plugin);
@@ -41,15 +41,15 @@ public class Listeners implements Listener {
      * @param Player p
      */
     public void saveVault(Player p) {
-        if(Commands.inVault.containsKey(p.getName())) {
+        if(Commands.IN_VAULT.containsKey(p.getName())) {
             Inventory inv = p.getOpenInventory().getTopInventory();
-            VaultViewInfo info = Commands.inVault.get(p.getName());
+            VaultViewInfo info = Commands.IN_VAULT.get(p.getName());
             try {
                 vm.saveVault(inv, info.getHolder(), info.getNumber());
             } catch(IOException e) {
                 e.printStackTrace();
             }
-            Commands.inVault.remove(p.getName());
+            Commands.IN_VAULT.remove(p.getName());
         }
     }
 
@@ -68,8 +68,8 @@ public class Listeners implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         vm.playerVaultFile(player.getName());
-        if(player.isOp() && Main.update) {
-            player.sendMessage(ChatColor.GREEN + "Version " + Main.name + " of PlayerVaults is up for download!");
+        if(player.isOp() && PlayerVaults.UPDATE) {
+            player.sendMessage(ChatColor.GREEN + "Version " + PlayerVaults.NAME + " of PlayerVaults is up for download!");
             player.sendMessage(ChatColor.GREEN + "http://dev.bukkit.org/server-mods/playervaults/ to view the changelog and download!");
         }
     }
@@ -78,7 +78,7 @@ public class Listeners implements Listener {
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         saveVault(player);
-        if(Main.dropOnDeath && (!player.hasPermission("playervaults.ignore.drops"))) {
+        if(PlayerVaults.DROP_ON_DEATH && (!player.hasPermission("playervaults.ignore.drops"))) {
             DropOnDeath.drop(event.getEntity());
         }
     }
@@ -101,7 +101,7 @@ public class Listeners implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if(Commands.inVault.containsKey(player.getName()) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+        if(Commands.IN_VAULT.containsKey(player.getName()) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Block block = event.getClickedBlock();
 
             /**
@@ -127,7 +127,7 @@ public class Listeners implements Listener {
     public void onInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         EntityType type = event.getRightClicked().getType();
-        if((type == EntityType.VILLAGER || type == EntityType.MINECART) && Commands.inVault.containsKey(player.getName())) {
+        if((type == EntityType.VILLAGER || type == EntityType.MINECART) && Commands.IN_VAULT.containsKey(player.getName())) {
             event.setCancelled(true);
         }
     }
