@@ -3,8 +3,10 @@ package com.drtshock.playervaults;
 import java.io.IOException;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -23,6 +25,7 @@ import org.bukkit.inventory.Inventory;
 import com.drtshock.playervaults.commands.Commands;
 import com.drtshock.playervaults.commands.VaultViewInfo;
 import com.drtshock.playervaults.util.DropOnDeath;
+import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.VaultManager;
 
 public class Listeners implements Listener {
@@ -101,20 +104,46 @@ public class Listeners implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if(Commands.IN_VAULT.containsKey(player.getName()) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            Block block = event.getClickedBlock();
+        if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if(Commands.IN_VAULT.containsKey(player.getName())) {
+                Block block = event.getClickedBlock();
 
-            /**
-             * Different inventories that
-             * we don't want the player to open.
-             */
-            if(block.getType() == Material.CHEST
-                    || block.getType() == Material.ENDER_CHEST
-                    || block.getType() == Material.FURNACE
-                    || block.getType() == Material.BURNING_FURNACE
-                    || block.getType() == Material.BREWING_STAND
-                    || block.getType() == Material.BEACON) {
-                event.setCancelled(true);
+                /**
+                 * Different inventories that
+                 * we don't want the player to open.
+                 */
+                if(block.getType() == Material.CHEST
+                        || block.getType() == Material.ENDER_CHEST
+                        || block.getType() == Material.FURNACE
+                        || block.getType() == Material.BURNING_FURNACE
+                        || block.getType() == Material.BREWING_STAND
+                        || block.getType() == Material.BEACON) {
+                    event.setCancelled(true);
+                }
+            }
+        }
+        if(Commands.SET_SIGN.containsKey(player.getName())) {
+            int i = Commands.SET_SIGN.get(player.getName()).getChest();
+            String owner = Commands.SET_SIGN.get(player.getName()).getOwner();
+            Commands.SET_SIGN.remove(player.getName());
+            event.setCancelled(true);
+            if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if(event.getClickedBlock().getType() == Material.WALL_SIGN || event.getClickedBlock().getType() == Material.SIGN_POST) {
+                    Sign s = (Sign) event.getClickedBlock().getState();
+                    Location l = s.getLocation();
+                    String world = l.getWorld().getName();
+                    int x = l.getBlockX();
+                    int y = l.getBlockY();
+                    int z = l.getBlockZ();
+                    PlayerVaults.SIGNS.set(world + ";;" + x + ";;" + y + ";;" + z + ".owner", owner);
+                    PlayerVaults.SIGNS.set(world + ";;" + x + ";;" + y + ";;" + z + ".chest", i);
+                    plugin.saveSigns();
+                    player.sendMessage(Lang.TITLE.toString() + Lang.SET_SIGN);
+                } else {
+                    player.sendMessage(Lang.TITLE.toString() + Lang.NOT_A_SIGN);
+                }
+            } else {
+                player.sendMessage(Lang.TITLE.toString() + Lang.NOT_A_SIGN);
             }
         }
     }

@@ -16,6 +16,7 @@ import com.drtshock.playervaults.util.Lang;
 public class Commands implements CommandExecutor {
 
     public static HashMap<String, VaultViewInfo> IN_VAULT = new HashMap<String, VaultViewInfo>();
+    public static HashMap<String, SignSetInfo> SET_SIGN = new HashMap<String, SignSetInfo>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -59,6 +60,29 @@ public class Commands implements CommandExecutor {
                     Inventory workbench = Bukkit.createInventory(null, InventoryType.WORKBENCH);
                     ((Player) sender).openInventory(workbench);
                     sender.sendMessage(Lang.TITLE.toString() + Lang.OPEN_WORKBENCH);
+                } else {
+                    sender.sendMessage(Lang.TITLE.toString() + Lang.PLAYER_ONLY);
+                }
+            } else {
+                sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
+            }
+        } else if(cmd.getName().equalsIgnoreCase("pvsign")) {
+            if(sender.hasPermission("playervaults.setsign")) {
+                if(sender instanceof Player) {
+                    if(args.length >= 2) {
+                        int i = 0;
+                        try {
+                            i = Integer.parseInt(args[1]);
+                        } catch(NumberFormatException nfe) {
+                            sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
+                            sender.sendMessage(Lang.TITLE.toString() + "Usage: /" + label + " <owner> <#>");
+                            return true;
+                        }
+                        SET_SIGN.put(sender.getName(), new SignSetInfo(args[0], i));
+                        sender.sendMessage(Lang.TITLE.toString() + Lang.CLICK_A_SIGN);
+                    } else {
+                        sender.sendMessage(Lang.TITLE.toString() + Lang.INVALID_ARGS);
+                    }
                 } else {
                     sender.sendMessage(Lang.TITLE.toString() + Lang.PLAYER_ONLY);
                 }

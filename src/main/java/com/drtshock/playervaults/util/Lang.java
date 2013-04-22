@@ -19,7 +19,10 @@ public enum Lang {
     REFUND_AMOUNT("refund-amount", "&fYou were refunded &a%price &ffor deleting that vault."),
     COST_TO_CREATE("cost-to-create", "&fYou were charged &c%price &ffor creating a vault."),
     COST_TO_OPEN("cost-to-open", "&fYou were charged &c%price &ffor opening that vault."),
-    VAULT_DOES_NOT_EXIST("vault-does-not-exist", "&cThat vault does not exist!");
+    VAULT_DOES_NOT_EXIST("vault-does-not-exist", "&cThat vault does not exist!"),
+    CLICK_A_SIGN("click-a-sign", "&fNow click a sign!"),
+    NOT_A_SIGN("not-a-sign","&cYou must click a sign!"),
+    SET_SIGN("set-sign-success", "&fYou have successfully set a PlayerVault access sign!");
 
     private String path;
     private String def; // Default string

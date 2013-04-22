@@ -30,6 +30,8 @@ public class PlayerVaults extends JavaPlugin {
     public static boolean USE_VAULT = false;
     public static YamlConfiguration LANG;
     public static File LANG_FILE;
+    public static YamlConfiguration SIGNS;
+    public static File SIGNS_FILE;
     public static String DIRECTORY = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
 
     @Override
@@ -38,6 +40,7 @@ public class PlayerVaults extends JavaPlugin {
         log = getServer().getLogger();
         getServer().getPluginManager().registerEvents(new Listeners(this), this);
         loadConfig();
+        loadSigns();
         startMetrics();
         Updater u = new Updater(getDescription().getVersion());
         if(getConfig().getBoolean("check-update")) {
@@ -56,6 +59,7 @@ public class PlayerVaults extends JavaPlugin {
         commands = new Commands();
         getCommand("pv").setExecutor(commands);
         getCommand("pvdel").setExecutor(commands);
+        getCommand("pvsign").setExecutor(commands);
         getCommand("workbench").setExecutor(commands);
         setupEconomy();
 
@@ -96,6 +100,35 @@ public class PlayerVaults extends JavaPlugin {
             saveDefaultConfig();
         } else {
             updateConfig();
+        }
+    }
+
+    public void loadSigns() {
+        File signs = new File(getDataFolder(), "signs.yml");
+        if(!signs.exists()) {
+            try {
+                signs.createNewFile();
+            } catch(IOException e) {
+                log.severe("PlayerVaults has encountered a fatal error trying to load the signs file.");
+                log.severe("Please report this error to drtshock and gomeow.");
+                e.printStackTrace();
+            }
+        }
+        PlayerVaults.SIGNS_FILE = signs;
+        PlayerVaults.SIGNS = YamlConfiguration.loadConfiguration(signs);
+    }
+    
+    public YamlConfiguration getSigns() {
+        return PlayerVaults.SIGNS;
+    }
+    
+    public void saveSigns() {
+        try {
+            PlayerVaults.SIGNS.save(PlayerVaults.SIGNS_FILE);
+        } catch(IOException e) {
+            log.severe("PlayerVaults has encountered an error trying to save the signs file.");
+            log.severe("Please report this error to drtshock and gomeow.");
+            e.printStackTrace();
         }
     }
 

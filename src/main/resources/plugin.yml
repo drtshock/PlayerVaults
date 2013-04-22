@@ -1,5 +1,5 @@
 name: PlayerVaults
-main: com.drtshock.playervaults.Main
+main: com.drtshock.playervaults.PlayerVaults
 authors: [drtshock, gomeow, Chester]
 version: 3.0.0
 website: http://dev.bukkit.org/server-mods/PlayerVaults
@@ -11,5 +11,8 @@ commands:
   pvdel:
     description: Delete a vault.
     aliases: [vaultdel]
+  pvsign:
+    description: Delete a vault.
+    aliases: [vaultsign]
   workbench:
     description: Opens a workbench.
