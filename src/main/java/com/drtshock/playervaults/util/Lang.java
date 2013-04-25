@@ -22,7 +22,8 @@ public enum Lang {
     VAULT_DOES_NOT_EXIST("vault-does-not-exist", "&cThat vault does not exist!"),
     CLICK_A_SIGN("click-a-sign", "&fNow click a sign!"),
     NOT_A_SIGN("not-a-sign","&cYou must click a sign!"),
-    SET_SIGN("set-sign-success", "&fYou have successfully set a PlayerVault access sign!");
+    SET_SIGN("set-sign-success", "&fYou have successfully set a PlayerVault access sign!"),
+    OPEN_WITH_SIGN("open-with-sign", "&fOpening vault &a%v &fof &a%p");
 
     private String path;
     private String def; // Default string

@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -145,6 +146,37 @@ public class Listeners implements Listener {
             } else {
                 player.sendMessage(Lang.TITLE.toString() + Lang.NOT_A_SIGN);
             }
+            return;
+        }
+        Block b = event.getClickedBlock();
+        if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if(b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN_POST) {
+                Location l = b.getLocation();
+                String world = l.getWorld().getName();
+                int x = l.getBlockX();
+                int y = l.getBlockY();
+                int z = l.getBlockZ();
+                if(PlayerVaults.SIGNS.getKeys(false).contains(world + ";;" + x + ";;" + y + ";;" + z)) {
+                    String owner = PlayerVaults.SIGNS.getString(world + ";;" + x + ";;" + y + ";;" + z + ".owner");
+                    int num = PlayerVaults.SIGNS.getInt(world + ";;" + x + ";;" + y + ";;" + z + ".chest");
+                    PlayerVaults.VM.loadVault(player, owner, num);
+                    event.setCancelled(true);
+                    player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_WITH_SIGN.toString().replace("%v", String.valueOf(num)).replace("%p", owner));
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        Location l = event.getBlock().getLocation();
+        String world = l.getWorld().getName();
+        int x = l.getBlockX();
+        int y = l.getBlockY();
+        int z = l.getBlockZ();
+        if(PlayerVaults.SIGNS.getKeys(false).contains(world + ";;" + x + ";;" + y + ";;" + z)) {
+            PlayerVaults.SIGNS.set(world + ";;" + x + ";;" + y + ";;" + z, null);
+            plugin.saveSigns();
         }
     }
 

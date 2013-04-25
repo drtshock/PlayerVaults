@@ -16,6 +16,7 @@ import com.drtshock.playervaults.commands.Commands;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.Metrics;
 import com.drtshock.playervaults.util.Updater;
+import com.drtshock.playervaults.util.VaultManager;
 
 public class PlayerVaults extends JavaPlugin {
 
@@ -33,6 +34,7 @@ public class PlayerVaults extends JavaPlugin {
     public static YamlConfiguration SIGNS;
     public static File SIGNS_FILE;
     public static String DIRECTORY = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
+    public static VaultManager VM;
 
     @Override
     public void onEnable() {
@@ -69,7 +71,7 @@ public class PlayerVaults extends JavaPlugin {
         }
 
         new File(DIRECTORY + File.separator + "backups").mkdirs();
-
+        VM = new VaultManager(this);
     }
 
     public void startMetrics() {

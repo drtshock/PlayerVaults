@@ -9,12 +9,8 @@ import org.bukkit.entity.Player;
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.EconomyOperations;
 import com.drtshock.playervaults.util.Lang;
-import com.drtshock.playervaults.util.VaultManager;
 
 public class VaultOperations {
-
-    private static PlayerVaults PLUGIN;
-    private static VaultManager VAULT_MANAGER = new VaultManager(PLUGIN);
 
     public static boolean checkPerms(CommandSender cs, int number) {
         if(cs.hasPermission("playervaults.amount." + String.valueOf(number))) return true;
@@ -44,7 +40,7 @@ public class VaultOperations {
             }
             if(checkPerms(sender, number)) {
                 if(EconomyOperations.payToOpen(sender)) {
-                    VAULT_MANAGER.loadVault(sender, sender.getName(), number);
+                    PlayerVaults.VM.loadVault(sender, sender.getName(), number);
                     sender.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
                     return true;
                 } else {
@@ -79,7 +75,7 @@ public class VaultOperations {
                 } catch(NumberFormatException nfe) {
                     sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
-                VAULT_MANAGER.loadVault(sender, user, number);
+                PlayerVaults.VM.loadVault(sender, user, number);
                 sender.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", user));
                 return true;
             } else {
@@ -111,7 +107,7 @@ public class VaultOperations {
             }
             try {
                 if(EconomyOperations.refundOnDelete(sender, number)) {
-                    VAULT_MANAGER.deleteVault(sender, sender.getName(), number);
+                    PlayerVaults.VM.deleteVault(sender, sender.getName(), number);
                     return;
                 }
             } catch(IOException e) {
@@ -143,7 +139,7 @@ public class VaultOperations {
                     sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
                 try {
-                    VAULT_MANAGER.deleteVault(sender, user, number);
+                    PlayerVaults.VM.deleteVault(sender, user, number);
                 } catch(IOException e) {
                     sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
                 }

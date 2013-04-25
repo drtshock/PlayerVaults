@@ -78,7 +78,7 @@ public class Commands implements CommandExecutor {
                             sender.sendMessage(Lang.TITLE.toString() + "Usage: /" + label + " <owner> <#>");
                             return true;
                         }
-                        SET_SIGN.put(sender.getName(), new SignSetInfo(args[0], i));
+                        SET_SIGN.put(sender.getName(), new SignSetInfo(args[0].toLowerCase(), i));
                         sender.sendMessage(Lang.TITLE.toString() + Lang.CLICK_A_SIGN);
                     } else {
                         sender.sendMessage(Lang.TITLE.toString() + Lang.INVALID_ARGS);
