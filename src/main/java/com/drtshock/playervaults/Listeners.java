@@ -14,6 +14,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -136,8 +138,8 @@ public class Listeners implements Listener {
                     int x = l.getBlockX();
                     int y = l.getBlockY();
                     int z = l.getBlockZ();
-                    PlayerVaults.SIGNS.set(world + ";;" + x + ";;" + y + ";;" + z + ".owner", owner);
-                    PlayerVaults.SIGNS.set(world + ";;" + x + ";;" + y + ";;" + z + ".chest", i);
+                    plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z + ".owner", owner);
+                    plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z + ".chest", i);
                     plugin.saveSigns();
                     player.sendMessage(Lang.TITLE.toString() + Lang.SET_SIGN);
                 } else {
@@ -156,7 +158,7 @@ public class Listeners implements Listener {
                 int x = l.getBlockX();
                 int y = l.getBlockY();
                 int z = l.getBlockZ();
-                if(PlayerVaults.SIGNS.getKeys(false).contains(world + ";;" + x + ";;" + y + ";;" + z)) {
+                if(plugin.getSigns().getKeys(false).contains(world + ";;" + x + ";;" + y + ";;" + z)) {
                     String owner = PlayerVaults.SIGNS.getString(world + ";;" + x + ";;" + y + ";;" + z + ".owner");
                     int num = PlayerVaults.SIGNS.getInt(world + ";;" + x + ";;" + y + ";;" + z + ".chest");
                     PlayerVaults.VM.loadVault(player, owner, num);
@@ -166,16 +168,29 @@ public class Listeners implements Listener {
             }
         }
     }
+    
+    @EventHandler
+    public void onBlockPhysics(BlockPhysicsEvent event) {
+        blockChangeCheck(event.getBlock().getLocation());
+    }
+    
+    @EventHandler
+    public void onEntityChangeBlock(EntityChangeBlockEvent event) {
+        blockChangeCheck(event.getBlock().getLocation());
+    }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        Location l = event.getBlock().getLocation();
+        blockChangeCheck(event.getBlock().getLocation());
+    }
+    
+    public void blockChangeCheck(Location l) {
         String world = l.getWorld().getName();
         int x = l.getBlockX();
         int y = l.getBlockY();
         int z = l.getBlockZ();
-        if(PlayerVaults.SIGNS.getKeys(false).contains(world + ";;" + x + ";;" + y + ";;" + z)) {
-            PlayerVaults.SIGNS.set(world + ";;" + x + ";;" + y + ";;" + z, null);
+        if(plugin.getSigns().getKeys(false).contains(world + ";;" + x + ";;" + y + ";;" + z)) {
+            plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z, null);
             plugin.saveSigns();
         }
     }
