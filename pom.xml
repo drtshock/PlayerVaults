@@ -3,7 +3,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.drtshock</groupId>
 	<artifactId>PlayerVaults</artifactId>
-	<version>3.1.0</version>
+	<version>3.1.1-SNAPSHOT</version>
 	<name>PlayerVaults</name>
 	<build>
 		<defaultGoal>clean package install</defaultGoal>
