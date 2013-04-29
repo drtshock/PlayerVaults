@@ -5,5 +5,5 @@ Virtual vaults for virtual players!
 
 Contribute if you feel so led.
 
-== Authors
+=== Authors
 drtshock, gomeow
