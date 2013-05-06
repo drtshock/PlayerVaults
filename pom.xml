@@ -5,6 +5,15 @@
     <artifactId>PlayerVaults</artifactId>
     <version>3.1.1-SNAPSHOT</version>
     <name>PlayerVaults</name>
+    <url>http://dev.bukkit.org/server-mods/playervaults/</url>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <upload.dbo.category>server-mods</upload.dbo.category>
+        <upload.dbo.slug>playervaults</upload.dbo.slug>
+
+    </properties>
     <build>
         <defaultGoal>clean package install</defaultGoal>
         <finalName>PlayerVaults</finalName>
