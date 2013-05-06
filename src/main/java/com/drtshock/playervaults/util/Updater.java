@@ -35,14 +35,14 @@ public class Updater extends PlayerVaults {
         }
     }
 
-    public boolean getUpdate() throws IOException {
+    public boolean getUpdate(String v) throws IOException {
         JSONObject json;
         try {
             json = getInfo();
             String version = json.getString("dbo_version");
             String link = json.getString("link");
             PlayerVaults.LINK = link;
-            if(!version.equalsIgnoreCase(super.getDescription().getVersion())) {
+            if(!version.equalsIgnoreCase(v)) {
                 return true;
             }
         } catch(JSONException e) {
