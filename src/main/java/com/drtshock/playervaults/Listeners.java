@@ -75,8 +75,8 @@ public class Listeners implements Listener {
         Player player = event.getPlayer();
         vm.playerVaultFile(player.getName());
         if(player.isOp() && PlayerVaults.UPDATE) {
-            player.sendMessage(ChatColor.GREEN + "Version " + PlayerVaults.NAME + " of PlayerVaults is up for download!");
-            player.sendMessage(ChatColor.GREEN + "http://dev.bukkit.org/server-mods/playervaults/ to view the changelog and download!");
+            player.sendMessage(ChatColor.GREEN + "Version " + PlayerVaults.NEWVERSION + " of PlayerVaults is up for download!");
+            player.sendMessage(ChatColor.GREEN + PlayerVaults.LINK + " to view the changelog and download!");
         }
     }
 

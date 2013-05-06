@@ -23,7 +23,8 @@ public class PlayerVaults extends JavaPlugin {
     public static PlayerVaults PLUGIN;
     public Logger log;
     public static boolean UPDATE = false;
-    public static String NAME = "";
+    public static String NEWVERSION = "";
+    public static String LINK = "";
     Commands commands;
     public static Economy ECON = null;
     public static boolean DROP_ON_DEATH = false;
@@ -44,14 +45,13 @@ public class PlayerVaults extends JavaPlugin {
         loadConfig();
         loadSigns();
         startMetrics();
-        Updater u = new Updater(getDescription().getVersion());
+        Updater u = new Updater();
         if(getConfig().getBoolean("check-update")) {
             try {
                 if(u.getUpdate()) {
                     UPDATE = true;
-                    NAME = u.getNewVersion();
                 }
-            } catch(Exception e) {
+            } catch(IOException e) {
                 log.log(Level.WARNING, "PlayerVaults: Failed to check for updates.");
                 log.log(Level.WARNING, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
                 e.printStackTrace();
