@@ -67,9 +67,21 @@ public class Commands implements CommandExecutor {
                 sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
             }
         } else if(cmd.getName().equalsIgnoreCase("pvsign")) {
-            if(sender.hasPermission("playervaults.setsign")) {
+            if(sender.hasPermission("playervaults.signs.set")) {
                 if(sender instanceof Player) {
-                    if(args.length >= 2) {
+                    if(args.length == 1) {
+                        int i = 0;
+                        try {
+                            i = Integer.parseInt(args[0]);
+                        } catch(NumberFormatException nfe) {
+                            sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
+                            sender.sendMessage(Lang.TITLE.toString() + "Usage: /" + label + " <owner> <#>");
+                            return true;
+                        }
+                        SET_SIGN.put(sender.getName(), new SignSetInfo(i));
+                        sender.sendMessage(Lang.TITLE.toString() + Lang.CLICK_A_SIGN);
+                    }
+                    else if(args.length >= 2) {
                         int i = 0;
                         try {
                             i = Integer.parseInt(args[1]);

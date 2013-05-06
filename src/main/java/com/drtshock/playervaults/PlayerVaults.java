@@ -48,7 +48,7 @@ public class PlayerVaults extends JavaPlugin {
         Updater u = new Updater();
         if(getConfig().getBoolean("check-update")) {
             try {
-                if(u.getUpdate()) {
+                if(u.getUpdate(getDescription().getVersion())) {
                     UPDATE = true;
                 }
             } catch(IOException e) {

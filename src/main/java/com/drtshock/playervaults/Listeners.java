@@ -127,7 +127,11 @@ public class Listeners implements Listener {
         }
         if(Commands.SET_SIGN.containsKey(player.getName())) {
             int i = Commands.SET_SIGN.get(player.getName()).getChest();
-            String owner = Commands.SET_SIGN.get(player.getName()).getOwner();
+            boolean self = Commands.SET_SIGN.get(player.getName()).isSelf();
+            String owner = null;
+            if(!self) {
+                owner = Commands.SET_SIGN.get(player.getName()).getOwner();
+            }
             Commands.SET_SIGN.remove(player.getName());
             event.setCancelled(true);
             if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -138,7 +142,11 @@ public class Listeners implements Listener {
                     int x = l.getBlockX();
                     int y = l.getBlockY();
                     int z = l.getBlockZ();
-                    plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z + ".owner", owner);
+                    if(self) {
+                        plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z + ".self", self);
+                    } else {
+                        plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z + ".owner", owner);
+                    }
                     plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z + ".chest", i);
                     plugin.saveSigns();
                     player.sendMessage(Lang.TITLE.toString() + Lang.SET_SIGN);
@@ -159,21 +167,29 @@ public class Listeners implements Listener {
                 int y = l.getBlockY();
                 int z = l.getBlockZ();
                 if(plugin.getSigns().getKeys(false).contains(world + ";;" + x + ";;" + y + ";;" + z)) {
-                    String owner = PlayerVaults.SIGNS.getString(world + ";;" + x + ";;" + y + ";;" + z + ".owner");
-                    int num = PlayerVaults.SIGNS.getInt(world + ";;" + x + ";;" + y + ";;" + z + ".chest");
-                    PlayerVaults.VM.loadVault(player, owner, num);
-                    event.setCancelled(true);
-                    player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_WITH_SIGN.toString().replace("%v", String.valueOf(num)).replace("%p", owner));
+                    if(player.hasPermission("playervaults.signs.use")) {
+                        boolean self = PlayerVaults.SIGNS.getBoolean(world + ";;" + x + ";;" + y + ";;" + z + ".self", false);
+                        String owner = null;
+                        if(!self) {
+                            owner = PlayerVaults.SIGNS.getString(world + ";;" + x + ";;" + y + ";;" + z + ".owner");
+                        }
+                        int num = PlayerVaults.SIGNS.getInt(world + ";;" + x + ";;" + y + ";;" + z + ".chest");
+                        PlayerVaults.VM.loadVault(player, (self) ? player.getName() : owner, num);
+                        event.setCancelled(true);
+                        player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_WITH_SIGN.toString().replace("%v", String.valueOf(num)).replace("%p", (self) ? player.getName() : owner));
+                    } else {
+                        player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
+                    }
                 }
             }
         }
     }
-    
+
     @EventHandler
     public void onBlockPhysics(BlockPhysicsEvent event) {
         blockChangeCheck(event.getBlock().getLocation());
     }
-    
+
     @EventHandler
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
         blockChangeCheck(event.getBlock().getLocation());
@@ -183,7 +199,7 @@ public class Listeners implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         blockChangeCheck(event.getBlock().getLocation());
     }
-    
+
     public void blockChangeCheck(Location l) {
         String world = l.getWorld().getName();
         int x = l.getBlockX();
