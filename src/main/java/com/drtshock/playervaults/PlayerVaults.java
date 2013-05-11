@@ -119,11 +119,11 @@ public class PlayerVaults extends JavaPlugin {
         PlayerVaults.SIGNS_FILE = signs;
         PlayerVaults.SIGNS = YamlConfiguration.loadConfiguration(signs);
     }
-    
+
     public YamlConfiguration getSigns() {
         return PlayerVaults.SIGNS;
     }
-    
+
     public void saveSigns() {
         try {
             PlayerVaults.SIGNS.save(PlayerVaults.SIGNS_FILE);
