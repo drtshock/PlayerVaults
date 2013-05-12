@@ -42,6 +42,7 @@ public class Updater extends PlayerVaults {
             String version = json.getString("dbo_version");
             String link = json.getString("link");
             PlayerVaults.LINK = link;
+            PlayerVaults.NEWVERSION = version;
             if(!version.equalsIgnoreCase(v)) {
                 return true;
             }
