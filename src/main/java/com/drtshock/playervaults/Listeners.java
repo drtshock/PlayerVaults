@@ -175,6 +175,7 @@ public class Listeners implements Listener {
                         }
                         int num = PlayerVaults.SIGNS.getInt(world + ";;" + x + ";;" + y + ";;" + z + ".chest");
                         PlayerVaults.VM.loadVault(player, (self) ? player.getName() : owner, num);
+                        Commands.IN_VAULT.put(player.getName(), new VaultViewInfo((self) ? player.getName() : owner, num));
                         event.setCancelled(true);
                         player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_WITH_SIGN.toString().replace("%v", String.valueOf(num)).replace("%p", (self) ? player.getName() : owner));
                     } else {
