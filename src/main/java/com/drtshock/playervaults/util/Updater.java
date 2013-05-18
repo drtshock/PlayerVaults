@@ -41,8 +41,9 @@ public class Updater extends PlayerVaults {
             json = getInfo();
             String version = json.getString("dbo_version");
             String link = json.getString("link");
-            PlayerVaults.LINK = link;
             PlayerVaults.NEWVERSION = version;
+            String goodLink = new BufferedReader(new InputStreamReader(new URL("http://is.gd/create.php?format=simple&url=" + link).openStream())).readLine();
+            PlayerVaults.LINK = goodLink;
             if(!version.equalsIgnoreCase(v)) {
                 return true;
             }
