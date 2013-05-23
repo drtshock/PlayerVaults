@@ -48,11 +48,14 @@ public class Listeners implements Listener {
     public void saveVault(Player p) {
         if(PlayerVaults.IN_VAULT.containsKey(p.getName())) {
             Inventory inv = p.getOpenInventory().getTopInventory();
-            VaultViewInfo info = PlayerVaults.IN_VAULT.get(p.getName());
-            try {
-                vm.saveVault(inv, info.getHolder(), info.getNumber());
-            } catch(IOException e) {
-                e.printStackTrace();
+            if(inv.getViewers().size() == 1) {
+                VaultViewInfo info = PlayerVaults.IN_VAULT.get(p.getName());
+                try {
+                    vm.saveVault(inv, info.getHolder(), info.getNumber());
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
+                PlayerVaults.OPENINVENTORIES.remove(info.toString());
             }
             PlayerVaults.IN_VAULT.remove(p.getName());
         }

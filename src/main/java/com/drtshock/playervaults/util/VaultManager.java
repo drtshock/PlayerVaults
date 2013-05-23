@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import com.drtshock.playervaults.PlayerVaults;
+import com.drtshock.playervaults.commands.VaultViewInfo;
 
 public class VaultManager {
 
@@ -51,23 +52,29 @@ public class VaultManager {
      * TODO: Check to see if the path exists before we get it!
      */
     public void loadVault(Player player, String holder, int number) {
+        VaultViewInfo info = new VaultViewInfo(holder, number);
         Inventory inv = null;
-        YamlConfiguration playerFile = playerVaultFile(holder);
-        if(playerFile.getConfigurationSection("vault" + number) == null) {
-            inv = Bukkit.createInventory(player, 54, ChatColor.DARK_RED + "Vault #" + String.valueOf(number));
-        }
-        else {
-            List<String> data = new ArrayList<String>();
-            for(int x = 0; x < 54; x++) {
-                String line = playerFile.getString("vault" + number + "." + x);
-                if(line != null) {
-                    data.add(line);
-                }
-                else {
-                    data.add("null");
-                }
+        if(PlayerVaults.OPENINVENTORIES.containsKey(info.toString())) {
+            inv = PlayerVaults.OPENINVENTORIES.get(info.toString());
+        } else {
+            YamlConfiguration playerFile = playerVaultFile(holder);
+            if(playerFile.getConfigurationSection("vault" + number) == null) {
+                inv = Bukkit.createInventory(player, 54, ChatColor.DARK_RED + "Vault #" + String.valueOf(number));
             }
-            inv = Serialization.toInventory(data, number);
+            else {
+                List<String> data = new ArrayList<String>();
+                for(int x = 0; x < 54; x++) {
+                    String line = playerFile.getString("vault" + number + "." + x);
+                    if(line != null) {
+                        data.add(line);
+                    }
+                    else {
+                        data.add("null");
+                    }
+                }
+                inv = Serialization.toInventory(data, number);
+            }
+            PlayerVaults.OPENINVENTORIES.put(info.toString(), inv);
         }
         player.openInventory(inv);
     }

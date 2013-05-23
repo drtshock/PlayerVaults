@@ -17,5 +17,9 @@ public class VaultViewInfo {
     public int getNumber() {
         return this.i;
     }
+    
+    public String toString() {
+        return this.s + " " + this.i;
+    }
 
 }

@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -31,6 +32,7 @@ public class PlayerVaults extends JavaPlugin {
     Commands commands;
     public static HashMap<String, SignSetInfo> SET_SIGN = new HashMap<String, SignSetInfo>();
     public static HashMap<String, VaultViewInfo> IN_VAULT = new HashMap<String, VaultViewInfo>();
+    public static HashMap<String, Inventory> OPENINVENTORIES = new HashMap<String, Inventory>();
     public static Economy ECON = null;
     public static boolean DROP_ON_DEATH = false;
     public static int INVENTORIES_TO_DROP = 0;
