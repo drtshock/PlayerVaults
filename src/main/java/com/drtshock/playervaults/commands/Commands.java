@@ -1,6 +1,5 @@
 package com.drtshock.playervaults.commands;
 
-import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,12 +10,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
+import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
 
 public class Commands implements CommandExecutor {
-
-    public static HashMap<String, VaultViewInfo> IN_VAULT = new HashMap<String, VaultViewInfo>();
-    public static HashMap<String, SignSetInfo> SET_SIGN = new HashMap<String, SignSetInfo>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -26,11 +23,11 @@ public class Commands implements CommandExecutor {
                 switch (args.length) {
                 case 1:
                     if(VaultOperations.openOwnVault(p, args[0]))
-                        IN_VAULT.put(sender.getName(), new VaultViewInfo(sender.getName(), Integer.parseInt(args[0])));
+                        PlayerVaults.IN_VAULT.put(sender.getName(), new VaultViewInfo(sender.getName(), Integer.parseInt(args[0])));
                     break;
                 case 2:
                     if(VaultOperations.openOtherVault(p, args[0], args[1]))
-                        IN_VAULT.put(sender.getName(), new VaultViewInfo(args[0], Integer.parseInt(args[1])));
+                        PlayerVaults.IN_VAULT.put(sender.getName(), new VaultViewInfo(args[0], Integer.parseInt(args[1])));
                     break;
                 default:
                     Feedback.showHelp(sender, Feedback.Type.OPEN);
@@ -78,7 +75,7 @@ public class Commands implements CommandExecutor {
                             sender.sendMessage(Lang.TITLE.toString() + "Usage: /" + label + " <owner> <#>");
                             return true;
                         }
-                        SET_SIGN.put(sender.getName(), new SignSetInfo(i));
+                        PlayerVaults.SET_SIGN.put(sender.getName(), new SignSetInfo(i));
                         sender.sendMessage(Lang.TITLE.toString() + Lang.CLICK_A_SIGN);
                     }
                     else if(args.length >= 2) {
@@ -90,7 +87,7 @@ public class Commands implements CommandExecutor {
                             sender.sendMessage(Lang.TITLE.toString() + "Usage: /" + label + " <owner> <#>");
                             return true;
                         }
-                        SET_SIGN.put(sender.getName(), new SignSetInfo(args[0].toLowerCase(), i));
+                        PlayerVaults.SET_SIGN.put(sender.getName(), new SignSetInfo(args[0].toLowerCase(), i));
                         sender.sendMessage(Lang.TITLE.toString() + Lang.CLICK_A_SIGN);
                     } else {
                         sender.sendMessage(Lang.TITLE.toString() + Lang.INVALID_ARGS);

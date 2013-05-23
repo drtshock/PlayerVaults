@@ -25,7 +25,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 
-import com.drtshock.playervaults.commands.Commands;
 import com.drtshock.playervaults.commands.VaultViewInfo;
 import com.drtshock.playervaults.util.DropOnDeath;
 import com.drtshock.playervaults.util.Lang;
@@ -47,15 +46,15 @@ public class Listeners implements Listener {
      * @param Player p
      */
     public void saveVault(Player p) {
-        if(Commands.IN_VAULT.containsKey(p.getName())) {
+        if(PlayerVaults.IN_VAULT.containsKey(p.getName())) {
             Inventory inv = p.getOpenInventory().getTopInventory();
-            VaultViewInfo info = Commands.IN_VAULT.get(p.getName());
+            VaultViewInfo info = PlayerVaults.IN_VAULT.get(p.getName());
             try {
                 vm.saveVault(inv, info.getHolder(), info.getNumber());
             } catch(IOException e) {
                 e.printStackTrace();
             }
-            Commands.IN_VAULT.remove(p.getName());
+            PlayerVaults.IN_VAULT.remove(p.getName());
         }
     }
 
@@ -108,7 +107,7 @@ public class Listeners implements Listener {
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if(Commands.IN_VAULT.containsKey(player.getName())) {
+            if(PlayerVaults.IN_VAULT.containsKey(player.getName())) {
                 Block block = event.getClickedBlock();
 
                 /**
@@ -125,14 +124,14 @@ public class Listeners implements Listener {
                 }
             }
         }
-        if(Commands.SET_SIGN.containsKey(player.getName())) {
-            int i = Commands.SET_SIGN.get(player.getName()).getChest();
-            boolean self = Commands.SET_SIGN.get(player.getName()).isSelf();
+        if(PlayerVaults.SET_SIGN.containsKey(player.getName())) {
+            int i = PlayerVaults.SET_SIGN.get(player.getName()).getChest();
+            boolean self = PlayerVaults.SET_SIGN.get(player.getName()).isSelf();
             String owner = null;
             if(!self) {
-                owner = Commands.SET_SIGN.get(player.getName()).getOwner();
+                owner = PlayerVaults.SET_SIGN.get(player.getName()).getOwner();
             }
-            Commands.SET_SIGN.remove(player.getName());
+            PlayerVaults.SET_SIGN.remove(player.getName());
             event.setCancelled(true);
             if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if(event.getClickedBlock().getType() == Material.WALL_SIGN || event.getClickedBlock().getType() == Material.SIGN_POST) {
@@ -175,7 +174,7 @@ public class Listeners implements Listener {
                         }
                         int num = PlayerVaults.SIGNS.getInt(world + ";;" + x + ";;" + y + ";;" + z + ".chest");
                         PlayerVaults.VM.loadVault(player, (self) ? player.getName() : owner, num);
-                        Commands.IN_VAULT.put(player.getName(), new VaultViewInfo((self) ? player.getName() : owner, num));
+                        PlayerVaults.IN_VAULT.put(player.getName(), new VaultViewInfo((self) ? player.getName() : owner, num));
                         event.setCancelled(true);
                         player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_WITH_SIGN.toString().replace("%v", String.valueOf(num)).replace("%p", (self) ? player.getName() : owner));
                     } else {
@@ -220,7 +219,7 @@ public class Listeners implements Listener {
     public void onInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         EntityType type = event.getRightClicked().getType();
-        if((type == EntityType.VILLAGER || type == EntityType.MINECART) && Commands.IN_VAULT.containsKey(player.getName())) {
+        if((type == EntityType.VILLAGER || type == EntityType.MINECART) && PlayerVaults.IN_VAULT.containsKey(player.getName())) {
             event.setCancelled(true);
         }
     }

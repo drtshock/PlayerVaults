@@ -3,6 +3,7 @@ package com.drtshock.playervaults;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,6 +14,8 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.drtshock.playervaults.commands.Commands;
+import com.drtshock.playervaults.commands.SignSetInfo;
+import com.drtshock.playervaults.commands.VaultViewInfo;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.Metrics;
 import com.drtshock.playervaults.util.Updater;
@@ -26,6 +29,8 @@ public class PlayerVaults extends JavaPlugin {
     public static String NEWVERSION = "";
     public static String LINK = "";
     Commands commands;
+    public static HashMap<String, SignSetInfo> SET_SIGN = new HashMap<String, SignSetInfo>();
+    public static HashMap<String, VaultViewInfo> IN_VAULT = new HashMap<String, VaultViewInfo>();
     public static Economy ECON = null;
     public static boolean DROP_ON_DEATH = false;
     public static int INVENTORIES_TO_DROP = 0;
