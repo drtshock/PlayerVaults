@@ -2,6 +2,7 @@ package com.drtshock.playervaults;
 
 import java.io.IOException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,14 +24,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
 
 import com.drtshock.playervaults.commands.VaultViewInfo;
 import com.drtshock.playervaults.util.DropOnDeath;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.VaultManager;
-import org.bukkit.Bukkit;
-import org.bukkit.event.server.PluginDisableEvent;
 
 public class Listeners implements Listener {
 
@@ -39,6 +39,7 @@ public class Listeners implements Listener {
     public Listeners(PlayerVaults playerVaults) {
         this.plugin = playerVaults;
     }
+
     VaultManager vm = new VaultManager(plugin);
 
     /**
@@ -53,7 +54,7 @@ public class Listeners implements Listener {
                 VaultViewInfo info = PlayerVaults.IN_VAULT.get(p.getName());
                 try {
                     vm.saveVault(inv, info.getHolder(), info.getNumber());
-                } catch (IOException e) {
+                } catch(IOException e) {
                 }
                 PlayerVaults.OPENINVENTORIES.remove(info.toString());
             }
@@ -69,8 +70,8 @@ public class Listeners implements Listener {
      */
     @EventHandler
     public void onDisableEvent(PluginDisableEvent event) {
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            if(PlayerVaults.IN_VAULT.containsKey(p.getName())) {
+        for(Player p:Bukkit.getOnlinePlayers()) {
+            if (PlayerVaults.IN_VAULT.containsKey(p.getName())) {
                 p.closeInventory();
             }
         }
@@ -90,7 +91,7 @@ public class Listeners implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        vm.playerVaultFile(player.getName());
+        vm.getPlayerVaultFile(player.getName());
         if (player.isOp() && PlayerVaults.UPDATE) {
             player.sendMessage(ChatColor.GREEN + "Version " + PlayerVaults.NEWVERSION + " of PlayerVaults is up for download!");
             player.sendMessage(ChatColor.GREEN + PlayerVaults.LINK + " to view the changelog and download!");
@@ -127,10 +128,7 @@ public class Listeners implements Listener {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (PlayerVaults.IN_VAULT.containsKey(player.getName())) {
                 Block block = event.getClickedBlock();
-
-                /**
-                 * Different inventories that we don't want the player to open.
-                 */
+                // Different inventories that we don't want the player to open.
                 if (block.getType() == Material.CHEST
                         || block.getType() == Material.ENDER_CHEST
                         || block.getType() == Material.FURNACE
@@ -190,7 +188,8 @@ public class Listeners implements Listener {
                             owner = PlayerVaults.SIGNS.getString(world + ";;" + x + ";;" + y + ";;" + z + ".owner");
                         }
                         int num = PlayerVaults.SIGNS.getInt(world + ";;" + x + ";;" + y + ";;" + z + ".chest");
-                        PlayerVaults.VM.loadVault(player, (self) ? player.getName() : owner, num);
+                        Inventory inv = PlayerVaults.VM.loadVault((self) ? player.getName() : owner, num);
+                        player.openInventory(inv);
                         PlayerVaults.IN_VAULT.put(player.getName(), new VaultViewInfo((self) ? player.getName() : owner, num));
                         event.setCancelled(true);
                         player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_WITH_SIGN.toString().replace("%v", String.valueOf(num)).replace("%p", (self) ? player.getName() : owner));
@@ -217,11 +216,15 @@ public class Listeners implements Listener {
         blockChangeCheck(event.getBlock().getLocation());
     }
 
-    public void blockChangeCheck(Location l) {
-        String world = l.getWorld().getName();
-        int x = l.getBlockX();
-        int y = l.getBlockY();
-        int z = l.getBlockZ();
+    /**
+     * Check if the location given is a sign, and if so, remove it from the signs.yml file
+     * @param location The location to check
+     */
+    public void blockChangeCheck(Location location) {
+        String world = location.getWorld().getName();
+        int x = location.getBlockX();
+        int y = location.getBlockY();
+        int z = location.getBlockZ();
         if (plugin.getSigns().getKeys(false).contains(world + ";;" + x + ";;" + y + ";;" + z)) {
             plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z, null);
             plugin.saveSigns();
@@ -229,8 +232,7 @@ public class Listeners implements Listener {
     }
 
     /**
-     * Don't let a player open a trading inventory OR a minecart while he has
-     * his vault open.
+     * Don't let a player open a trading inventory OR a minecart while he has his vault open.
      */
     @EventHandler
     public void onInteractEntity(PlayerInteractEntityEvent event) {

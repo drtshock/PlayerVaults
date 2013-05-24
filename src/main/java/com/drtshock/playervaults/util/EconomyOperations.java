@@ -13,6 +13,9 @@ import org.bukkit.entity.Player;
 
 import com.drtshock.playervaults.PlayerVaults;
 
+/**
+ * A class that handles all economy operations.
+ */
 public class EconomyOperations {
 
     private static File CONFIG_FILE;
@@ -28,17 +31,16 @@ public class EconomyOperations {
 
     /**
      * Have a player pay to open a vault.
-     * Returns true if successful. Otherwise false.
-     * @param player
-     * @return transaction success
+     * @param player The player to pay.
+     * @return The transaction success.
      */
     public static boolean payToOpen(Player player) {
-        if(!BUKKIT_CONFIG.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !PlayerVaults.USE_VAULT)
+        if (!BUKKIT_CONFIG.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !PlayerVaults.USE_VAULT)
             return true;
 
         double cost = BUKKIT_CONFIG.getDouble("economy.cost-to-open", 10);
         EconomyResponse resp = PlayerVaults.ECON.withdrawPlayer(player.getName(), cost);
-        if(resp.transactionSuccess()) {
+        if (resp.transactionSuccess()) {
             player.sendMessage(Lang.TITLE.toString() + Lang.COST_TO_OPEN.toString().replaceAll("%price", "" + cost));
             return true;
         }
@@ -48,17 +50,16 @@ public class EconomyOperations {
 
     /**
      * Have a player pay to create a vault.
-     * Returns true if successful. Otherwise false.
-     * @param player
-     * @return transaction success
+     * @param player The player to pay.
+     * @return The transaction success
      */
     public static boolean payToCreate(Player player) {
-        if(!BUKKIT_CONFIG.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !PlayerVaults.USE_VAULT)
+        if (!BUKKIT_CONFIG.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !PlayerVaults.USE_VAULT)
             return true;
 
         double cost = BUKKIT_CONFIG.getDouble("economy.cost-to-create", 100);
         EconomyResponse resp = PlayerVaults.ECON.withdrawPlayer(player.getName(), cost);
-        if(resp.transactionSuccess()) {
+        if (resp.transactionSuccess()) {
             player.sendMessage(Lang.TITLE.toString() + Lang.COST_TO_CREATE.toString().replaceAll("%price", "" + cost));
             return true;
         }
@@ -68,20 +69,19 @@ public class EconomyOperations {
 
     /**
      * Have a player get his money back when vault is deleted.
-     * Returns true if successful. Otherwise false.
-     * @param player
-     * @return transaction success.
+     * @param player The player to receive the money.
+     * @return The transaction success.
      */
     public static boolean refundOnDelete(Player player, int number) {
         String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
-
-        if(!BUKKIT_CONFIG.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !PlayerVaults.USE_VAULT)
+        if (!BUKKIT_CONFIG.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !PlayerVaults.USE_VAULT) {
             return true;
+        }
         String name = player.getName().toLowerCase();
         File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
         YamlConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
-        if(file.exists()) {
-            if(playerFile.getString("vault" + number) == null) {
+        if (file.exists()) {
+            if (playerFile.getString("vault" + number) == null) {
                 player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.VAULT_DOES_NOT_EXIST);
                 return false;
             }
@@ -92,7 +92,7 @@ public class EconomyOperations {
         }
         double cost = BUKKIT_CONFIG.getDouble("economy.refund-on-delete");
         EconomyResponse resp = PlayerVaults.ECON.depositPlayer(player.getName(), cost);
-        if(resp.transactionSuccess()) {
+        if (resp.transactionSuccess()) {
             player.sendMessage(Lang.TITLE.toString() + Lang.REFUND_AMOUNT.toString().replaceAll("%price", String.valueOf(cost)));
             return true;
         }

@@ -87,7 +87,7 @@ public class JSONTokener {
      * the next number or identifier.
      */
     public void back() throws JSONException {
-        if(this.usePrevious || this.index <= 0) {
+        if (this.usePrevious || this.index <= 0) {
             throw new JSONException("Stepping back two steps is not supported");
         }
         this.index -= 1;
@@ -103,13 +103,13 @@ public class JSONTokener {
      * @return  An int between 0 and 15, or -1 if c was not a hex digit.
      */
     public static int dehexchar(char c) {
-        if(c >= '0' && c <= '9') {
+        if (c >= '0' && c <= '9') {
             return c - '0';
         }
-        if(c >= 'A' && c <= 'F') {
+        if (c >= 'A' && c <= 'F') {
             return c - ('A' - 10);
         }
-        if(c >= 'a' && c <= 'f') {
+        if (c >= 'a' && c <= 'f') {
             return c - ('a' - 10);
         }
         return -1;
@@ -126,7 +126,7 @@ public class JSONTokener {
      */
     public boolean more() throws JSONException {
         this.next();
-        if(this.end()) {
+        if (this.end()) {
             return false;
         }
         this.back();
@@ -140,7 +140,7 @@ public class JSONTokener {
      */
     public char next() throws JSONException {
         int c;
-        if(this.usePrevious) {
+        if (this.usePrevious) {
             this.usePrevious = false;
             c = this.previous;
         } else {
@@ -150,16 +150,16 @@ public class JSONTokener {
                 throw new JSONException(exception);
             }
 
-            if(c <= 0) { // End of stream
+            if (c <= 0) { // End of stream
                 this.eof = true;
                 c = 0;
             }
         }
         this.index += 1;
-        if(this.previous == '\r') {
+        if (this.previous == '\r') {
             this.line += 1;
             this.character = c == '\n' ? 0 : 1;
-        } else if(c == '\n') {
+        } else if (c == '\n') {
             this.line += 1;
             this.character = 0;
         } else {
@@ -178,7 +178,7 @@ public class JSONTokener {
      */
     public char next(char c) throws JSONException {
         char n = this.next();
-        if(n != c) {
+        if (n != c) {
             throw this.syntaxError("Expected '" + c + "' and instead saw '" +
                     n + "'");
         }
@@ -195,16 +195,16 @@ public class JSONTokener {
      *   n characters remaining in the source string.
      */
     public String next(int n) throws JSONException {
-        if(n == 0) {
+        if (n == 0) {
             return "";
         }
 
         char[] chars = new char[n];
         int pos = 0;
 
-        while (pos < n) {
+        while(pos < n) {
             chars[pos] = this.next();
-            if(this.end()) {
+            if (this.end()) {
                 throw this.syntaxError("Substring bounds error");
             }
             pos += 1;
@@ -220,7 +220,7 @@ public class JSONTokener {
     public char nextClean() throws JSONException {
         for(;;) {
             char c = this.next();
-            if(c == 0 || c > ' ') {
+            if (c == 0 || c > ' ') {
                 return c;
             }
         }
@@ -279,7 +279,7 @@ public class JSONTokener {
                 }
                 break;
             default:
-                if(c == quote) {
+                if (c == quote) {
                     return sb.toString();
                 }
                 sb.append(c);
@@ -297,8 +297,8 @@ public class JSONTokener {
         StringBuffer sb = new StringBuffer();
         for(;;) {
             char c = this.next();
-            if(c == delimiter || c == 0 || c == '\n' || c == '\r') {
-                if(c != 0) {
+            if (c == delimiter || c == 0 || c == '\n' || c == '\r') {
+                if (c != 0) {
                     this.back();
                 }
                 return sb.toString().trim();
@@ -318,9 +318,9 @@ public class JSONTokener {
         StringBuffer sb = new StringBuffer();
         for(;;) {
             c = this.next();
-            if(delimiters.indexOf(c) >= 0 || c == 0 ||
+            if (delimiters.indexOf(c) >= 0 || c == 0 ||
                     c == '\n' || c == '\r') {
-                if(c != 0) {
+                if (c != 0) {
                     this.back();
                 }
                 return sb.toString().trim();
@@ -362,14 +362,14 @@ public class JSONTokener {
          */
 
         StringBuffer sb = new StringBuffer();
-        while (c >= ' ' && ",:]}/\\\"[{;=#".indexOf(c) < 0) {
+        while(c >= ' ' && ",:]}/\\\"[{;=#".indexOf(c) < 0) {
             sb.append(c);
             c = this.next();
         }
         this.back();
 
         string = sb.toString().trim();
-        if("".equals(string)) {
+        if ("".equals(string)) {
             throw this.syntaxError("Missing value");
         }
         return JSONObject.stringToValue(string);
@@ -391,14 +391,14 @@ public class JSONTokener {
             this.reader.mark(1000000);
             do {
                 c = this.next();
-                if(c == 0) {
+                if (c == 0) {
                     this.reader.reset();
                     this.index = startIndex;
                     this.character = startCharacter;
                     this.line = startLine;
                     return c;
                 }
-            } while (c != to);
+            } while(c != to);
         } catch(IOException exc) {
             throw new JSONException(exc);
         }

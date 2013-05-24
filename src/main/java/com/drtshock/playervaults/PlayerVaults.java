@@ -53,9 +53,9 @@ public class PlayerVaults extends JavaPlugin {
         loadSigns();
         startMetrics();
         Updater u = new Updater();
-        if(getConfig().getBoolean("check-update")) {
+        if (getConfig().getBoolean("check-update")) {
             try {
-                if(u.getUpdate(getDescription().getVersion())) {
+                if (u.getUpdate(getDescription().getVersion())) {
                     UPDATE = true;
                 }
             } catch(IOException e) {
@@ -72,7 +72,7 @@ public class PlayerVaults extends JavaPlugin {
         getCommand("workbench").setExecutor(commands);
         setupEconomy();
 
-        if(getConfig().getBoolean("drop-on-death.enabled")) {
+        if (getConfig().getBoolean("drop-on-death.enabled")) {
             DROP_ON_DEATH = true;
             INVENTORIES_TO_DROP = getConfig().getInt("drop-on-death.inventories");
         }
@@ -81,6 +81,9 @@ public class PlayerVaults extends JavaPlugin {
         VM = new VaultManager(this);
     }
 
+    /**
+     * Start metrics
+     */
     public void startMetrics() {
         try {
             Metrics metrics = new Metrics(this);
@@ -90,12 +93,17 @@ public class PlayerVaults extends JavaPlugin {
         }
     }
 
+    /**
+     * Setup economy
+     * 
+     * @return Whether or not economy exists.
+     */
     private boolean setupEconomy() {
-        if(getServer().getPluginManager().getPlugin("Vault") == null) {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
         }
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if(rsp == null) {
+        if (rsp == null) {
             return false;
         }
         ECON = rsp.getProvider();
@@ -103,18 +111,24 @@ public class PlayerVaults extends JavaPlugin {
         return ECON != null;
     }
 
+    /**
+     * Load the config.yml file.
+     */
     public void loadConfig() {
         File config = new File(getDataFolder() + File.separator + "config.yml");
-        if(!config.exists()) {
+        if (!config.exists()) {
             saveDefaultConfig();
         } else {
             updateConfig();
         }
     }
 
+    /**
+     * Load the signs.yml file.
+     */
     public void loadSigns() {
         File signs = new File(getDataFolder(), "signs.yml");
-        if(!signs.exists()) {
+        if (!signs.exists()) {
             try {
                 signs.createNewFile();
             } catch(IOException e) {
@@ -127,10 +141,18 @@ public class PlayerVaults extends JavaPlugin {
         PlayerVaults.SIGNS = YamlConfiguration.loadConfiguration(signs);
     }
 
+    /**
+     * Get the signs.yml config.
+     * 
+     * @return The signs.yml config.
+     */
     public YamlConfiguration getSigns() {
         return PlayerVaults.SIGNS;
     }
 
+    /**
+     * Save the signs.yml file.
+     */
     public void saveSigns() {
         try {
             PlayerVaults.SIGNS.save(PlayerVaults.SIGNS_FILE);
@@ -141,6 +163,9 @@ public class PlayerVaults extends JavaPlugin {
         }
     }
 
+    /**
+     * Update the config.yml file.
+     */
     public void updateConfig() {
         boolean checkUpdate = getConfig().getBoolean("check-update", true);
         boolean ecoEnabled = getConfig().getBoolean("economy.enabled", false);
@@ -166,18 +191,28 @@ public class PlayerVaults extends JavaPlugin {
         }
     }
 
+    /**
+     * Set an object in the config.yml
+     * @param path The path in the config.
+     * @param object What to be saved.
+     * @param conf Where to save the object.
+     */
     public <T> void setInConfig(String path, T object, YamlConfiguration conf) {
         conf.set(path, object);
     }
 
+    /**
+     * Load the lang.yml file.
+     * @return The lang.yml config.
+     */
     public YamlConfiguration loadLang() {
         File lang = new File(getDataFolder(), "lang.yml");
-        if(!lang.exists()) {
+        if (!lang.exists()) {
             try {
                 getDataFolder().mkdir();
                 lang.createNewFile();
                 InputStream defConfigStream = this.getResource("lang.yml");
-                if(defConfigStream != null) {
+                if (defConfigStream != null) {
                     YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
                     defConfig.save(lang);
                     Lang.setFile(defConfig);
@@ -197,10 +232,18 @@ public class PlayerVaults extends JavaPlugin {
         return conf;
     }
 
+    /**
+     * Gets the lang.yml config.
+     * @return The lang.yml config.
+     */
     public YamlConfiguration getLang() {
         return LANG;
     }
 
+    /**
+     * Get the lang.yml file.
+     * @return The lang.yml file.
+     */
     public File getLangFile() {
         return LANG_FILE;
     }

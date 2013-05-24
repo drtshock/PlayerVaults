@@ -3,6 +3,9 @@ package com.drtshock.playervaults.util;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+/**
+ * An enum for requesting strings from the language file.
+ */
 public enum Lang {
     TITLE("title-name", "&4[&fPlayerVaults&4]:"),
     OPEN_VAULT("open-vault", "&fOpening vault &a%v"),
@@ -21,34 +24,51 @@ public enum Lang {
     COST_TO_OPEN("cost-to-open", "&fYou were charged &c%price &ffor opening that vault."),
     VAULT_DOES_NOT_EXIST("vault-does-not-exist", "&cThat vault does not exist!"),
     CLICK_A_SIGN("click-a-sign", "&fNow click a sign!"),
-    NOT_A_SIGN("not-a-sign","&cYou must click a sign!"),
+    NOT_A_SIGN("not-a-sign", "&cYou must click a sign!"),
     SET_SIGN("set-sign-success", "&fYou have successfully set a PlayerVault access sign!"),
     OPEN_WITH_SIGN("open-with-sign", "&fOpening vault &a%v &fof &a%p");
 
     private String path;
-    private String def; // Default string
+    private String def;
     private static YamlConfiguration LANG;
 
+    /**
+     * Lang enum constructor.
+     * @param path The string path.
+     * @param start The default string.
+     */
     Lang(String path, String start) {
         this.path = path;
         this.def = start;
     }
 
-    public static void setFile(YamlConfiguration yc) {
-        LANG = yc;
+    /**
+     * Set the {@code YamlConfiguration} to use.
+     * @param config The config to set.
+     */
+    public static void setFile(YamlConfiguration config) {
+        LANG = config;
     }
 
     @Override
     public String toString() {
-        if(this == TITLE)
+        if (this == TITLE)
             return ChatColor.translateAlternateColorCodes('&', LANG.getString(this.path, def)) + " ";
         return ChatColor.translateAlternateColorCodes('&', LANG.getString(this.path, def));
     }
 
+    /**
+     * Get the default value of the path.
+     * @return The default value of the path.
+     */
     public String getDefault() {
         return this.def;
     }
 
+    /**
+     * Get the path to the string.
+     * @return The path to the string.
+     */
     public String getPath() {
         return this.path;
     }

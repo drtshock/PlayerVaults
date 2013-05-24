@@ -15,6 +15,9 @@ import org.json.JSONObject;
 
 import com.drtshock.playervaults.PlayerVaults;
 
+/**
+ * A class for updating the lang.yml and checking for updates at DBO.
+ */
 public class Updater extends PlayerVaults {
 
     SortedMap<String, String> lang = new TreeMap<String, String>();
@@ -22,7 +25,7 @@ public class Updater extends PlayerVaults {
     public Updater() {
         YamlConfiguration langConf = super.getLang();
         for(Lang item:Lang.values()) {
-            if(langConf.getString(item.getPath()) == null) {
+            if (langConf.getString(item.getPath()) == null) {
                 langConf.set(item.getPath(), item.getDefault());
             }
         }
@@ -35,7 +38,13 @@ public class Updater extends PlayerVaults {
         }
     }
 
-    public boolean getUpdate(String v) throws IOException {
+    /**
+     * Check whether or not there is a new update.
+     * @param currentVersion The current running version.
+     * @return Whether or not an update is available.
+     * @throws IOException Oh no!
+     */
+    public boolean getUpdate(String currentVersion) throws IOException {
         JSONObject json;
         try {
             json = getInfo();
@@ -44,7 +53,7 @@ public class Updater extends PlayerVaults {
             PlayerVaults.NEWVERSION = version;
             String goodLink = new BufferedReader(new InputStreamReader(new URL("http://is.gd/create.php?format=simple&url=" + link).openStream())).readLine();
             PlayerVaults.LINK = goodLink;
-            if(!version.equalsIgnoreCase(v)) {
+            if (!version.equalsIgnoreCase(currentVersion)) {
                 return true;
             }
         } catch(JSONException e) {
@@ -53,6 +62,11 @@ public class Updater extends PlayerVaults {
         return false;
     }
 
+    /**
+     * Get the information about versions from DBO.
+     * @return The information in JSON.
+     * @throws IOException Oh no!
+     */
     public JSONObject getInfo() throws IOException {
         URL url = new URL("http://api.bukget.org/3/plugins/bukkit/playervaults/latest");
         BufferedReader in = null;
@@ -67,7 +81,7 @@ public class Updater extends PlayerVaults {
             in.close();
             return json;
         } catch(JSONException e) {
+            throw new IOException("Oh no!");
         }
-        return null;
     }
 }

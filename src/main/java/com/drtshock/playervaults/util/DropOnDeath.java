@@ -7,25 +7,19 @@ import org.bukkit.inventory.ItemStack;
 
 import com.drtshock.playervaults.PlayerVaults;
 
+/**
+ * A class that contains a method to drop the contents of a player's vault when they die.
+ */
 public class DropOnDeath {
-
-    public static PlayerVaults PLUGIN;
-
-    public DropOnDeath(PlayerVaults instance) {
-        DropOnDeath.PLUGIN = instance;
-    }
-
-    static VaultManager VAULT_MANAGER = new VaultManager(PLUGIN);
 
     /**
      * Drops all items when a player dies.
-     * @param player
+     * @param player The player to drop the inventory of.
      */
     public static void drop(Player player) {
         Location loc = player.getLocation();
-
         for(int count = 1; count <= PlayerVaults.INVENTORIES_TO_DROP; count++) {
-            Inventory inv = VAULT_MANAGER.getVault(player, count);
+            Inventory inv = PlayerVaults.VM.getVault(player.getName(), count);
             ItemStack[] stack = inv.getContents();
             for(ItemStack is:stack) {
                 loc.getWorld().dropItemNaturally(loc, is);

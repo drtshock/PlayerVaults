@@ -134,7 +134,7 @@ public class Metrics {
     private volatile int taskId = -1;
 
     public Metrics(final Plugin plugin) throws IOException {
-        if(plugin == null) {
+        if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
         }
 
@@ -149,7 +149,7 @@ public class Metrics {
         configuration.addDefault("guid", UUID.randomUUID().toString());
 
         // Do we need to create the file?
-        if(configuration.get("guid", null) == null) {
+        if (configuration.get("guid", null) == null) {
             configuration.options().header("http://mcstats.org").copyDefaults(true);
             configuration.save(configurationFile);
         }
@@ -166,7 +166,7 @@ public class Metrics {
      * @return Graph object created. Will never return NULL under normal circumstances unless bad parameters are given
      */
     public Graph createGraph(final String name) {
-        if(name == null) {
+        if (name == null) {
             throw new IllegalArgumentException("Graph name cannot be null");
         }
 
@@ -186,7 +186,7 @@ public class Metrics {
      * @param graph The name of the graph
      */
     public void addGraph(final Graph graph) {
-        if(graph == null) {
+        if (graph == null) {
             throw new IllegalArgumentException("Graph cannot be null");
         }
 
@@ -199,7 +199,7 @@ public class Metrics {
      * @param plotter The plotter to use to plot custom data
      */
     public void addCustomData(final Plotter plotter) {
-        if(plotter == null) {
+        if (plotter == null) {
             throw new IllegalArgumentException("Plotter cannot be null");
         }
 
@@ -219,14 +219,14 @@ public class Metrics {
      */
     @SuppressWarnings("deprecation")
     public boolean start() {
-        synchronized (optOutLock) {
+        synchronized(optOutLock) {
             // Did we opt out?
-            if(isOptOut()) {
+            if (isOptOut()) {
                 return false;
             }
 
             // Is metrics already running?
-            if(taskId >= 0) {
+            if (taskId >= 0) {
                 return true;
             }
 
@@ -238,10 +238,10 @@ public class Metrics {
                 public void run() {
                     try {
                         // This has to be synchronized or it can collide with the disable method.
-                        synchronized (optOutLock) {
+                        synchronized(optOutLock) {
                             // Disable Task, if it is running and the server owner decided to
                             // opt-out
-                            if(isOptOut() && taskId > 0) {
+                            if (isOptOut() && taskId > 0) {
                                 plugin.getServer().getScheduler().cancelTask(taskId);
                                 taskId = -1;
                                 // Tell all plotters to stop gathering information.
@@ -276,7 +276,7 @@ public class Metrics {
      * @return true if metrics should be opted out of it
      */
     public boolean isOptOut() {
-        synchronized (optOutLock) {
+        synchronized(optOutLock) {
             try {
                 // Reload the metrics file
                 configuration.load(getConfigFile());
@@ -298,15 +298,15 @@ public class Metrics {
      */
     public void enable() throws IOException {
         // This has to be synchronized or it can collide with the check in the task.
-        synchronized (optOutLock) {
+        synchronized(optOutLock) {
             // Check if the server owner has already set opt-out, if not, set it.
-            if(isOptOut()) {
+            if (isOptOut()) {
                 configuration.set("opt-out", false);
                 configuration.save(configurationFile);
             }
 
             // Enable Task, if it is not running
-            if(taskId < 0) {
+            if (taskId < 0) {
                 start();
             }
         }
@@ -319,15 +319,15 @@ public class Metrics {
      */
     public void disable() throws IOException {
         // This has to be synchronized or it can collide with the check in the task.
-        synchronized (optOutLock) {
+        synchronized(optOutLock) {
             // Check if the server owner has already set opt-out, if not, set it.
-            if(!isOptOut()) {
+            if (!isOptOut()) {
                 configuration.set("opt-out", true);
                 configuration.save(configurationFile);
             }
 
             // Disable Task, if it is running
-            if(taskId > 0) {
+            if (taskId > 0) {
                 this.plugin.getServer().getScheduler().cancelTask(taskId);
                 taskId = -1;
             }
@@ -369,16 +369,16 @@ public class Metrics {
         encodeDataPair(data, "revision", String.valueOf(REVISION));
 
         // If we're pinging, append it
-        if(isPing) {
+        if (isPing) {
             encodeDataPair(data, "ping", "true");
         }
 
         // Acquire a lock on the graphs, which lets us make the assumption we also lock everything
         // inside of the graph (e.g plotters)
-        synchronized (graphs) {
+        synchronized(graphs) {
             final Iterator<Graph> iter = graphs.iterator();
 
-            while (iter.hasNext()) {
+            while(iter.hasNext()) {
                 final Graph graph = iter.next();
 
                 for(Plotter plotter:graph.getPlotters()) {
@@ -405,7 +405,7 @@ public class Metrics {
 
         // Mineshafter creates a socks proxy, so we can safely bypass it
         // It does not reroute POST requests so we need to go around it
-        if(isMineshafterPresent()) {
+        if (isMineshafterPresent()) {
             connection = url.openConnection(Proxy.NO_PROXY);
         } else {
             connection = url.openConnection();
@@ -426,15 +426,15 @@ public class Metrics {
         writer.close();
         reader.close();
 
-        if(response == null || response.startsWith("ERR")) {
+        if (response == null || response.startsWith("ERR")) {
             throw new IOException(response); // Throw the exception
         } else {
             // Is this the first update this hour?
-            if(response.contains("OK This is your first update this hour")) {
-                synchronized (graphs) {
+            if (response.contains("OK This is your first update this hour")) {
+                synchronized(graphs) {
                     final Iterator<Graph> iter = graphs.iterator();
 
-                    while (iter.hasNext()) {
+                    while(iter.hasNext()) {
                         final Graph graph = iter.next();
 
                         for(Plotter plotter:graph.getPlotters()) {
@@ -550,7 +550,7 @@ public class Metrics {
 
         @Override
         public boolean equals(final Object object) {
-            if(!(object instanceof Graph)) {
+            if (!(object instanceof Graph)) {
                 return false;
             }
 
@@ -624,7 +624,7 @@ public class Metrics {
 
         @Override
         public boolean equals(final Object object) {
-            if(!(object instanceof Plotter)) {
+            if (!(object instanceof Plotter)) {
                 return false;
             }
 

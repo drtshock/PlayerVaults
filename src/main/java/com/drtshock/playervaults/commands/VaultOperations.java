@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.EconomyOperations;
@@ -12,101 +13,107 @@ import com.drtshock.playervaults.util.Lang;
 
 public class VaultOperations {
 
-    public static boolean checkPerms(CommandSender cs, int number) {
-        if(cs.hasPermission("playervaults.amount." + String.valueOf(number))) return true;
+    /**
+     * Check whether or not the player has permission to open the requested vault.
+     * @param sender The person to check.
+     * @param number The vault number.
+     * @return Whether or not they have permission.
+     */
+    public static boolean checkPerms(CommandSender sender, int number) {
+        if (sender.hasPermission("playervaults.amount." + String.valueOf(number))) return true;
         for(int x = number; x <= 99; x++) {
-            if(cs.hasPermission("playervaults.amount." + String.valueOf(x))) return true;
+            if (sender.hasPermission("playervaults.amount." + String.valueOf(x))) return true;
         }
         return false;
     }
 
     /**
      * Open a player's own vault.
-     * Return true if allowed. Otherwise false.
-     * @param Sender sender
-     * @param String arg
-     * @return success
+     * @param player The player to open to.
+     * @param arg The vault number to open.
+     * @return Whether or not the player was allowed to open it.
      */
-    public static boolean openOwnVault(Player sender, String arg) {
-        if(arg.matches("^[0-9]{1,2}$")) {
+    public static boolean openOwnVault(Player player, String arg) {
+        if (arg.matches("^[0-9]{1,2}$")) {
             int number = 0;
             try {
                 number = Integer.parseInt(arg);
-                if(number == 0)
+                if (number == 0)
                     return false;
             } catch(NumberFormatException nfe) {
-                sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+                player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 return false;
             }
-            if(checkPerms(sender, number)) {
-                if(EconomyOperations.payToOpen(sender)) {
-                    PlayerVaults.VM.loadVault(sender, sender.getName(), number);
-                    sender.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
+            if (checkPerms(player, number)) {
+                if (EconomyOperations.payToOpen(player)) {
+                    Inventory inv = PlayerVaults.VM.loadVault(player.getName(), number);
+                    player.openInventory(inv);
+                    player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
                     return true;
                 } else {
-                    sender.sendMessage(Lang.TITLE.toString() + Lang.INSUFFICIENT_FUNDS);
+                    player.sendMessage(Lang.TITLE.toString() + Lang.INSUFFICIENT_FUNDS);
                     return false;
                 }
             } else {
-                Feedback.noPerms(sender);
+                player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
             }
         } else {
-            sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
+            player.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
         }
         return false;
     }
 
     /**
      * Open another player's vault.
-     * Return true if allowed. Otherwise false.
-     * @param Sender sender
-     * @param String user
-     * @param String arg
-     * @return success
+     * @param player The player to open to.
+     * @param user The user to whom the requested vault belongs.
+     * @param arg The vault number to open.
+     * @return Whether or not the player was allowed to open it.
      */
-    public static boolean openOtherVault(Player sender, String user, String arg) {
-        if(sender.hasPermission("playervaults.admin")) {
-            if(arg.matches("^[0-9]{1,2}$")) {
+    public static boolean openOtherVault(Player player, String user, String arg) {
+        if (player.hasPermission("playervaults.admin")) {
+            if (arg.matches("^[0-9]{1,2}$")) {
                 int number = 0;
                 try {
                     number = Integer.parseInt(arg);
-                    if(number == 0)
+                    if (number == 0)
                         return false;
                 } catch(NumberFormatException nfe) {
-                    sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+                    player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
-                PlayerVaults.VM.loadVault(sender, user, number);
-                sender.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", user));
+                Inventory inv = PlayerVaults.VM.loadVault(user, number);
+                player.openInventory(inv);
+                player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", user));
                 return true;
             } else {
-                sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
+                player.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
             }
         }
         else {
-            Feedback.noPerms(sender);
+            player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
         }
         return false;
     }
 
     /**
      * Delete a player's own vault.
-     * Return true if allowed. Otherwise false.
-     * @param Sender sender
-     * @param String arg
+     * @param player The player to delete.
+     * @param user The user to whom the deleted vault belongs.
+     * @param arg The vault number to delete.
      */
     public static void deleteOwnVault(Player sender, String arg) {
-        if(arg.matches("^[0-9]{1,2}$")) {
+        if (arg.matches("^[0-9]{1,2}$")) {
             int number = 0;
             try {
                 number = Integer.parseInt(arg);
-                if(number == 0)
+                if (number == 0)
                     sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 return;
             } catch(NumberFormatException nfe) {
                 sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
             }
             try {
-                if(EconomyOperations.refundOnDelete(sender, number)) {
+                if (EconomyOperations.refundOnDelete(sender, number)) {
                     PlayerVaults.VM.deleteVault(sender, sender.getName(), number);
                     return;
                 }
@@ -119,19 +126,18 @@ public class VaultOperations {
     }
 
     /**
-     * Delete another player's vault.
-     * Return true if allowed. Otherwise false.
-     * @param Sender sender
-     * @param String user
-     * @param String arg
+     * Delete a player's own vault.
+     * @param player The player to delete.
+     * @param user The user to whom the deleted vault belongs.
+     * @param arg The vault number to delete.
      */
     public static void deleteOtherVault(CommandSender sender, String user, String arg) {
-        if(sender.hasPermission("playervaults.delete")) {
-            if(arg.matches("^[0-9]{1,2}$")) {
+        if (sender.hasPermission("playervaults.delete")) {
+            if (arg.matches("^[0-9]{1,2}$")) {
                 int number = 0;
                 try {
                     number = Integer.parseInt(arg);
-                    if(number == 0) {
+                    if (number == 0) {
                         sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                         return;
                     }
@@ -147,7 +153,9 @@ public class VaultOperations {
                 sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
             }
         }
-        else Feedback.noPerms(sender);
+        else {
+            sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
+        }
     }
 
 }

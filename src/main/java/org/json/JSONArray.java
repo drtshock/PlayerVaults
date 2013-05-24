@@ -100,13 +100,13 @@ public class JSONArray {
      */
     public JSONArray(JSONTokener x) throws JSONException {
         this();
-        if(x.nextClean() != '[') {
+        if (x.nextClean() != '[') {
             throw x.syntaxError("A JSONArray text must start with '['");
         }
-        if(x.nextClean() != ']') {
+        if (x.nextClean() != ']') {
             x.back();
             for(;;) {
-                if(x.nextClean() == ',') {
+                if (x.nextClean() == ',') {
                     x.back();
                     this.myArrayList.add(JSONObject.NULL);
                 } else {
@@ -116,7 +116,7 @@ public class JSONArray {
                 switch (x.nextClean()) {
                 case ';':
                 case ',':
-                    if(x.nextClean() == ']') {
+                    if (x.nextClean() == ']') {
                         return;
                     }
                     x.back();
@@ -147,9 +147,9 @@ public class JSONArray {
      */
     public JSONArray(Collection<?> collection) {
         this.myArrayList = new ArrayList<Object>();
-        if(collection != null) {
+        if (collection != null) {
             Iterator<?> iter = collection.iterator();
-            while (iter.hasNext()) {
+            while(iter.hasNext()) {
                 this.myArrayList.add(JSONObject.wrap(iter.next()));
             }
         }
@@ -161,7 +161,7 @@ public class JSONArray {
      */
     public JSONArray(Object array) throws JSONException {
         this();
-        if(array.getClass().isArray()) {
+        if (array.getClass().isArray()) {
             int length = Array.getLength(array);
             for(int i = 0; i < length; i += 1) {
                 this.put(JSONObject.wrap(Array.get(array, i)));
@@ -181,7 +181,7 @@ public class JSONArray {
      */
     public Object get(int index) throws JSONException {
         Object object = this.opt(index);
-        if(object == null) {
+        if (object == null) {
             throw new JSONException("JSONArray[" + index + "] not found.");
         }
         return object;
@@ -198,11 +198,11 @@ public class JSONArray {
      */
     public boolean getBoolean(int index) throws JSONException {
         Object object = this.get(index);
-        if(object.equals(Boolean.FALSE) ||
+        if (object.equals(Boolean.FALSE) ||
                 (object instanceof String &&
                 ((String) object).equalsIgnoreCase("false"))) {
             return false;
-        } else if(object.equals(Boolean.TRUE) ||
+        } else if (object.equals(Boolean.TRUE) ||
                 (object instanceof String &&
                 ((String) object).equalsIgnoreCase("true"))) {
             return true;
@@ -258,7 +258,7 @@ public class JSONArray {
      */
     public JSONArray getJSONArray(int index) throws JSONException {
         Object object = this.get(index);
-        if(object instanceof JSONArray) {
+        if (object instanceof JSONArray) {
             return (JSONArray) object;
         }
         throw new JSONException("JSONArray[" + index +
@@ -274,7 +274,7 @@ public class JSONArray {
      */
     public JSONObject getJSONObject(int index) throws JSONException {
         Object object = this.get(index);
-        if(object instanceof JSONObject) {
+        if (object instanceof JSONObject) {
             return (JSONObject) object;
         }
         throw new JSONException("JSONArray[" + index +
@@ -309,7 +309,7 @@ public class JSONArray {
      */
     public String getString(int index) throws JSONException {
         Object object = this.get(index);
-        if(object instanceof String) {
+        if (object instanceof String) {
             return (String) object;
         }
         throw new JSONException("JSONArray[" + index + "] not a string.");
@@ -337,7 +337,7 @@ public class JSONArray {
         StringBuffer sb = new StringBuffer();
 
         for(int i = 0; i < len; i += 1) {
-            if(i > 0) {
+            if (i > 0) {
                 sb.append(separator);
             }
             sb.append(JSONObject.valueToString(this.myArrayList.get(i)));
@@ -711,13 +711,13 @@ public class JSONArray {
      */
     public JSONArray put(int index, Object value) throws JSONException {
         JSONObject.testValidity(value);
-        if(index < 0) {
+        if (index < 0) {
             throw new JSONException("JSONArray[" + index + "] not found.");
         }
-        if(index < this.length()) {
+        if (index < this.length()) {
             this.myArrayList.set(index, value);
         } else {
-            while (index != this.length()) {
+            while(index != this.length()) {
                 this.put(JSONObject.NULL);
             }
             this.put(value);
@@ -747,7 +747,7 @@ public class JSONArray {
      * @throws JSONException If any of the names are null.
      */
     public JSONObject toJSONObject(JSONArray names) throws JSONException {
-        if(names == null || names.length() == 0 || this.length() == 0) {
+        if (names == null || names.length() == 0 || this.length() == 0) {
             return null;
         }
         JSONObject jo = new JSONObject();
@@ -789,7 +789,7 @@ public class JSONArray {
      */
     public String toString(int indentFactor) throws JSONException {
         StringWriter sw = new StringWriter();
-        synchronized (sw.getBuffer()) {
+        synchronized(sw.getBuffer()) {
             return this.write(sw, indentFactor, 0).toString();
         }
     }
@@ -827,17 +827,17 @@ public class JSONArray {
             int length = this.length();
             writer.write('[');
 
-            if(length == 1) {
+            if (length == 1) {
                 JSONObject.writeValue(writer, this.myArrayList.get(0),
                         indentFactor, indent);
-            } else if(length != 0) {
+            } else if (length != 0) {
                 final int newindent = indent + indentFactor;
 
                 for(int i = 0; i < length; i += 1) {
-                    if(commanate) {
+                    if (commanate) {
                         writer.write(',');
                     }
-                    if(indentFactor > 0) {
+                    if (indentFactor > 0) {
                         writer.write('\n');
                     }
                     JSONObject.indent(writer, newindent);
@@ -845,7 +845,7 @@ public class JSONArray {
                             indentFactor, newindent);
                     commanate = true;
                 }
-                if(indentFactor > 0) {
+                if (indentFactor > 0) {
                     writer.write('\n');
                 }
                 JSONObject.indent(writer, indent);
