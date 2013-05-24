@@ -18,6 +18,7 @@ public class VaultViewInfo {
         return this.i;
     }
     
+    @Override
     public String toString() {
         return this.s + " " + this.i;
     }

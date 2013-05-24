@@ -29,6 +29,8 @@ import com.drtshock.playervaults.commands.VaultViewInfo;
 import com.drtshock.playervaults.util.DropOnDeath;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.VaultManager;
+import org.bukkit.Bukkit;
+import org.bukkit.event.server.PluginDisableEvent;
 
 public class Listeners implements Listener {
 
@@ -37,27 +39,40 @@ public class Listeners implements Listener {
     public Listeners(PlayerVaults playerVaults) {
         this.plugin = playerVaults;
     }
-
     VaultManager vm = new VaultManager(plugin);
 
     /**
-     * Save a players vault.
-     * Sends to method in VaultManager class.
+     * Save a players vault. Sends to method in VaultManager class.
+     *
      * @param Player p
      */
     public void saveVault(Player p) {
-        if(PlayerVaults.IN_VAULT.containsKey(p.getName())) {
+        if (PlayerVaults.IN_VAULT.containsKey(p.getName())) {
             Inventory inv = p.getOpenInventory().getTopInventory();
-            if(inv.getViewers().size() == 1) {
+            if (inv.getViewers().size() == 1) {
                 VaultViewInfo info = PlayerVaults.IN_VAULT.get(p.getName());
                 try {
                     vm.saveVault(inv, info.getHolder(), info.getNumber());
-                } catch(IOException e) {
-                    e.printStackTrace();
+                } catch (IOException e) {
                 }
                 PlayerVaults.OPENINVENTORIES.remove(info.toString());
             }
             PlayerVaults.IN_VAULT.remove(p.getName());
+        }
+    }
+
+    /**
+     * Save vaults when the plugin disables. Fixes a dupe on server shutdown
+     * with open vaults.
+     *
+     * @param event
+     */
+    @EventHandler
+    public void onDisableEvent(PluginDisableEvent event) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if(PlayerVaults.IN_VAULT.containsKey(p.getName())) {
+                p.closeInventory();
+            }
         }
     }
 
@@ -76,7 +91,7 @@ public class Listeners implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         vm.playerVaultFile(player.getName());
-        if(player.isOp() && PlayerVaults.UPDATE) {
+        if (player.isOp() && PlayerVaults.UPDATE) {
             player.sendMessage(ChatColor.GREEN + "Version " + PlayerVaults.NEWVERSION + " of PlayerVaults is up for download!");
             player.sendMessage(ChatColor.GREEN + PlayerVaults.LINK + " to view the changelog and download!");
         }
@@ -86,7 +101,7 @@ public class Listeners implements Listener {
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         saveVault(player);
-        if(PlayerVaults.DROP_ON_DEATH && (!player.hasPermission("playervaults.ignore.drops"))) {
+        if (PlayerVaults.DROP_ON_DEATH && (!player.hasPermission("playervaults.ignore.drops"))) {
             DropOnDeath.drop(event.getEntity());
         }
     }
@@ -94,30 +109,29 @@ public class Listeners implements Listener {
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
         HumanEntity he = event.getPlayer();
-        if(he instanceof Player) {
+        if (he instanceof Player) {
             Player player = (Player) he;
             saveVault(player);
         }
     }
 
     /**
-     * Check if a player is trying to do something while
-     * in a vault.
-     * Don't let them open up another chest.
+     * Check if a player is trying to do something while in a vault. Don't let
+     * them open up another chest.
+     *
      * @param PlayerInteractEvent
      */
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if(PlayerVaults.IN_VAULT.containsKey(player.getName())) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (PlayerVaults.IN_VAULT.containsKey(player.getName())) {
                 Block block = event.getClickedBlock();
 
                 /**
-                 * Different inventories that
-                 * we don't want the player to open.
+                 * Different inventories that we don't want the player to open.
                  */
-                if(block.getType() == Material.CHEST
+                if (block.getType() == Material.CHEST
                         || block.getType() == Material.ENDER_CHEST
                         || block.getType() == Material.FURNACE
                         || block.getType() == Material.BURNING_FURNACE
@@ -127,24 +141,24 @@ public class Listeners implements Listener {
                 }
             }
         }
-        if(PlayerVaults.SET_SIGN.containsKey(player.getName())) {
+        if (PlayerVaults.SET_SIGN.containsKey(player.getName())) {
             int i = PlayerVaults.SET_SIGN.get(player.getName()).getChest();
             boolean self = PlayerVaults.SET_SIGN.get(player.getName()).isSelf();
             String owner = null;
-            if(!self) {
+            if (!self) {
                 owner = PlayerVaults.SET_SIGN.get(player.getName()).getOwner();
             }
             PlayerVaults.SET_SIGN.remove(player.getName());
             event.setCancelled(true);
-            if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                if(event.getClickedBlock().getType() == Material.WALL_SIGN || event.getClickedBlock().getType() == Material.SIGN_POST) {
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if (event.getClickedBlock().getType() == Material.WALL_SIGN || event.getClickedBlock().getType() == Material.SIGN_POST) {
                     Sign s = (Sign) event.getClickedBlock().getState();
                     Location l = s.getLocation();
                     String world = l.getWorld().getName();
                     int x = l.getBlockX();
                     int y = l.getBlockY();
                     int z = l.getBlockZ();
-                    if(self) {
+                    if (self) {
                         plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z + ".self", self);
                     } else {
                         plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z + ".owner", owner);
@@ -161,18 +175,18 @@ public class Listeners implements Listener {
             return;
         }
         Block b = event.getClickedBlock();
-        if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if(b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN_POST) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN_POST) {
                 Location l = b.getLocation();
                 String world = l.getWorld().getName();
                 int x = l.getBlockX();
                 int y = l.getBlockY();
                 int z = l.getBlockZ();
-                if(plugin.getSigns().getKeys(false).contains(world + ";;" + x + ";;" + y + ";;" + z)) {
-                    if(player.hasPermission("playervaults.signs.use")) {
+                if (plugin.getSigns().getKeys(false).contains(world + ";;" + x + ";;" + y + ";;" + z)) {
+                    if (player.hasPermission("playervaults.signs.use")) {
                         boolean self = PlayerVaults.SIGNS.getBoolean(world + ";;" + x + ";;" + y + ";;" + z + ".self", false);
                         String owner = null;
-                        if(!self) {
+                        if (!self) {
                             owner = PlayerVaults.SIGNS.getString(world + ";;" + x + ";;" + y + ";;" + z + ".owner");
                         }
                         int num = PlayerVaults.SIGNS.getInt(world + ";;" + x + ";;" + y + ";;" + z + ".chest");
@@ -208,21 +222,21 @@ public class Listeners implements Listener {
         int x = l.getBlockX();
         int y = l.getBlockY();
         int z = l.getBlockZ();
-        if(plugin.getSigns().getKeys(false).contains(world + ";;" + x + ";;" + y + ";;" + z)) {
+        if (plugin.getSigns().getKeys(false).contains(world + ";;" + x + ";;" + y + ";;" + z)) {
             plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z, null);
             plugin.saveSigns();
         }
     }
 
     /**
-     * Don't let a player open a trading inventory OR a minecart
-     * while he has his vault open.
+     * Don't let a player open a trading inventory OR a minecart while he has
+     * his vault open.
      */
     @EventHandler
     public void onInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         EntityType type = event.getRightClicked().getType();
-        if((type == EntityType.VILLAGER || type == EntityType.MINECART) && PlayerVaults.IN_VAULT.containsKey(player.getName())) {
+        if ((type == EntityType.VILLAGER || type == EntityType.MINECART) && PlayerVaults.IN_VAULT.containsKey(player.getName())) {
             event.setCancelled(true);
         }
     }

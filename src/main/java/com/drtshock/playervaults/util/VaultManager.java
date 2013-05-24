@@ -23,52 +23,49 @@ public class VaultManager {
     public VaultManager(PlayerVaults instance) {
         this.plugin = instance;
     }
-
     private final String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
 
     /**
-     * Method to save player's vault.
-     * Serialize his inventory.
-     * Save the vaults.yml
+     * Method to save player's vault. Serialize his inventory. Save the
+     * vaults.yml
+     *
      * @param player
-     * @throws IOException 
+     * @throws IOException
      */
     public void saveVault(Inventory inv, String player, int number) throws IOException {
         YamlConfiguration yaml = playerVaultFile(player);
         yaml.set("vault" + number, null);
         List<String> list = Serialization.toString(inv);
         String[] ser = list.toArray(new String[list.size()]);
-        for(int x = 0; x < ser.length; x++) {
-            if(!ser[x].equalsIgnoreCase("null"))
+        for (int x = 0; x < ser.length; x++) {
+            if (!ser[x].equalsIgnoreCase("null")) {
                 yaml.set("vault" + number + "." + x, ser[x]);
+            }
         }
         saveFile(player, yaml);
     }
 
     /**
-     * Method to load player's vault.
-     * Deserialize his inventory
-     * 
+     * Method to load player's vault. Deserialize his inventory
+     *
      * TODO: Check to see if the path exists before we get it!
      */
     public void loadVault(Player player, String holder, int number) {
         VaultViewInfo info = new VaultViewInfo(holder, number);
         Inventory inv = null;
-        if(PlayerVaults.OPENINVENTORIES.containsKey(info.toString())) {
+        if (PlayerVaults.OPENINVENTORIES.containsKey(info.toString())) {
             inv = PlayerVaults.OPENINVENTORIES.get(info.toString());
         } else {
             YamlConfiguration playerFile = playerVaultFile(holder);
-            if(playerFile.getConfigurationSection("vault" + number) == null) {
+            if (playerFile.getConfigurationSection("vault" + number) == null) {
                 inv = Bukkit.createInventory(player, 54, ChatColor.DARK_RED + "Vault #" + String.valueOf(number));
-            }
-            else {
+            } else {
                 List<String> data = new ArrayList<String>();
-                for(int x = 0; x < 54; x++) {
+                for (int x = 0; x < 54; x++) {
                     String line = playerFile.getString("vault" + number + "." + x);
-                    if(line != null) {
+                    if (line != null) {
                         data.add(line);
-                    }
-                    else {
+                    } else {
                         data.add("null");
                     }
                 }
@@ -80,8 +77,9 @@ public class VaultManager {
     }
 
     /**
-     * Gets an inventory without opening it.
-     * Used for dropping a players inventories on death.
+     * Gets an inventory without opening it. Used for dropping a players
+     * inventories on death.
+     *
      * @param player
      * @param number
      * @return the inventory
@@ -89,7 +87,7 @@ public class VaultManager {
     public Inventory getVault(Player player, int number) {
         YamlConfiguration playerFile = playerVaultFile(player.getName());
         List<String> data = playerFile.getStringList("vault" + number);
-        if(data == null) {
+        if (data == null) {
             Inventory inv = Bukkit.createInventory(player, 54, ChatColor.GREEN + "Vault #" + String.valueOf(number));
             return inv;
         } else {
@@ -100,6 +98,7 @@ public class VaultManager {
 
     /**
      * Deletes a players vault.
+     *
      * @param sender
      * @param target
      * @param number
@@ -109,35 +108,33 @@ public class VaultManager {
         String name = target.toLowerCase();
         File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
         FileConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
-        if(file.exists()) {
+        if (file.exists()) {
             playerFile.set("vault" + number, null);
             playerFile.save(file);
         }
-        if(sender.getName().equalsIgnoreCase(target)) {
+        if (sender.getName().equalsIgnoreCase(target)) {
             sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT.toString().replace("%v", String.valueOf(number)));
-        }
-        else {
+        } else {
             sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_OTHER_VAULT.toString().replace("%v", String.valueOf(number)).replace("%p", target));
         }
     }
 
     /**
-     * Get the player's vault file.
-     * Create if doesn't exist.
+     * Get the player's vault file. Create if doesn't exist.
+     *
      * @param player
      * @return playerVaultFile file.
      */
     public YamlConfiguration playerVaultFile(String player) {
         File folder = new File(directory);
-        if(!folder.exists()) {
+        if (!folder.exists()) {
             folder.mkdir();
         }
         File file = new File(directory + File.separator + player.toLowerCase() + ".yml");
-        if(!file.exists()) {
+        if (!file.exists()) {
             try {
                 file.createNewFile();
-            } catch(IOException e) {
-                e.printStackTrace();
+            } catch (IOException e) {
             }
         }
         YamlConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
@@ -146,13 +143,14 @@ public class VaultManager {
 
     /**
      * Save the players vault file.
+     *
      * @param name
      * @param yaml
      * @throws IOException
      */
     public void saveFile(String name, YamlConfiguration yaml) throws IOException {
         File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
-        if(file.exists()) {
+        if (file.exists()) {
             file.renameTo(new File(directory + File.separator + "backups" + File.separator + name.toLowerCase() + ".yml"));
         }
         yaml.save(file);
