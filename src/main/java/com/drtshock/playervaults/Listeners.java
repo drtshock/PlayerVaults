@@ -2,7 +2,6 @@ package com.drtshock.playervaults;
 
 import java.io.IOException;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,7 +23,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
 
 import com.drtshock.playervaults.commands.VaultViewInfo;
@@ -45,7 +43,7 @@ public class Listeners implements Listener {
     /**
      * Save a players vault. Sends to method in VaultManager class.
      *
-     * @param Player p
+     * @param Player The player of whose vault to save
      */
     public void saveVault(Player p) {
         if (PlayerVaults.IN_VAULT.containsKey(p.getName())) {
@@ -59,21 +57,6 @@ public class Listeners implements Listener {
                 PlayerVaults.OPENINVENTORIES.remove(info.toString());
             }
             PlayerVaults.IN_VAULT.remove(p.getName());
-        }
-    }
-
-    /**
-     * Save vaults when the plugin disables. Fixes a dupe on server shutdown
-     * with open vaults.
-     *
-     * @param event
-     */
-    @EventHandler
-    public void onDisableEvent(PluginDisableEvent event) {
-        for(Player p:Bukkit.getOnlinePlayers()) {
-            if (PlayerVaults.IN_VAULT.containsKey(p.getName())) {
-                p.closeInventory();
-            }
         }
     }
 
@@ -118,8 +101,6 @@ public class Listeners implements Listener {
     /**
      * Check if a player is trying to do something while in a vault. Don't let
      * them open up another chest.
-     *
-     * @param PlayerInteractEvent
      */
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {

@@ -9,7 +9,9 @@ import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,11 +27,11 @@ import com.drtshock.playervaults.util.VaultManager;
 public class PlayerVaults extends JavaPlugin {
 
     public static PlayerVaults PLUGIN;
-    public Logger log;
+    public static Logger log;
     public static boolean UPDATE = false;
     public static String NEWVERSION = "";
     public static String LINK = "";
-    Commands commands;
+    public static Commands commands;
     public static HashMap<String, SignSetInfo> SET_SIGN = new HashMap<String, SignSetInfo>();
     public static HashMap<String, VaultViewInfo> IN_VAULT = new HashMap<String, VaultViewInfo>();
     public static HashMap<String, Inventory> OPENINVENTORIES = new HashMap<String, Inventory>();
@@ -43,12 +45,13 @@ public class PlayerVaults extends JavaPlugin {
     public static File SIGNS_FILE;
     public static String DIRECTORY = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
     public static VaultManager VM;
+    public static Listeners listener;
 
     @Override
     public void onEnable() {
         loadLang();
         log = getServer().getLogger();
-        getServer().getPluginManager().registerEvents(new Listeners(this), this);
+        getServer().getPluginManager().registerEvents(listener = new Listeners(this), this);
         loadConfig();
         loadSigns();
         startMetrics();
@@ -79,6 +82,15 @@ public class PlayerVaults extends JavaPlugin {
 
         new File(DIRECTORY + File.separator + "backups").mkdirs();
         VM = new VaultManager(this);
+    }
+
+    @Override
+    public void onDisable() {
+        for(Player p:Bukkit.getOnlinePlayers()) {
+            if (IN_VAULT.containsKey(p.getName())) {
+                p.closeInventory();
+            }
+        }
     }
 
     /**
