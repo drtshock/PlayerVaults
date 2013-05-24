@@ -66,11 +66,11 @@ public class VaultOperations {
     /**
      * Open another player's vault.
      * @param player The player to open to.
-     * @param user The user to whom the requested vault belongs.
+     * @param holder The user to whom the requested vault belongs.
      * @param arg The vault number to open.
      * @return Whether or not the player was allowed to open it.
      */
-    public static boolean openOtherVault(Player player, String user, String arg) {
+    public static boolean openOtherVault(Player player, String holder, String arg) {
         if (player.hasPermission("playervaults.admin")) {
             if (arg.matches("^[0-9]{1,2}$")) {
                 int number = 0;
@@ -81,15 +81,14 @@ public class VaultOperations {
                 } catch(NumberFormatException nfe) {
                     player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
-                Inventory inv = PlayerVaults.VM.loadVault(user, number);
+                Inventory inv = PlayerVaults.VM.loadVault(holder, number);
                 player.openInventory(inv);
-                player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", user));
+                player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", holder));
                 return true;
             } else {
                 player.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
             }
-        }
-        else {
+        } else {
             player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
         }
         return false;
@@ -101,37 +100,37 @@ public class VaultOperations {
      * @param user The user to whom the deleted vault belongs.
      * @param arg The vault number to delete.
      */
-    public static void deleteOwnVault(Player sender, String arg) {
+    public static void deleteOwnVault(Player player, String arg) {
         if (arg.matches("^[0-9]{1,2}$")) {
             int number = 0;
             try {
                 number = Integer.parseInt(arg);
                 if (number == 0)
-                    sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+                    player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 return;
             } catch(NumberFormatException nfe) {
-                sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+                player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
             }
             try {
-                if (EconomyOperations.refundOnDelete(sender, number)) {
-                    PlayerVaults.VM.deleteVault(sender, sender.getName(), number);
+                if (EconomyOperations.refundOnDelete(player, number)) {
+                    PlayerVaults.VM.deleteVault(player, player.getName(), number);
                     return;
                 }
             } catch(IOException e) {
-                sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
+                player.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
             }
         } else {
-            sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
+            player.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
         }
     }
 
     /**
      * Delete a player's own vault.
      * @param player The player to delete.
-     * @param user The user to whom the deleted vault belongs.
+     * @param holder The user to whom the deleted vault belongs.
      * @param arg The vault number to delete.
      */
-    public static void deleteOtherVault(CommandSender sender, String user, String arg) {
+    public static void deleteOtherVault(CommandSender sender, String holder, String arg) {
         if (sender.hasPermission("playervaults.delete")) {
             if (arg.matches("^[0-9]{1,2}$")) {
                 int number = 0;
@@ -145,15 +144,14 @@ public class VaultOperations {
                     sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
                 try {
-                    PlayerVaults.VM.deleteVault(sender, user, number);
+                    PlayerVaults.VM.deleteVault(sender, holder, number);
                 } catch(IOException e) {
                     sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
                 }
             } else {
                 sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
             }
-        }
-        else {
+        } else {
             sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
         }
     }
