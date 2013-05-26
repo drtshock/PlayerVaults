@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.drtshock.playervaults.commands.Commands;
 import com.drtshock.playervaults.commands.SignSetInfo;
@@ -55,19 +56,7 @@ public class PlayerVaults extends JavaPlugin {
         loadConfig();
         loadSigns();
         startMetrics();
-        Updater u = new Updater();
-        if (getConfig().getBoolean("check-update")) {
-            try {
-                if (u.getUpdate(getDescription().getVersion())) {
-                    UPDATE = true;
-                }
-            } catch(IOException e) {
-                log.log(Level.WARNING, "PlayerVaults: Failed to check for updates.");
-                log.log(Level.WARNING, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
-                e.printStackTrace();
-            }
-        }
-
+        checkUpdate();
         commands = new Commands();
         getCommand("pv").setExecutor(commands);
         getCommand("pvdel").setExecutor(commands);
@@ -103,6 +92,29 @@ public class PlayerVaults extends JavaPlugin {
         } catch(IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Checks for available updates.
+     */
+    public void checkUpdate() {
+        new BukkitRunnable() {
+
+            public void run() {
+                Updater u = new Updater();
+                if (getConfig().getBoolean("check-update")) {
+                    try {
+                        if (u.getUpdate(getDescription().getVersion())) {
+                            UPDATE = true;
+                        }
+                    } catch(IOException e) {
+                        log.log(Level.WARNING, "PlayerVaults: Failed to check for updates.");
+                        log.log(Level.WARNING, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.runTaskAsynchronously(this);
     }
 
     /**
