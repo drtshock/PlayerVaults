@@ -250,9 +250,21 @@ public class PlayerVaults extends JavaPlugin {
             }
         }
         YamlConfiguration conf = YamlConfiguration.loadConfiguration(lang);
+        for(Lang item:Lang.values()) {
+            if (conf.getString(item.getPath()) == null) {
+                conf.set(item.getPath(), item.getDefault());
+            }
+        }
         Lang.setFile(conf);
         PlayerVaults.LANG = conf;
         PlayerVaults.LANG_FILE = lang;
+        try {
+            conf.save(getLangFile());
+        } catch(IOException e) {
+            log.log(Level.WARNING, "PlayerVaults: Failed to save lang.yml.");
+            log.log(Level.WARNING, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
+            e.printStackTrace();
+        }
         return conf;
     }
 
