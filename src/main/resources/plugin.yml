@@ -1,7 +1,7 @@
 name: PlayerVaults
 main: com.drtshock.playervaults.PlayerVaults
 authors: [drtshock, gomeow, Chester]
-version: ${project.version}-b${BUILD_NUMBER}
+version: ${project.version}
 website: http://dev.bukkit.org/server-mods/PlayerVaults
 softdepend: [Vault]
 commands:
