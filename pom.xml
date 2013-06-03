@@ -59,8 +59,8 @@
     <dependencies>
         <dependency>
             <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.5-R0.1-SNAPSHOT</version>
+            <artifactId>bukkit</artifactId>
+            <version>1.5.2-R0.1</version>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
