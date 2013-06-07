@@ -1,13 +1,10 @@
 package com.drtshock.playervaults.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
 
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
@@ -55,9 +52,9 @@ public class Commands implements CommandExecutor {
         } else if (cmd.getName().equalsIgnoreCase("workbench")) {
             if (sender.hasPermission("playervaults.workbench")) {
                 if (sender instanceof Player) {
-                    Inventory workbench = Bukkit.createInventory(null, InventoryType.WORKBENCH);
-                    ((Player) sender).openInventory(workbench);
-                    sender.sendMessage(Lang.TITLE.toString() + Lang.OPEN_WORKBENCH);
+                    Player player = (Player) sender;
+                    player.openWorkbench(null, true);
+                    player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_WORKBENCH);
                 } else {
                     sender.sendMessage(Lang.TITLE.toString() + Lang.PLAYER_ONLY);
                 }
