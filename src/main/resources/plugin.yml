@@ -16,3 +16,4 @@ commands:
     aliases: [vaultsign]
   workbench:
     description: Opens a workbench.
+    aliases: [wb]
