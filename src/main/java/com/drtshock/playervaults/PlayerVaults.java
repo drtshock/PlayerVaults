@@ -101,16 +101,19 @@ public class PlayerVaults extends JavaPlugin {
         new BukkitRunnable() {
 
             public void run() {
-                Updater u = new Updater();
                 if (getConfig().getBoolean("check-update")) {
-                    try {
-                        if (u.getUpdate(getDescription().getVersion())) {
-                            UPDATE = true;
+                    if (getConfig().getBoolean("check-update")) {
+                        try {
+                            Updater u = new Updater(getDescription().getVersion());
+                            if (UPDATE = u.getUpdate()) {
+                                LINK = u.getLink();
+                                NEWVERSION = u.getNewVersion();
+                            }
+                        } catch(Exception e) {
+                            getLogger().log(Level.WARNING, "Failed to check for updates.");
+                            getLogger().log(Level.WARNING, "Report this stack trace to gomeow.");
+                            e.printStackTrace();
                         }
-                    } catch(IOException e) {
-                        log.log(Level.WARNING, "PlayerVaults: Failed to check for updates.");
-                        log.log(Level.WARNING, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
-                        e.printStackTrace();
                     }
                 }
             }
