@@ -1,8 +1,10 @@
 package com.drtshock.playervaults;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -230,26 +232,48 @@ public class PlayerVaults extends JavaPlugin {
 
     /**
      * Load the lang.yml file.
-     * @return The lang.yml config.
      */
-    public YamlConfiguration loadLang() {
+    public void loadLang() {
         File lang = new File(getDataFolder(), "lang.yml");
+        OutputStream out = null;
+        InputStream defLangStream = this.getResource("lang.yml");
         if (!lang.exists()) {
             try {
                 getDataFolder().mkdir();
                 lang.createNewFile();
-                InputStream defConfigStream = this.getResource("lang.yml");
-                if (defConfigStream != null) {
-                    YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-                    defConfig.save(lang);
+                if (defLangStream != null) {
+                    out = new FileOutputStream(lang);
+                    int read = 0;
+                    byte[] bytes = new byte[1024];
+
+                    while((read = defLangStream.read(bytes)) != -1) {
+                        out.write(bytes, 0, read);
+                    }
+                    YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defLangStream);
                     Lang.setFile(defConfig);
-                    return defConfig;
+                    return;
                 }
             } catch(IOException e) {
                 e.printStackTrace(); // So they notice
                 log.severe("[PlayerVaults] Couldn't create language file.");
                 log.severe("[PlayerVaults] This is a fatal error. Now disabling");
                 this.setEnabled(false); // Without it loaded, we can't send them messages
+            } finally {
+                if (defLangStream != null) {
+                    try {
+                        defLangStream.close();
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (out != null) {
+                    try {
+                        out.close();
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
             }
         }
         YamlConfiguration conf = YamlConfiguration.loadConfiguration(lang);
@@ -268,7 +292,6 @@ public class PlayerVaults extends JavaPlugin {
             log.log(Level.WARNING, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
             e.printStackTrace();
         }
-        return conf;
     }
 
     /**
