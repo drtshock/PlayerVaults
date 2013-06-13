@@ -36,8 +36,15 @@ public class VaultManager {
      * @throws IOException Uh oh!
      */
     public void saveVault(Inventory inventory, String player, int number) throws IOException {
+        int size = inventory.getSize();
         YamlConfiguration yaml = getPlayerVaultFile(player);
-        yaml.set("vault" + number, null);
+        if (size == 54) {
+            yaml.set("vault" + number, null);
+        } else {
+            for(int x = 0; x < 27; x++) {
+                yaml.set("vault" + number + "." + x, null);
+            }
+        }
         List<String> list = Serialization.toString(inventory);
         String[] ser = list.toArray(new String[list.size()]);
         for(int x = 0; x < ser.length; x++) {
@@ -53,7 +60,7 @@ public class VaultManager {
      * @param holder The holder of the vault.
      * @param number The vault number.
      */
-    public Inventory loadVault(String holder, int number) {
+    public Inventory loadVault(String holder, int number, boolean large) {
         VaultViewInfo info = new VaultViewInfo(holder, number);
         Inventory inv = null;
         if (PlayerVaults.OPENINVENTORIES.containsKey(info.toString())) {
@@ -64,7 +71,7 @@ public class VaultManager {
                 inv = Bukkit.createInventory(null, 54, ChatColor.DARK_RED + "Vault #" + String.valueOf(number));
             } else {
                 List<String> data = new ArrayList<String>();
-                for(int x = 0; x < 54; x++) {
+                for(int x = 0; x < ((large) ? 54 : 27); x++) {
                     String line = playerFile.getString("vault" + number + "." + x);
                     if (line != null) {
                         data.add(line);
@@ -72,7 +79,7 @@ public class VaultManager {
                         data.add("null");
                     }
                 }
-                inv = Serialization.toInventory(data, number);
+                inv = Serialization.toInventory(data, number, large);
             }
             PlayerVaults.OPENINVENTORIES.put(info.toString(), inv);
         }
@@ -92,7 +99,7 @@ public class VaultManager {
             Inventory inv = Bukkit.createInventory(null, 54, ChatColor.GREEN + "Vault #" + String.valueOf(number));
             return inv;
         } else {
-            Inventory inv = Serialization.toInventory(data, number);
+            Inventory inv = Serialization.toInventory(data, number, true);
             return inv;
         }
     }

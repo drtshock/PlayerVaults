@@ -72,8 +72,8 @@ public class Serialization {
         return result;
     }
 
-    public static Inventory toInventory(List<String> stringItems, int number) {
-        Inventory inv = Bukkit.createInventory(null, 54, ChatColor.RED + "Vault #" + number);
+    public static Inventory toInventory(List<String> stringItems, int number, boolean large) {
+        Inventory inv = Bukkit.createInventory(null, (large) ? 54 : 27, ChatColor.RED + "Vault #" + number);
         List<ItemStack> contents = new ArrayList<ItemStack>();
         for(String piece:stringItems) {
             if (piece.equalsIgnoreCase("null")) {

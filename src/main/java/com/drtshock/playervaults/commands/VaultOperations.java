@@ -46,7 +46,8 @@ public class VaultOperations {
             }
             if (checkPerms(player, number)) {
                 if (EconomyOperations.payToOpen(player)) {
-                    Inventory inv = PlayerVaults.VM.loadVault(player.getName(), number);
+                    PlayerVaults.log.info(String.valueOf(player.hasPermission("playervaults.small")));
+                    Inventory inv = PlayerVaults.VM.loadVault(player.getName(), number, !player.hasPermission("playervaults.small"));
                     player.openInventory(inv);
                     player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
                     return true;
@@ -81,7 +82,7 @@ public class VaultOperations {
                 } catch(NumberFormatException nfe) {
                     player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
-                Inventory inv = PlayerVaults.VM.loadVault(holder, number);
+                Inventory inv = PlayerVaults.VM.loadVault(holder, number, true);
                 player.openInventory(inv);
                 player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", holder));
                 return true;

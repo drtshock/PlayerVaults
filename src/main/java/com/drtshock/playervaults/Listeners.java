@@ -168,7 +168,7 @@ public class Listeners implements Listener {
                             owner = PlayerVaults.SIGNS.getString(world + ";;" + x + ";;" + y + ";;" + z + ".owner");
                         }
                         int num = PlayerVaults.SIGNS.getInt(world + ";;" + x + ";;" + y + ";;" + z + ".chest");
-                        Inventory inv = PlayerVaults.VM.loadVault((self) ? player.getName() : owner, num);
+                        Inventory inv = PlayerVaults.VM.loadVault((self) ? player.getName() : owner, num, !player.hasPermission("playervaults.small"));
                         player.openInventory(inv);
                         PlayerVaults.IN_VAULT.put(player.getName(), new VaultViewInfo((self) ? player.getName() : owner, num));
                         event.setCancelled(true);
