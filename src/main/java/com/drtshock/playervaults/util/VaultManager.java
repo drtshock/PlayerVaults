@@ -68,7 +68,9 @@ public class VaultManager {
         } else {
             YamlConfiguration playerFile = getPlayerVaultFile(holder);
             if (playerFile.getConfigurationSection("vault" + number) == null) {
-                inv = Bukkit.createInventory(null, 54, ChatColor.DARK_RED + "Vault #" + String.valueOf(number));
+                VaultHolder vaultHolder = new VaultHolder(number);
+                inv = Bukkit.createInventory(vaultHolder, 54, ChatColor.DARK_RED + "Vault #" + String.valueOf(number));
+                vaultHolder.setInventory(inv);
             } else {
                 List<String> data = new ArrayList<String>();
                 for(int x = 0; x < ((large) ? 54 : 27); x++) {
@@ -96,7 +98,9 @@ public class VaultManager {
         YamlConfiguration playerFile = getPlayerVaultFile(holder);
         List<String> data = playerFile.getStringList("vault" + number);
         if (data == null) {
-            Inventory inv = Bukkit.createInventory(null, 54, ChatColor.GREEN + "Vault #" + String.valueOf(number));
+            VaultHolder vaultHolder = new VaultHolder(number);
+            Inventory inv = Bukkit.createInventory(vaultHolder, 54, ChatColor.GREEN + "Vault #" + String.valueOf(number));
+            vaultHolder.setInventory(inv);
             return inv;
         } else {
             Inventory inv = Serialization.toInventory(data, number, true);
