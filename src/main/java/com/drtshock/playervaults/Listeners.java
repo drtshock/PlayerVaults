@@ -25,6 +25,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 
+import com.drtshock.playervaults.commands.VaultOperations;
 import com.drtshock.playervaults.commands.VaultViewInfo;
 import com.drtshock.playervaults.util.DropOnDeath;
 import com.drtshock.playervaults.util.Lang;
@@ -161,13 +162,13 @@ public class Listeners implements Listener {
                 int y = l.getBlockY();
                 int z = l.getBlockZ();
                 if (plugin.getSigns().getKeys(false).contains(world + ";;" + x + ";;" + y + ";;" + z)) {
-                    if (player.hasPermission("playervaults.signs.use")) {
+                    int num = PlayerVaults.SIGNS.getInt(world + ";;" + x + ";;" + y + ";;" + z + ".chest");
+                    if ((player.hasPermission("playervaults.signs.use") && (player.hasPermission("playervaults.signs.bypass") || VaultOperations.checkPerms(player, 99)))) {
                         boolean self = PlayerVaults.SIGNS.getBoolean(world + ";;" + x + ";;" + y + ";;" + z + ".self", false);
                         String owner = null;
                         if (!self) {
                             owner = PlayerVaults.SIGNS.getString(world + ";;" + x + ";;" + y + ";;" + z + ".owner");
                         }
-                        int num = PlayerVaults.SIGNS.getInt(world + ";;" + x + ";;" + y + ";;" + z + ".chest");
                         Inventory inv = PlayerVaults.VM.loadVault((self) ? player.getName() : owner, num, !player.hasPermission("playervaults.small"));
                         player.openInventory(inv);
                         PlayerVaults.IN_VAULT.put(player.getName(), new VaultViewInfo((self) ? player.getName() : owner, num));
