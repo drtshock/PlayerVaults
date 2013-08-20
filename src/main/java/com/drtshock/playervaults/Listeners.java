@@ -1,5 +1,11 @@
 package com.drtshock.playervaults;
 
+import com.drtshock.playervaults.commands.VaultOperations;
+import com.drtshock.playervaults.commands.VaultViewInfo;
+import com.drtshock.playervaults.util.DropOnDeath;
+import com.drtshock.playervaults.util.Lang;
+import com.drtshock.playervaults.util.VaultManager;
+
 import java.io.IOException;
 
 import org.bukkit.ChatColor;
@@ -25,12 +31,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 
-import com.drtshock.playervaults.commands.VaultOperations;
-import com.drtshock.playervaults.commands.VaultViewInfo;
-import com.drtshock.playervaults.util.DropOnDeath;
-import com.drtshock.playervaults.util.Lang;
-import com.drtshock.playervaults.util.VaultManager;
-
 public class Listeners implements Listener {
 
     public PlayerVaults plugin;
@@ -53,7 +53,7 @@ public class Listeners implements Listener {
                 VaultViewInfo info = PlayerVaults.IN_VAULT.get(p.getName());
                 try {
                     vm.saveVault(inv, info.getHolder(), info.getNumber());
-                } catch(IOException e) {
+                } catch (IOException e) {
                 }
                 PlayerVaults.OPENINVENTORIES.remove(info.toString());
             }

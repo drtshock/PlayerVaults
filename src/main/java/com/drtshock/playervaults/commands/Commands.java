@@ -1,13 +1,13 @@
 package com.drtshock.playervaults.commands;
 
+import com.drtshock.playervaults.PlayerVaults;
+import com.drtshock.playervaults.util.Lang;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.util.Lang;
 
 public class Commands implements CommandExecutor {
 
@@ -68,7 +68,7 @@ public class Commands implements CommandExecutor {
                         int i = 0;
                         try {
                             i = Integer.parseInt(args[0]);
-                        } catch(NumberFormatException nfe) {
+                        } catch (NumberFormatException nfe) {
                             sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
                             sender.sendMessage(Lang.TITLE.toString() + "Usage: /" + label + " <owner> <#>");
                             return true;
@@ -80,7 +80,7 @@ public class Commands implements CommandExecutor {
                         int i = 0;
                         try {
                             i = Integer.parseInt(args[1]);
-                        } catch(NumberFormatException nfe) {
+                        } catch (NumberFormatException nfe) {
                             sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
                             sender.sendMessage(Lang.TITLE.toString() + "Usage: /" + label + " <owner> <#>");
                             return true;

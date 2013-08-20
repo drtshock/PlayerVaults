@@ -1,5 +1,13 @@
 package com.drtshock.playervaults;
 
+import com.drtshock.playervaults.commands.Commands;
+import com.drtshock.playervaults.commands.SignSetInfo;
+import com.drtshock.playervaults.commands.VaultViewInfo;
+import com.drtshock.playervaults.util.Lang;
+import com.drtshock.playervaults.util.Metrics;
+import com.drtshock.playervaults.util.Updater;
+import com.drtshock.playervaults.util.VaultManager;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,14 +26,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import com.drtshock.playervaults.commands.Commands;
-import com.drtshock.playervaults.commands.SignSetInfo;
-import com.drtshock.playervaults.commands.VaultViewInfo;
-import com.drtshock.playervaults.util.Lang;
-import com.drtshock.playervaults.util.Metrics;
-import com.drtshock.playervaults.util.Updater;
-import com.drtshock.playervaults.util.VaultManager;
 
 public class PlayerVaults extends JavaPlugin {
 
@@ -77,7 +77,7 @@ public class PlayerVaults extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for(Player p:Bukkit.getOnlinePlayers()) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
             if (IN_VAULT.containsKey(p.getName())) {
                 p.closeInventory();
             }
@@ -91,7 +91,7 @@ public class PlayerVaults extends JavaPlugin {
         try {
             Metrics metrics = new Metrics(this);
             metrics.start();
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -111,7 +111,7 @@ public class PlayerVaults extends JavaPlugin {
                                 LINK = u.getLink();
                                 NEWVERSION = u.getNewVersion();
                             }
-                        } catch(Exception e) {
+                        } catch (Exception e) {
                             getLogger().log(Level.WARNING, "Failed to check for updates.");
                             getLogger().log(Level.WARNING, "Report this stack trace to gomeow.");
                             e.printStackTrace();
@@ -160,7 +160,7 @@ public class PlayerVaults extends JavaPlugin {
         if (!signs.exists()) {
             try {
                 signs.createNewFile();
-            } catch(IOException e) {
+            } catch (IOException e) {
                 log.severe("PlayerVaults has encountered a fatal error trying to load the signs file.");
                 log.severe("Please report this error to drtshock and gomeow.");
                 e.printStackTrace();
@@ -185,7 +185,7 @@ public class PlayerVaults extends JavaPlugin {
     public void saveSigns() {
         try {
             PlayerVaults.SIGNS.save(PlayerVaults.SIGNS_FILE);
-        } catch(IOException e) {
+        } catch (IOException e) {
             log.severe("PlayerVaults has encountered an error trying to save the signs file.");
             log.severe("Please report this error to drtshock and gomeow.");
             e.printStackTrace();
@@ -215,7 +215,7 @@ public class PlayerVaults extends JavaPlugin {
         setInConfig("drop-on-death.inventories", dropInvs, conf);
         try {
             conf.save(configFile);
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -246,14 +246,14 @@ public class PlayerVaults extends JavaPlugin {
                     int read = 0;
                     byte[] bytes = new byte[1024];
 
-                    while((read = defLangStream.read(bytes)) != -1) {
+                    while ((read = defLangStream.read(bytes)) != -1) {
                         out.write(bytes, 0, read);
                     }
                     YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defLangStream);
                     Lang.setFile(defConfig);
                     return;
                 }
-            } catch(IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace(); // So they notice
                 log.severe("[PlayerVaults] Couldn't create language file.");
                 log.severe("[PlayerVaults] This is a fatal error. Now disabling");
@@ -262,14 +262,14 @@ public class PlayerVaults extends JavaPlugin {
                 if (defLangStream != null) {
                     try {
                         defLangStream.close();
-                    } catch(IOException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
                 if (out != null) {
                     try {
                         out.close();
-                    } catch(IOException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
 
@@ -277,7 +277,7 @@ public class PlayerVaults extends JavaPlugin {
             }
         }
         YamlConfiguration conf = YamlConfiguration.loadConfiguration(lang);
-        for(Lang item:Lang.values()) {
+        for (Lang item : Lang.values()) {
             if (conf.getString(item.getPath()) == null) {
                 conf.set(item.getPath(), item.getDefault());
             }
@@ -287,7 +287,7 @@ public class PlayerVaults extends JavaPlugin {
         PlayerVaults.LANG_FILE = lang;
         try {
             conf.save(getLangFile());
-        } catch(IOException e) {
+        } catch (IOException e) {
             log.log(Level.WARNING, "PlayerVaults: Failed to save lang.yml.");
             log.log(Level.WARNING, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
             e.printStackTrace();

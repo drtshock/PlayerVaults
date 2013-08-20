@@ -105,7 +105,7 @@ public class JSONArray {
         }
         if (x.nextClean() != ']') {
             x.back();
-            for(;;) {
+            for (;;) {
                 if (x.nextClean() == ',') {
                     x.back();
                     this.myArrayList.add(JSONObject.NULL);
@@ -149,7 +149,7 @@ public class JSONArray {
         this.myArrayList = new ArrayList<Object>();
         if (collection != null) {
             Iterator<?> iter = collection.iterator();
-            while(iter.hasNext()) {
+            while (iter.hasNext()) {
                 this.myArrayList.add(JSONObject.wrap(iter.next()));
             }
         }
@@ -163,7 +163,7 @@ public class JSONArray {
         this();
         if (array.getClass().isArray()) {
             int length = Array.getLength(array);
-            for(int i = 0; i < length; i += 1) {
+            for (int i = 0; i < length; i += 1) {
                 this.put(JSONObject.wrap(Array.get(array, i)));
             }
         } else {
@@ -224,7 +224,7 @@ public class JSONArray {
             return object instanceof Number
                     ? ((Number) object).doubleValue()
                     : Double.parseDouble((String) object);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new JSONException("JSONArray[" + index +
                     "] is not a number.");
         }
@@ -243,7 +243,7 @@ public class JSONArray {
             return object instanceof Number
                     ? ((Number) object).intValue()
                     : Integer.parseInt((String) object);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new JSONException("JSONArray[" + index +
                     "] is not a number.");
         }
@@ -295,7 +295,7 @@ public class JSONArray {
             return object instanceof Number
                     ? ((Number) object).longValue()
                     : Long.parseLong((String) object);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new JSONException("JSONArray[" + index +
                     "] is not a number.");
         }
@@ -336,7 +336,7 @@ public class JSONArray {
         int len = this.length();
         StringBuffer sb = new StringBuffer();
 
-        for(int i = 0; i < len; i += 1) {
+        for (int i = 0; i < len; i += 1) {
             if (i > 0) {
                 sb.append(separator);
             }
@@ -390,7 +390,7 @@ public class JSONArray {
     public boolean optBoolean(int index, boolean defaultValue) {
         try {
             return this.getBoolean(index);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -419,7 +419,7 @@ public class JSONArray {
     public double optDouble(int index, double defaultValue) {
         try {
             return this.getDouble(index);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -447,7 +447,7 @@ public class JSONArray {
     public int optInt(int index, int defaultValue) {
         try {
             return this.getInt(index);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -499,7 +499,7 @@ public class JSONArray {
     public long optLong(int index, long defaultValue) {
         try {
             return this.getLong(index);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -717,7 +717,7 @@ public class JSONArray {
         if (index < this.length()) {
             this.myArrayList.set(index, value);
         } else {
-            while(index != this.length()) {
+            while (index != this.length()) {
                 this.put(JSONObject.NULL);
             }
             this.put(value);
@@ -751,7 +751,7 @@ public class JSONArray {
             return null;
         }
         JSONObject jo = new JSONObject();
-        for(int i = 0; i < names.length(); i += 1) {
+        for (int i = 0; i < names.length(); i += 1) {
             jo.put(names.getString(i), this.opt(i));
         }
         return jo;
@@ -771,7 +771,7 @@ public class JSONArray {
     public String toString() {
         try {
             return this.toString(0);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -789,7 +789,7 @@ public class JSONArray {
      */
     public String toString(int indentFactor) throws JSONException {
         StringWriter sw = new StringWriter();
-        synchronized(sw.getBuffer()) {
+        synchronized (sw.getBuffer()) {
             return this.write(sw, indentFactor, 0).toString();
         }
     }
@@ -833,7 +833,7 @@ public class JSONArray {
             } else if (length != 0) {
                 final int newindent = indent + indentFactor;
 
-                for(int i = 0; i < length; i += 1) {
+                for (int i = 0; i < length; i += 1) {
                     if (commanate) {
                         writer.write(',');
                     }
@@ -852,7 +852,7 @@ public class JSONArray {
             }
             writer.write(']');
             return writer;
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new JSONException(e);
         }
     }

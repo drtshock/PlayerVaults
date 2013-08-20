@@ -1,15 +1,15 @@
 package com.drtshock.playervaults.commands;
 
+import com.drtshock.playervaults.PlayerVaults;
+import com.drtshock.playervaults.util.EconomyOperations;
+import com.drtshock.playervaults.util.Lang;
+
 import java.io.IOException;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-
-import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.util.EconomyOperations;
-import com.drtshock.playervaults.util.Lang;
 
 public class VaultOperations {
 
@@ -21,7 +21,7 @@ public class VaultOperations {
      */
     public static boolean checkPerms(CommandSender sender, int number) {
         if (sender.hasPermission("playervaults.amount." + String.valueOf(number))) return true;
-        for(int x = number; x <= 99; x++) {
+        for (int x = number; x <= 99; x++) {
             if (sender.hasPermission("playervaults.amount." + String.valueOf(x))) return true;
         }
         return false;
@@ -40,7 +40,7 @@ public class VaultOperations {
                 number = Integer.parseInt(arg);
                 if (number == 0)
                     return false;
-            } catch(NumberFormatException nfe) {
+            } catch (NumberFormatException nfe) {
                 player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 return false;
             }
@@ -79,7 +79,7 @@ public class VaultOperations {
                     number = Integer.parseInt(arg);
                     if (number == 0)
                         return false;
-                } catch(NumberFormatException nfe) {
+                } catch (NumberFormatException nfe) {
                     player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
                 Inventory inv = PlayerVaults.VM.loadVault(holder, number, true);
@@ -109,7 +109,7 @@ public class VaultOperations {
                 if (number == 0)
                     player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 return;
-            } catch(NumberFormatException nfe) {
+            } catch (NumberFormatException nfe) {
                 player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
             }
             try {
@@ -117,7 +117,7 @@ public class VaultOperations {
                     PlayerVaults.VM.deleteVault(player, player.getName(), number);
                     return;
                 }
-            } catch(IOException e) {
+            } catch (IOException e) {
                 player.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
             }
         } else {
@@ -141,12 +141,12 @@ public class VaultOperations {
                         sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                         return;
                     }
-                } catch(NumberFormatException nfe) {
+                } catch (NumberFormatException nfe) {
                     sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
                 try {
                     PlayerVaults.VM.deleteVault(sender, holder, number);
-                } catch(IOException e) {
+                } catch (IOException e) {
                     sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
                 }
             } else {

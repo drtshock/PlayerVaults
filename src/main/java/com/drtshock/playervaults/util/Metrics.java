@@ -28,12 +28,6 @@ package com.drtshock.playervaults.util;
  * either expressed or implied, of anybody else.
  */
 
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +45,12 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
+
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 
 /**
  * <p>
@@ -219,7 +219,7 @@ public class Metrics {
      */
     @SuppressWarnings("deprecation")
     public boolean start() {
-        synchronized(optOutLock) {
+        synchronized (optOutLock) {
             // Did we opt out?
             if (isOptOut()) {
                 return false;
@@ -238,14 +238,14 @@ public class Metrics {
                 public void run() {
                     try {
                         // This has to be synchronized or it can collide with the disable method.
-                        synchronized(optOutLock) {
+                        synchronized (optOutLock) {
                             // Disable Task, if it is running and the server owner decided to
                             // opt-out
                             if (isOptOut() && taskId > 0) {
                                 plugin.getServer().getScheduler().cancelTask(taskId);
                                 taskId = -1;
                                 // Tell all plotters to stop gathering information.
-                                for(Graph graph:graphs) {
+                                for (Graph graph : graphs) {
                                     graph.onOptOut();
                                 }
                             }
@@ -260,7 +260,7 @@ public class Metrics {
                         // After the first post we set firstPost to false
                         // Each post thereafter will be a ping
                         firstPost = false;
-                    } catch(IOException e) {
+                    } catch (IOException e) {
                         Bukkit.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
                     }
                 }
@@ -276,14 +276,14 @@ public class Metrics {
      * @return true if metrics should be opted out of it
      */
     public boolean isOptOut() {
-        synchronized(optOutLock) {
+        synchronized (optOutLock) {
             try {
                 // Reload the metrics file
                 configuration.load(getConfigFile());
-            } catch(IOException ex) {
+            } catch (IOException ex) {
                 Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
                 return true;
-            } catch(InvalidConfigurationException ex) {
+            } catch (InvalidConfigurationException ex) {
                 Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
                 return true;
             }
@@ -298,7 +298,7 @@ public class Metrics {
      */
     public void enable() throws IOException {
         // This has to be synchronized or it can collide with the check in the task.
-        synchronized(optOutLock) {
+        synchronized (optOutLock) {
             // Check if the server owner has already set opt-out, if not, set it.
             if (isOptOut()) {
                 configuration.set("opt-out", false);
@@ -319,7 +319,7 @@ public class Metrics {
      */
     public void disable() throws IOException {
         // This has to be synchronized or it can collide with the check in the task.
-        synchronized(optOutLock) {
+        synchronized (optOutLock) {
             // Check if the server owner has already set opt-out, if not, set it.
             if (!isOptOut()) {
                 configuration.set("opt-out", true);
@@ -375,13 +375,13 @@ public class Metrics {
 
         // Acquire a lock on the graphs, which lets us make the assumption we also lock everything
         // inside of the graph (e.g plotters)
-        synchronized(graphs) {
+        synchronized (graphs) {
             final Iterator<Graph> iter = graphs.iterator();
 
-            while(iter.hasNext()) {
+            while (iter.hasNext()) {
                 final Graph graph = iter.next();
 
-                for(Plotter plotter:graph.getPlotters()) {
+                for (Plotter plotter : graph.getPlotters()) {
                     // The key name to send to the metrics server
                     // The format is C-GRAPHNAME-PLOTTERNAME where separator - is defined at the top
                     // Legacy (R4) submitters use the format Custom%s, or CustomPLOTTERNAME
@@ -431,13 +431,13 @@ public class Metrics {
         } else {
             // Is this the first update this hour?
             if (response.contains("OK This is your first update this hour")) {
-                synchronized(graphs) {
+                synchronized (graphs) {
                     final Iterator<Graph> iter = graphs.iterator();
 
-                    while(iter.hasNext()) {
+                    while (iter.hasNext()) {
                         final Graph graph = iter.next();
 
-                        for(Plotter plotter:graph.getPlotters()) {
+                        for (Plotter plotter : graph.getPlotters()) {
                             plotter.reset();
                         }
                     }
@@ -455,7 +455,7 @@ public class Metrics {
         try {
             Class.forName("mineshafter.MineServer");
             return true;
-        } catch(Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -561,8 +561,7 @@ public class Metrics {
         /**
          * Called when the server owner decides to opt-out of Metrics while the server is running.
          */
-        protected void onOptOut() {
-        }
+        protected void onOptOut() {}
 
     }
 
@@ -614,8 +613,7 @@ public class Metrics {
         /**
          * Called after the website graphs have been updated
          */
-        public void reset() {
-        }
+        public void reset() {}
 
         @Override
         public int hashCode() {

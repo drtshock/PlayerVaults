@@ -174,10 +174,10 @@ public class JSONObject {
      */
     public JSONObject(JSONObject jo, String[] names) {
         this();
-        for(int i = 0; i < names.length; i += 1) {
+        for (int i = 0; i < names.length; i += 1) {
             try {
                 this.putOnce(names[i], jo.opt(names[i]));
-            } catch(Exception ignore) {
+            } catch (Exception ignore) {
             }
         }
     }
@@ -196,7 +196,7 @@ public class JSONObject {
         if (x.nextClean() != '{') {
             throw x.syntaxError("A JSONObject text must begin with '{'");
         }
-        for(;;) {
+        for (;;) {
             c = x.nextClean();
             switch (c) {
             case 0:
@@ -249,7 +249,7 @@ public class JSONObject {
         this.map = new HashMap();
         if (map != null) {
             Iterator i = map.entrySet().iterator();
-            while(i.hasNext()) {
+            while (i.hasNext()) {
                 Map.Entry e = (Map.Entry) i.next();
                 Object value = e.getValue();
                 if (value != null) {
@@ -297,11 +297,11 @@ public class JSONObject {
     public JSONObject(Object object, String names[]) {
         this();
         Class c = object.getClass();
-        for(int i = 0; i < names.length; i += 1) {
+        for (int i = 0; i < names.length; i += 1) {
             String name = names[i];
             try {
                 this.putOpt(name, c.getField(name).get(object));
-            } catch(Exception ignore) {
+            } catch (Exception ignore) {
             }
         }
     }
@@ -333,7 +333,7 @@ public class JSONObject {
         // Iterate through the keys in the bundle.
 
         Enumeration keys = bundle.getKeys();
-        while(keys.hasMoreElements()) {
+        while (keys.hasMoreElements()) {
             Object key = keys.nextElement();
             if (key instanceof String) {
 
@@ -344,7 +344,7 @@ public class JSONObject {
                 String[] path = ((String) key).split("\\.");
                 int last = path.length - 1;
                 JSONObject target = this;
-                for(int i = 0; i < last; i += 1) {
+                for (int i = 0; i < last; i += 1) {
                     String segment = path[i];
                     JSONObject nextTarget = target.optJSONObject(segment);
                     if (nextTarget == null) {
@@ -433,7 +433,7 @@ public class JSONObject {
         String string = Double.toString(d);
         if (string.indexOf('.') > 0 && string.indexOf('e') < 0 &&
                 string.indexOf('E') < 0) {
-            while(string.endsWith("0")) {
+            while (string.endsWith("0")) {
                 string = string.substring(0, string.length() - 1);
             }
             if (string.endsWith(".")) {
@@ -498,7 +498,7 @@ public class JSONObject {
             return object instanceof Number
                     ? ((Number) object).doubleValue()
                     : Double.parseDouble((String) object);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new JSONException("JSONObject[" + quote(key) +
                     "] is not a number.");
         }
@@ -518,7 +518,7 @@ public class JSONObject {
             return object instanceof Number
                     ? ((Number) object).intValue()
                     : Integer.parseInt((String) object);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new JSONException("JSONObject[" + quote(key) +
                     "] is not an int.");
         }
@@ -572,7 +572,7 @@ public class JSONObject {
             return object instanceof Number
                     ? ((Number) object).longValue()
                     : Long.parseLong((String) object);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new JSONException("JSONObject[" + quote(key) +
                     "] is not a long.");
         }
@@ -591,7 +591,7 @@ public class JSONObject {
         Iterator iterator = jo.keys();
         String[] names = new String[length];
         int i = 0;
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             names[i] = (String) iterator.next();
             i += 1;
         }
@@ -614,7 +614,7 @@ public class JSONObject {
             return null;
         }
         String[] names = new String[length];
-        for(int i = 0; i < length; i += 1) {
+        for (int i = 0; i < length; i += 1) {
             names[i] = fields[i].getName();
         }
         return names;
@@ -719,7 +719,7 @@ public class JSONObject {
     public JSONArray names() {
         JSONArray ja = new JSONArray();
         Iterator keys = this.keys();
-        while(keys.hasNext()) {
+        while (keys.hasNext()) {
             ja.put(keys.next());
         }
         return ja.length() == 0 ? null : ja;
@@ -743,7 +743,7 @@ public class JSONObject {
         String string = number.toString();
         if (string.indexOf('.') > 0 && string.indexOf('e') < 0 &&
                 string.indexOf('E') < 0) {
-            while(string.endsWith("0")) {
+            while (string.endsWith("0")) {
                 string = string.substring(0, string.length() - 1);
             }
             if (string.endsWith(".")) {
@@ -786,7 +786,7 @@ public class JSONObject {
     public boolean optBoolean(String key, boolean defaultValue) {
         try {
             return this.getBoolean(key);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -817,7 +817,7 @@ public class JSONObject {
     public double optDouble(String key, double defaultValue) {
         try {
             return this.getDouble(key);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -848,7 +848,7 @@ public class JSONObject {
     public int optInt(String key, int defaultValue) {
         try {
             return this.getInt(key);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -905,7 +905,7 @@ public class JSONObject {
     public long optLong(String key, long defaultValue) {
         try {
             return this.getLong(key);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -945,7 +945,7 @@ public class JSONObject {
         Method[] methods = includeSuperClass
                 ? klass.getMethods()
                 : klass.getDeclaredMethods();
-        for(int i = 0; i < methods.length; i += 1) {
+        for (int i = 0; i < methods.length; i += 1) {
             try {
                 Method method = methods[i];
                 if (Modifier.isPublic(method.getModifiers())) {
@@ -977,7 +977,7 @@ public class JSONObject {
                         }
                     }
                 }
-            } catch(Exception ignore) {
+            } catch (Exception ignore) {
             }
         }
     }
@@ -1140,10 +1140,10 @@ public class JSONObject {
      */
     public static String quote(String string) {
         StringWriter sw = new StringWriter();
-        synchronized(sw.getBuffer()) {
+        synchronized (sw.getBuffer()) {
             try {
                 return quote(string, sw).toString();
-            } catch(IOException ignored) {
+            } catch (IOException ignored) {
                 // will never happen - we are writing to a string writer
                 return "";
             }
@@ -1163,7 +1163,7 @@ public class JSONObject {
         int len = string.length();
 
         w.write('"');
-        for(i = 0; i < len; i += 1) {
+        for (i = 0; i < len; i += 1) {
             b = c;
             c = string.charAt(i);
             switch (c) {
@@ -1265,7 +1265,7 @@ public class JSONObject {
                         return myLong;
                     }
                 }
-            } catch(Exception ignore) {
+            } catch (Exception ignore) {
             }
         }
         return string;
@@ -1305,7 +1305,7 @@ public class JSONObject {
             return null;
         }
         JSONArray ja = new JSONArray();
-        for(int i = 0; i < names.length(); i += 1) {
+        for (int i = 0; i < names.length(); i += 1) {
             ja.put(this.opt(names.getString(i)));
         }
         return ja;
@@ -1326,7 +1326,7 @@ public class JSONObject {
     public String toString() {
         try {
             return this.toString(0);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -1345,7 +1345,7 @@ public class JSONObject {
      */
     public String toString(int indentFactor) throws JSONException {
         StringWriter w = new StringWriter();
-        synchronized(w.getBuffer()) {
+        synchronized (w.getBuffer()) {
             return this.write(w, indentFactor, 0).toString();
         }
     }
@@ -1379,7 +1379,7 @@ public class JSONObject {
             Object object;
             try {
                 object = ((JSONString) value).toJSONString();
-            } catch(Exception e) {
+            } catch (Exception e) {
                 throw new JSONException(e);
             }
             if (object instanceof String) {
@@ -1452,7 +1452,7 @@ public class JSONObject {
                 return object.toString();
             }
             return new JSONObject(object);
-        } catch(Exception exception) {
+        } catch (Exception exception) {
             return null;
         }
     }
@@ -1493,7 +1493,7 @@ public class JSONObject {
             Object o;
             try {
                 o = ((JSONString) value).toJSONString();
-            } catch(Exception e) {
+            } catch (Exception e) {
                 throw new JSONException(e);
             }
             writer.write(o != null ? o.toString() : quote(value.toString()));
@@ -1504,7 +1504,7 @@ public class JSONObject {
     }
 
     static final void indent(Writer writer, int indent) throws IOException {
-        for(int i = 0; i < indent; i += 1) {
+        for (int i = 0; i < indent; i += 1) {
             writer.write(' ');
         }
     }
@@ -1536,7 +1536,7 @@ public class JSONObject {
                 writeValue(writer, this.map.get(key), indentFactor, indent);
             } else if (length != 0) {
                 final int newindent = indent + indentFactor;
-                while(keys.hasNext()) {
+                while (keys.hasNext()) {
                     Object key = keys.next();
                     if (commanate) {
                         writer.write(',');
@@ -1561,7 +1561,7 @@ public class JSONObject {
             }
             writer.write('}');
             return writer;
-        } catch(IOException exception) {
+        } catch (IOException exception) {
             throw new JSONException(exception);
         }
     }

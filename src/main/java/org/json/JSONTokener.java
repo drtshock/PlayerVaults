@@ -146,7 +146,7 @@ public class JSONTokener {
         } else {
             try {
                 c = this.reader.read();
-            } catch(IOException exception) {
+            } catch (IOException exception) {
                 throw new JSONException(exception);
             }
 
@@ -202,7 +202,7 @@ public class JSONTokener {
         char[] chars = new char[n];
         int pos = 0;
 
-        while(pos < n) {
+        while (pos < n) {
             chars[pos] = this.next();
             if (this.end()) {
                 throw this.syntaxError("Substring bounds error");
@@ -218,7 +218,7 @@ public class JSONTokener {
      * @return  A character, or 0 if there are no more characters.
      */
     public char nextClean() throws JSONException {
-        for(;;) {
+        for (;;) {
             char c = this.next();
             if (c == 0 || c > ' ') {
                 return c;
@@ -240,7 +240,7 @@ public class JSONTokener {
     public String nextString(char quote) throws JSONException {
         char c;
         StringBuffer sb = new StringBuffer();
-        for(;;) {
+        for (;;) {
             c = this.next();
             switch (c) {
             case 0:
@@ -295,7 +295,7 @@ public class JSONTokener {
      */
     public String nextTo(char delimiter) throws JSONException {
         StringBuffer sb = new StringBuffer();
-        for(;;) {
+        for (;;) {
             char c = this.next();
             if (c == delimiter || c == 0 || c == '\n' || c == '\r') {
                 if (c != 0) {
@@ -316,7 +316,7 @@ public class JSONTokener {
     public String nextTo(String delimiters) throws JSONException {
         char c;
         StringBuffer sb = new StringBuffer();
-        for(;;) {
+        for (;;) {
             c = this.next();
             if (delimiters.indexOf(c) >= 0 || c == 0 ||
                     c == '\n' || c == '\r') {
@@ -362,7 +362,7 @@ public class JSONTokener {
          */
 
         StringBuffer sb = new StringBuffer();
-        while(c >= ' ' && ",:]}/\\\"[{;=#".indexOf(c) < 0) {
+        while (c >= ' ' && ",:]}/\\\"[{;=#".indexOf(c) < 0) {
             sb.append(c);
             c = this.next();
         }
@@ -398,8 +398,8 @@ public class JSONTokener {
                     this.line = startLine;
                     return c;
                 }
-            } while(c != to);
-        } catch(IOException exc) {
+            } while (c != to);
+        } catch (IOException exc) {
             throw new JSONException(exc);
         }
 

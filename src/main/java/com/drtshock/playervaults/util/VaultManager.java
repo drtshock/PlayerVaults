@@ -1,5 +1,8 @@
 package com.drtshock.playervaults.util;
 
+import com.drtshock.playervaults.PlayerVaults;
+import com.drtshock.playervaults.commands.VaultViewInfo;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,9 +14,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
-
-import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.commands.VaultViewInfo;
 
 /**
  * A class for managing actual IO to the files, loading inventories, and saving them.
@@ -41,13 +41,13 @@ public class VaultManager {
         if (size == 54) {
             yaml.set("vault" + number, null);
         } else {
-            for(int x = 0; x < 27; x++) {
+            for (int x = 0; x < 27; x++) {
                 yaml.set("vault" + number + "." + x, null);
             }
         }
         List<String> list = Serialization.toString(inventory);
         String[] ser = list.toArray(new String[list.size()]);
-        for(int x = 0; x < ser.length; x++) {
+        for (int x = 0; x < ser.length; x++) {
             if (!ser[x].equalsIgnoreCase("null")) {
                 yaml.set("vault" + number + "." + x, ser[x]);
             }
@@ -73,7 +73,7 @@ public class VaultManager {
                 vaultHolder.setInventory(inv);
             } else {
                 List<String> data = new ArrayList<String>();
-                for(int x = 0; x < ((large) ? 54 : 27); x++) {
+                for (int x = 0; x < ((large) ? 54 : 27); x++) {
                     String line = playerFile.getString("vault" + number + "." + x);
                     if (line != null) {
                         data.add(line);
@@ -144,7 +144,7 @@ public class VaultManager {
         if (!file.exists()) {
             try {
                 file.createNewFile();
-            } catch(IOException e) {
+            } catch (IOException e) {
                 // Who cares?
             }
         }

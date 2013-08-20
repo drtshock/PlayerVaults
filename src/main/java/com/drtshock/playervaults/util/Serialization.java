@@ -28,7 +28,7 @@ public class Serialization {
     public static Map<String, Object> toMap(JSONObject object) throws JSONException {
         Map<String, Object> map = new HashMap<String, Object>();
         Iterator<String> keys = object.keys();
-        while(keys.hasNext()) {
+        while (keys.hasNext()) {
             String key = (String) keys.next();
             map.put(key, fromJson(object.get(key)));
         }
@@ -49,7 +49,7 @@ public class Serialization {
 
     public static List<Object> toList(JSONArray array) throws JSONException {
         List<Object> list = new ArrayList<Object>();
-        for(int i = 0; i < array.length(); i++) {
+        for (int i = 0; i < array.length(); i++) {
             list.add(fromJson(array.get(i)));
         }
         return list;
@@ -58,10 +58,10 @@ public class Serialization {
     public static List<String> toString(Inventory inv) {
         List<String> result = new ArrayList<String>();
         List<ConfigurationSerializable> items = new ArrayList<ConfigurationSerializable>();
-        for(ItemStack is:inv.getContents()) {
+        for (ItemStack is : inv.getContents()) {
             items.add(is);
         }
-        for(ConfigurationSerializable cs:items) {
+        for (ConfigurationSerializable cs : items) {
             if (cs == null) {
                 result.add("null");
             }
@@ -77,7 +77,7 @@ public class Serialization {
         Inventory inv = Bukkit.createInventory(holder, (large) ? 54 : 27, ChatColor.RED + "Vault #" + number);
         holder.setInventory(inv);
         List<ItemStack> contents = new ArrayList<ItemStack>();
-        for(String piece:stringItems) {
+        for (String piece : stringItems) {
             if (piece.equalsIgnoreCase("null")) {
                 contents.add(null);
             }
@@ -85,13 +85,13 @@ public class Serialization {
                 try {
                     ItemStack item = (ItemStack) deserialize(toMap(new JSONObject(piece)));
                     contents.add(item);
-                } catch(JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         }
         ItemStack[] items = new ItemStack[contents.size()];
-        for(int x = 0; x < contents.size(); x++)
+        for (int x = 0; x < contents.size(); x++)
             items[x] = contents.get(x);
         inv.setContents(items);
         return inv;
@@ -99,7 +99,7 @@ public class Serialization {
 
     public static Map<String, Object> serialize(ConfigurationSerializable cs) {
         Map<String, Object> serialized = recreateMap(cs.serialize());
-        for(Entry<String, Object> entry:serialized.entrySet()) {
+        for (Entry<String, Object> entry : serialized.entrySet()) {
             if (entry.getValue() instanceof ConfigurationSerializable) {
                 entry.setValue(serialize((ConfigurationSerializable) entry.getValue()));
             }
@@ -110,7 +110,7 @@ public class Serialization {
 
     public static Map<String, Object> recreateMap(Map<String, Object> original) {
         Map<String, Object> map = new HashMap<String, Object>();
-        for(Entry<String, Object> entry:original.entrySet()) {
+        for (Entry<String, Object> entry : original.entrySet()) {
             map.put(entry.getKey(), entry.getValue());
         }
         return map;
@@ -118,7 +118,7 @@ public class Serialization {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static ConfigurationSerializable deserialize(Map<String, Object> map) {
-        for(Entry<String, Object> entry:map.entrySet()) {
+        for (Entry<String, Object> entry : map.entrySet()) {
             if (entry.getValue() instanceof Map && ((Map) entry.getValue()).containsKey(ConfigurationSerialization.SERIALIZED_TYPE_KEY)) {
                 entry.setValue(deserialize((Map) entry.getValue()));
             }

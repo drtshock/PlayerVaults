@@ -24,7 +24,7 @@ public class Updater {
         newVersion = feed.getElementsByTagName("title").item(1).getTextContent().substring(1);
         String link = feed.getElementsByTagName("link").item(1).getTextContent();
         this.link = new BufferedReader(new InputStreamReader(new URL("http://is.gd/create.php?format=simple&url=" + link).openStream())).readLine();
-        if(v.contains("SNAPSHOT") && !newVersion.equals(oldVersion)) {
+        if (v.contains("SNAPSHOT") && !newVersion.equals(oldVersion)) {
             update = false;
             return;
         }
