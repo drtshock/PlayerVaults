@@ -14,7 +14,7 @@ public class VaultHolder implements InventoryHolder {
 
     /**
      * Creates a new vault holder
-     * 
+     *
      * @param vaultNumber the vault number this holder is using
      */
     public VaultHolder(int vaultNumber) {
@@ -23,7 +23,7 @@ public class VaultHolder implements InventoryHolder {
 
     /**
      * Gets the vault number this holder is currently using
-     * 
+     *
      * @return the vault number
      */
     public int getVaultNumber() {
@@ -32,7 +32,7 @@ public class VaultHolder implements InventoryHolder {
 
     /**
      * Sets the inventory this vault holder holds
-     * 
+     *
      * @param inventory the inventory, may be null
      */
     public void setInventory(Inventory inventory) {

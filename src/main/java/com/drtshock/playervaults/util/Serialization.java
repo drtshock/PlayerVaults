@@ -64,8 +64,7 @@ public class Serialization {
         for (ConfigurationSerializable cs : items) {
             if (cs == null) {
                 result.add("null");
-            }
-            else {
+            } else {
                 result.add(new JSONObject(serialize(cs)).toString());
             }
         }
@@ -80,8 +79,7 @@ public class Serialization {
         for (String piece : stringItems) {
             if (piece.equalsIgnoreCase("null")) {
                 contents.add(null);
-            }
-            else {
+            } else {
                 try {
                     ItemStack item = (ItemStack) deserialize(toMap(new JSONObject(piece)));
                     contents.add(item);

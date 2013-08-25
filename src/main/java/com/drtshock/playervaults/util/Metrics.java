@@ -561,7 +561,8 @@ public class Metrics {
         /**
          * Called when the server owner decides to opt-out of Metrics while the server is running.
          */
-        protected void onOptOut() {}
+        protected void onOptOut() {
+        }
 
     }
 
@@ -613,7 +614,8 @@ public class Metrics {
         /**
          * Called after the website graphs have been updated
          */
-        public void reset() {}
+        public void reset() {
+        }
 
         @Override
         public int hashCode() {

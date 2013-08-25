@@ -85,8 +85,7 @@ public class EconomyOperations {
                 player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.VAULT_DOES_NOT_EXIST);
                 return false;
             }
-        }
-        else {
+        } else {
             player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.VAULT_DOES_NOT_EXIST);
             return false;
         }
