@@ -79,8 +79,18 @@ public class PlayerVaults extends JavaPlugin {
     public void onDisable() {
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (IN_VAULT.containsKey(p.getName())) {
-                p.closeInventory();
+                Inventory inv = p.getOpenInventory().getTopInventory();
+                if (inv.getViewers().size() == 1) {
+                    VaultViewInfo info = PlayerVaults.IN_VAULT.get(p.getName());
+                    try {
+                        VM.saveVault(inv, info.getHolder(), info.getNumber());
+                    } catch (IOException e) {
+                    }
+                    PlayerVaults.OPENINVENTORIES.remove(info.toString());
+                }
+                PlayerVaults.IN_VAULT.remove(p.getName());
             }
+            p.closeInventory();
         }
     }
 
@@ -124,7 +134,7 @@ public class PlayerVaults extends JavaPlugin {
 
     /**
      * Setup economy
-     * 
+     *
      * @return Whether or not economy exists.
      */
     private boolean setupEconomy() {
@@ -172,7 +182,7 @@ public class PlayerVaults extends JavaPlugin {
 
     /**
      * Get the signs.yml config.
-     * 
+     *
      * @return The signs.yml config.
      */
     public YamlConfiguration getSigns() {
@@ -222,9 +232,10 @@ public class PlayerVaults extends JavaPlugin {
 
     /**
      * Set an object in the config.yml
-     * @param path The path in the config.
+     *
+     * @param path   The path in the config.
      * @param object What to be saved.
-     * @param conf Where to save the object.
+     * @param conf   Where to save the object.
      */
     public <T> void setInConfig(String path, T object, YamlConfiguration conf) {
         conf.set(path, object);
@@ -296,6 +307,7 @@ public class PlayerVaults extends JavaPlugin {
 
     /**
      * Gets the lang.yml config.
+     *
      * @return The lang.yml config.
      */
     public YamlConfiguration getLang() {
@@ -304,6 +316,7 @@ public class PlayerVaults extends JavaPlugin {
 
     /**
      * Get the lang.yml file.
+     *
      * @return The lang.yml file.
      */
     public File getLangFile() {
