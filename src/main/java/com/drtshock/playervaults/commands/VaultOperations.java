@@ -124,34 +124,34 @@ public class VaultOperations {
     }
 
     /**
-     * Delete a player's own vault.
-     * @param player The player to delete.
+     * Delete a player's vault.
+     * @param sender The sender executing the deletion.
      * @param holder The user to whom the deleted vault belongs.
      * @param arg The vault number to delete.
      */
-    public static void deleteOtherVault(CommandSender player, String holder, String arg) {
-        if (player.hasPermission("playervaults.delete")) {
+    public static void deleteOtherVault(CommandSender sender, String holder, String arg) {
+        if (sender.hasPermission("playervaults.delete")) {
             if (arg.matches("^[0-9]{1,2}$")) {
                 int number = 0;
                 try {
                     number = Integer.parseInt(arg);
                     if (number == 0) {
-                        player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+                        sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                         return;
                     }
                 } catch (NumberFormatException nfe) {
-                    player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+                    sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
                 try {
-                    PlayerVaults.VM.deleteVault(player, holder, number);
+                    PlayerVaults.VM.deleteVault(sender, holder, number);
                 } catch (IOException e) {
-                    player.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
+                    sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
                 }
             } else {
-                player.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
+                sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
             }
         } else {
-            player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
+            sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
         }
     }
 
