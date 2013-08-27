@@ -60,7 +60,7 @@ public class VaultManager {
      * @param holder The holder of the vault.
      * @param number The vault number.
      */
-    public Inventory loadVault(String holder, int number, boolean large) {
+    public Inventory loadVault(String holder, int number) {
         VaultViewInfo info = new VaultViewInfo(holder, number);
         Inventory inv = null;
         if (PlayerVaults.OPENINVENTORIES.containsKey(info.toString())) {
@@ -73,7 +73,7 @@ public class VaultManager {
                 vaultHolder.setInventory(inv);
             } else {
                 List<String> data = new ArrayList<String>();
-                for (int x = 0; x < ((large) ? 54 : 27); x++) {
+                for (int x = 0; x < 54; x++) {
                     String line = playerFile.getString("vault" + number + "." + x);
                     if (line != null) {
                         data.add(line);
@@ -81,7 +81,7 @@ public class VaultManager {
                         data.add("null");
                     }
                 }
-                inv = Serialization.toInventory(data, number, large);
+                inv = Serialization.toInventory(data, number);
             }
             PlayerVaults.OPENINVENTORIES.put(info.toString(), inv);
         }
@@ -103,9 +103,14 @@ public class VaultManager {
             vaultHolder.setInventory(inv);
             return inv;
         } else {
-            Inventory inv = Serialization.toInventory(data, number, true);
+            Inventory inv = Serialization.toInventory(data, number);
             return inv;
         }
+    }
+
+    public boolean vaultExists(String holder, int number) {
+        YamlConfiguration playerFile = getPlayerVaultFile(holder);
+        return playerFile.contains("vault" + number);
     }
 
     /**

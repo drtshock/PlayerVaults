@@ -3,7 +3,6 @@ package com.drtshock.playervaults.util;
 import com.drtshock.playervaults.PlayerVaults;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -18,15 +17,14 @@ import org.bukkit.entity.Player;
  */
 public class EconomyOperations {
 
-    private static File CONFIG_FILE;
     private static YamlConfiguration BUKKIT_CONFIG = new YamlConfiguration();
 
     public static PlayerVaults PLUGIN;
 
-    public EconomyOperations(PlayerVaults instance) throws FileNotFoundException, IOException, InvalidConfigurationException {
+    public EconomyOperations(PlayerVaults instance) throws IOException, InvalidConfigurationException {
         PLUGIN = instance;
-        CONFIG_FILE = new File(PLUGIN.getDataFolder(), "config.yml");
-        BUKKIT_CONFIG.load(CONFIG_FILE);
+        File config = new File(PLUGIN.getDataFolder(), "config.yml");
+        BUKKIT_CONFIG.load(config);
     }
 
     /**
@@ -34,17 +32,19 @@ public class EconomyOperations {
      * @param player The player to pay.
      * @return The transaction success.
      */
-    public static boolean payToOpen(Player player) {
+    public static boolean payToOpen(Player player, int number) {
         if (!BUKKIT_CONFIG.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !PlayerVaults.USE_VAULT)
             return true;
-
-        double cost = BUKKIT_CONFIG.getDouble("economy.cost-to-open", 10);
-        EconomyResponse resp = PlayerVaults.ECON.withdrawPlayer(player.getName(), cost);
-        if (resp.transactionSuccess()) {
-            player.sendMessage(Lang.TITLE.toString() + Lang.COST_TO_OPEN.toString().replaceAll("%price", "" + cost));
-            return true;
+        if (PlayerVaults.VM.vaultExists(player.getName(), number)) {
+            return payToCreate(player);
+        } else {
+            double cost = BUKKIT_CONFIG.getDouble("economy.cost-to-create", 100);
+            EconomyResponse resp = PlayerVaults.ECON.withdrawPlayer(player.getName(), cost);
+            if (resp.transactionSuccess()) {
+                player.sendMessage(Lang.TITLE.toString() + Lang.COST_TO_OPEN.toString().replaceAll("%price", "" + cost));
+                return true;
+            }
         }
-
         return false;
     }
 

@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
 public class Updater {
 
     public Updater(String v) throws SAXException, IOException, ParserConfigurationException {
-        oldVersion = v.substring(0, 5);
+        String oldVersion = v.substring(0, 5);
         HttpURLConnection connection = (HttpURLConnection) new URL("http://dev.bukkit.org/projects/playervaults/files.rss").openConnection();
         connection.setConnectTimeout(10000);
         connection.setReadTimeout(10000);
@@ -31,7 +31,6 @@ public class Updater {
         update = !newVersion.equals(oldVersion);
     }
 
-    private String oldVersion;
     private String newVersion;
     private String link;
     private boolean update;

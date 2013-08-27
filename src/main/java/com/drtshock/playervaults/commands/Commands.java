@@ -63,7 +63,7 @@ public class Commands implements CommandExecutor {
             if (sender.hasPermission("playervaults.signs.set")) {
                 if (sender instanceof Player) {
                     if (args.length == 1) {
-                        int i = 0;
+                        int i;
                         try {
                             i = Integer.parseInt(args[0]);
                         } catch (NumberFormatException nfe) {
@@ -74,7 +74,7 @@ public class Commands implements CommandExecutor {
                         PlayerVaults.SET_SIGN.put(sender.getName(), new SignSetInfo(i));
                         sender.sendMessage(Lang.TITLE.toString() + Lang.CLICK_A_SIGN);
                     } else if (args.length >= 2) {
-                        int i = 0;
+                        int i;
                         try {
                             i = Integer.parseInt(args[1]);
                         } catch (NumberFormatException nfe) {

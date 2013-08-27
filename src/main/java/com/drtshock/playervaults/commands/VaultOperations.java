@@ -35,7 +35,7 @@ public class VaultOperations {
      */
     public static boolean openOwnVault(Player player, String arg) {
         if (arg.matches("^[0-9]{1,2}$")) {
-            int number = 0;
+            int number;
             try {
                 number = Integer.parseInt(arg);
                 if (number == 0)
@@ -45,9 +45,9 @@ public class VaultOperations {
                 return false;
             }
             if (checkPerms(player, number)) {
-                if (EconomyOperations.payToOpen(player)) {
+                if (EconomyOperations.payToOpen(player, number)) {
                     PlayerVaults.log.info(String.valueOf(player.hasPermission("playervaults.small")));
-                    Inventory inv = PlayerVaults.VM.loadVault(player.getName(), number, !player.hasPermission("playervaults.small"));
+                    Inventory inv = PlayerVaults.VM.loadVault(player.getName(), number);
                     player.openInventory(inv);
                     player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
                     return true;
@@ -82,7 +82,7 @@ public class VaultOperations {
                 } catch (NumberFormatException nfe) {
                     player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
-                Inventory inv = PlayerVaults.VM.loadVault(holder, number, true);
+                Inventory inv = PlayerVaults.VM.loadVault(holder, number);
                 player.openInventory(inv);
                 player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", holder));
                 return true;
@@ -98,7 +98,6 @@ public class VaultOperations {
     /**
      * Delete a player's own vault.
      * @param player The player to delete.
-     * @param user The user to whom the deleted vault belongs.
      * @param arg The vault number to delete.
      */
     public static void deleteOwnVault(Player player, String arg) {
@@ -115,7 +114,6 @@ public class VaultOperations {
             try {
                 if (EconomyOperations.refundOnDelete(player, number)) {
                     PlayerVaults.VM.deleteVault(player, player.getName(), number);
-                    return;
                 }
             } catch (IOException e) {
                 player.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
@@ -131,29 +129,29 @@ public class VaultOperations {
      * @param holder The user to whom the deleted vault belongs.
      * @param arg The vault number to delete.
      */
-    public static void deleteOtherVault(CommandSender sender, String holder, String arg) {
-        if (sender.hasPermission("playervaults.delete")) {
+    public static void deleteOtherVault(CommandSender player, String holder, String arg) {
+        if (player.hasPermission("playervaults.delete")) {
             if (arg.matches("^[0-9]{1,2}$")) {
                 int number = 0;
                 try {
                     number = Integer.parseInt(arg);
                     if (number == 0) {
-                        sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+                        player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                         return;
                     }
                 } catch (NumberFormatException nfe) {
-                    sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+                    player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
                 try {
-                    PlayerVaults.VM.deleteVault(sender, holder, number);
+                    PlayerVaults.VM.deleteVault(player, holder, number);
                 } catch (IOException e) {
-                    sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
+                    player.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
                 }
             } else {
-                sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
+                player.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
             }
         } else {
-            sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
+            player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
         }
     }
 
