@@ -26,6 +26,14 @@ public class VaultOperations {
         }
         return false;
     }
+    
+    public static int getMaxVaultSize(CommandSender sender) {
+    	int size = 1;
+    	  for(int i = 0; i <= 54; i++) {
+    		if(sender.hasPermission("playervaults.size." + String.valueOf(i)) size = i;
+    	  }
+    		return size;
+    }
 
     /**
      * Open a player's own vault.
