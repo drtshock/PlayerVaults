@@ -79,7 +79,7 @@ public class Serialization {
         List<ItemStack> contents = new ArrayList<ItemStack>();
         for (String piece : stringItems) {
             if (piece.equalsIgnoreCase("null")) {
-                contents.add(new ItemStack(Material.AIR, 1));
+                contents.add(null);
             } else {
                 try {
                     ItemStack item = (ItemStack) deserialize(toMap(new JSONObject(piece)));

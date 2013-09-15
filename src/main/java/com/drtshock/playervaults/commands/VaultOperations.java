@@ -6,6 +6,7 @@ import com.drtshock.playervaults.util.Lang;
 
 import java.io.IOException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -82,7 +83,7 @@ public class VaultOperations {
                 } catch (NumberFormatException nfe) {
                     player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
-                Inventory inv = PlayerVaults.VM.loadVault(holder, number, PlayerVaults.getMaxVaultSize(player));
+                Inventory inv = PlayerVaults.VM.loadVault(holder, number, PlayerVaults.getMaxVaultSize(Bukkit.getPlayerExact(holder)));
                 player.openInventory(inv);
                 player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", holder));
                 return true;
