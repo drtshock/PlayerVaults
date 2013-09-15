@@ -63,6 +63,8 @@ public class VaultManager {
      * @param number The vault number.
      */
     public Inventory loadVault(String holder, int number, int size) {
+    	if(size != 9 && size != 18 && size != 27 && size != 36 && 
+    			size != 45 && size != 54 && size != 64 && size != 72 && size != 81) size = 27;
         VaultViewInfo info = new VaultViewInfo(holder, number);
         Inventory inv = null;
         if (PlayerVaults.OPENINVENTORIES.containsKey(info.toString())) {
