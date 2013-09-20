@@ -4,7 +4,6 @@ import com.drtshock.playervaults.commands.Commands;
 import com.drtshock.playervaults.commands.SignSetInfo;
 import com.drtshock.playervaults.commands.VaultViewInfo;
 import com.drtshock.playervaults.util.Lang;
-import com.drtshock.playervaults.util.Metrics;
 import com.drtshock.playervaults.util.Updater;
 import com.drtshock.playervaults.util.VaultManager;
 
@@ -57,7 +56,6 @@ public class PlayerVaults extends JavaPlugin {
         getServer().getPluginManager().registerEvents(listener = new Listeners(this), this);
         loadConfig();
         loadSigns();
-        startMetrics();
         checkUpdate();
         commands = new Commands();
         getCommand("pv").setExecutor(commands);
@@ -91,18 +89,6 @@ public class PlayerVaults extends JavaPlugin {
                 PlayerVaults.IN_VAULT.remove(p.getName());
             }
             p.closeInventory();
-        }
-    }
-
-    /**
-     * Start metrics
-     */
-    public void startMetrics() {
-        try {
-            Metrics metrics = new Metrics(this);
-            metrics.start();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
