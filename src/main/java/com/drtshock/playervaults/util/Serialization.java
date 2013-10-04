@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.inventory.Inventory;
@@ -71,9 +72,9 @@ public class Serialization {
         return result;
     }
 
-    public static Inventory toInventory(List<String> stringItems, int number) {
+    public static Inventory toInventory(List<String> stringItems, int number, int size) {
         VaultHolder holder = new VaultHolder(number);
-        Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.RED + "Vault #" + number);
+        Inventory inv = Bukkit.createInventory(holder, size, ChatColor.RED + "Vault #" + number);
         holder.setInventory(inv);
         List<ItemStack> contents = new ArrayList<ItemStack>();
         for (String piece : stringItems) {

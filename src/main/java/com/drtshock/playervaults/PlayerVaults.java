@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -307,5 +308,17 @@ public class PlayerVaults extends JavaPlugin {
      */
     public File getLangFile() {
         return LANG_FILE;
+    }
+    
+    public static int getMaxVaultSize(CommandSender sender) {
+    	int size = 27;
+    	  for(int i = 1; i <= 81; i++) {
+    		if(sender.hasPermission("playervaults.size." + String.valueOf(i))) {
+    			if(i == 9 || i == 18 || i == 27 || i == 45 || i == 54 || i == 63 || i == 72 || i == 81) {
+    				size = i;
+    			}
+    		}
+    	  }
+    		return size;
     }
 }
