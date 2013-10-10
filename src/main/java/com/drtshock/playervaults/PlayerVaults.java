@@ -4,6 +4,7 @@ import com.drtshock.playervaults.commands.Commands;
 import com.drtshock.playervaults.commands.SignSetInfo;
 import com.drtshock.playervaults.commands.VaultViewInfo;
 import com.drtshock.playervaults.util.Lang;
+import com.drtshock.playervaults.util.Metrics;
 import com.drtshock.playervaults.util.Updater;
 import com.drtshock.playervaults.util.Updater.UpdateType;
 import com.drtshock.playervaults.util.VaultManager;
@@ -64,6 +65,7 @@ public class PlayerVaults extends JavaPlugin {
         getCommand("pvsign").setExecutor(commands);
         getCommand("workbench").setExecutor(commands);
         setupEconomy();
+        startMetrics();
 
         if (getConfig().getBoolean("drop-on-death.enabled")) {
             DROP_ON_DEATH = true;
@@ -72,6 +74,15 @@ public class PlayerVaults extends JavaPlugin {
 
         new File(DIRECTORY + File.separator + "backups").mkdirs();
         VM = new VaultManager(this);
+    }
+
+    private void startMetrics() {
+        try {
+            Metrics metrics = new Metrics(this);
+            metrics.start();
+        } catch (IOException ex) {
+            getLogger().warning("Failed to load metrics :(");
+        }
     }
 
     @Override
