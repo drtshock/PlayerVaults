@@ -38,7 +38,6 @@ public class Listeners implements Listener {
     public Listeners(PlayerVaults playerVaults) {
         this.plugin = playerVaults;
     }
-
     VaultManager vm = new VaultManager(plugin);
 
     /**
@@ -198,7 +197,9 @@ public class Listeners implements Listener {
     }
 
     /**
-     * Check if the location given is a sign, and if so, remove it from the signs.yml file
+     * Check if the location given is a sign, and if so, remove it from the
+     * signs.yml file
+     *
      * @param location The location to check
      */
     public void blockChangeCheck(Location location) {
@@ -213,7 +214,8 @@ public class Listeners implements Listener {
     }
 
     /**
-     * Don't let a player open a trading inventory OR a minecart while he has his vault open.
+     * Don't let a player open a trading inventory OR a minecart while he has
+     * his vault open.
      */
     @EventHandler
     public void onInteractEntity(PlayerInteractEntityEvent event) {

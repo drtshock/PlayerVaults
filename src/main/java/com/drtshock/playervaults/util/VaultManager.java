@@ -16,7 +16,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
 
 /**
- * A class for managing actual IO to the files, loading inventories, and saving them.
+ * A class for managing actual IO to the files, loading inventories, and saving
+ * them.
  */
 public class VaultManager {
 
@@ -25,11 +26,11 @@ public class VaultManager {
     public VaultManager(PlayerVaults instance) {
         this.plugin = instance;
     }
-
     private final String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
 
     /**
      * Saves the inventory to the specified player and vault number.
+     *
      * @param inventory The inventory to be saved.
      * @param player The player of whose file to save to.
      * @param number The vault number.
@@ -57,6 +58,7 @@ public class VaultManager {
 
     /**
      * Load the player's vault and return it.
+     *
      * @param holder The holder of the vault.
      * @param number The vault number.
      */
@@ -89,7 +91,9 @@ public class VaultManager {
     }
 
     /**
-     * Gets an inventory without storing references to it. Used for dropping a players inventories on death.
+     * Gets an inventory without storing references to it. Used for dropping a
+     * players inventories on death.
+     *
      * @param holder The holder of the vault.
      * @param number The vault number.
      * @return The inventory of the specified holder and vault number.
@@ -115,6 +119,7 @@ public class VaultManager {
 
     /**
      * Deletes a players vault.
+     *
      * @param sender The sender of whom to send messages to.
      * @param holder The vault holder.
      * @param number The vault number.
@@ -137,6 +142,7 @@ public class VaultManager {
 
     /**
      * Get the holder's vault file. Create if doesn't exist.
+     *
      * @param holder The vault holder.
      * @return The holder's vault config file.
      */
@@ -159,6 +165,7 @@ public class VaultManager {
 
     /**
      * Save the players vault file.
+     *
      * @param holder The vault holder of whose file to save.
      * @param yaml The config to save.
      * @throws IOException Uh oh!

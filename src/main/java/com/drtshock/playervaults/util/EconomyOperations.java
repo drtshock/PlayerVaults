@@ -18,7 +18,6 @@ import org.bukkit.entity.Player;
 public class EconomyOperations {
 
     private static YamlConfiguration BUKKIT_CONFIG = new YamlConfiguration();
-
     public static PlayerVaults PLUGIN;
 
     public EconomyOperations(PlayerVaults instance) throws IOException, InvalidConfigurationException {
@@ -29,12 +28,14 @@ public class EconomyOperations {
 
     /**
      * Have a player pay to open a vault.
+     *
      * @param player The player to pay.
      * @return The transaction success.
      */
     public static boolean payToOpen(Player player, int number) {
-        if (!BUKKIT_CONFIG.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !PlayerVaults.USE_VAULT)
+        if (!BUKKIT_CONFIG.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !PlayerVaults.USE_VAULT) {
             return true;
+        }
         if (PlayerVaults.VM.vaultExists(player.getName(), number)) {
             return payToCreate(player);
         } else {
@@ -50,12 +51,14 @@ public class EconomyOperations {
 
     /**
      * Have a player pay to create a vault.
+     *
      * @param player The player to pay.
      * @return The transaction success
      */
     public static boolean payToCreate(Player player) {
-        if (!BUKKIT_CONFIG.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !PlayerVaults.USE_VAULT)
+        if (!BUKKIT_CONFIG.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || !PlayerVaults.USE_VAULT) {
             return true;
+        }
 
         double cost = BUKKIT_CONFIG.getDouble("economy.cost-to-create", 100);
         EconomyResponse resp = PlayerVaults.ECON.withdrawPlayer(player.getName(), cost);
@@ -69,6 +72,7 @@ public class EconomyOperations {
 
     /**
      * Have a player get his money back when vault is deleted.
+     *
      * @param player The player to receive the money.
      * @return The transaction success.
      */
@@ -97,5 +101,4 @@ public class EconomyOperations {
         }
         return false;
     }
-
 }

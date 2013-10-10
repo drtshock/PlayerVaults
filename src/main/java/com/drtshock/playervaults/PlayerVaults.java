@@ -5,6 +5,7 @@ import com.drtshock.playervaults.commands.SignSetInfo;
 import com.drtshock.playervaults.commands.VaultViewInfo;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.Updater;
+import com.drtshock.playervaults.util.Updater.UpdateType;
 import com.drtshock.playervaults.util.VaultManager;
 
 import java.io.File;
@@ -96,26 +97,15 @@ public class PlayerVaults extends JavaPlugin {
      * Checks for available updates.
      */
     public void checkUpdate() {
-        new BukkitRunnable() {
-
-            public void run() {
-                if (getConfig().getBoolean("check-update")) {
-                    if (getConfig().getBoolean("check-update")) {
-                        try {
-                            Updater u = new Updater(getDescription().getVersion());
-                            if (UPDATE = u.getUpdate()) {
-                                LINK = u.getLink();
-                                NEWVERSION = u.getNewVersion();
-                            }
-                        } catch (Exception e) {
-                            getLogger().log(Level.WARNING, "Failed to check for updates.");
-                            getLogger().log(Level.WARNING, "Report this stack trace to gomeow.");
-                            e.printStackTrace();
-                        }
-                    }
-                }
+        if (getConfig().getBoolean("check-update")) {
+            Updater.UpdateType updateType = (getConfig().getBoolean("download-update") ? UpdateType.DEFAULT : UpdateType.NO_DOWNLOAD);
+            Updater updater = new Updater(this, 50123, this.getFile(), updateType, false);
+            UPDATE = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+            NEWVERSION = updater.getLatestName();
+            if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
+                getLogger().info("Successfully updated Playervaults for next restart!");
             }
-        }.runTaskAsynchronously(this);
+        }
     }
 
     /**
@@ -219,9 +209,9 @@ public class PlayerVaults extends JavaPlugin {
     /**
      * Set an object in the config.yml
      *
-     * @param path   The path in the config.
+     * @param path The path in the config.
      * @param object What to be saved.
-     * @param conf   Where to save the object.
+     * @param conf Where to save the object.
      */
     public <T> void setInConfig(String path, T object, YamlConfiguration conf) {
         conf.set(path, object);
