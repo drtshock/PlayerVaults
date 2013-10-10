@@ -30,7 +30,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class PlayerVaults extends JavaPlugin {
 
     public static PlayerVaults PLUGIN;
-    public static Logger log;
+    public static Logger LOG;
     public static boolean UPDATE = false;
     public static String NEWVERSION = "";
     public static String LINK = "";
@@ -53,7 +53,7 @@ public class PlayerVaults extends JavaPlugin {
     @Override
     public void onEnable() {
         loadLang();
-        log = getServer().getLogger();
+        LOG = getServer().getLogger();
         getServer().getPluginManager().registerEvents(listener = new Listeners(this), this);
         loadConfig();
         loadSigns();
@@ -98,13 +98,20 @@ public class PlayerVaults extends JavaPlugin {
      */
     public void checkUpdate() {
         if (getConfig().getBoolean("check-update")) {
-            Updater.UpdateType updateType = (getConfig().getBoolean("download-update") ? UpdateType.DEFAULT : UpdateType.NO_DOWNLOAD);
-            Updater updater = new Updater(this, 50123, this.getFile(), updateType, false);
-            UPDATE = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-            NEWVERSION = updater.getLatestName();
-            if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
-                getLogger().info("Successfully updated Playervaults for next restart!");
-            }
+            final PlayerVaults plugin = this;
+            final File file = this.getFile();
+            final Updater.UpdateType updateType = (getConfig().getBoolean("download-update") ? UpdateType.DEFAULT : UpdateType.NO_DOWNLOAD);
+            getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
+                @Override
+                public void run() {
+                    Updater updater = new Updater(plugin, 50123, file, updateType, false);
+                    PlayerVaults.UPDATE = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+                    PlayerVaults.NEWVERSION = updater.getLatestName();
+                    if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
+                        getLogger().info("Successfully updated Playervaults for next restart!");
+                    }
+                }
+            });
         }
     }
 
@@ -147,8 +154,8 @@ public class PlayerVaults extends JavaPlugin {
             try {
                 signs.createNewFile();
             } catch (IOException e) {
-                log.severe("PlayerVaults has encountered a fatal error trying to load the signs file.");
-                log.severe("Please report this error to drtshock and gomeow.");
+                LOG.severe("PlayerVaults has encountered a fatal error trying to load the signs file.");
+                LOG.severe("Please report this error to drtshock and gomeow.");
                 e.printStackTrace();
             }
         }
@@ -172,8 +179,8 @@ public class PlayerVaults extends JavaPlugin {
         try {
             PlayerVaults.SIGNS.save(PlayerVaults.SIGNS_FILE);
         } catch (IOException e) {
-            log.severe("PlayerVaults has encountered an error trying to save the signs file.");
-            log.severe("Please report this error to drtshock and gomeow.");
+            LOG.severe("PlayerVaults has encountered an error trying to save the signs file.");
+            LOG.severe("Please report this error to drtshock and gomeow.");
             e.printStackTrace();
         }
     }
@@ -242,8 +249,8 @@ public class PlayerVaults extends JavaPlugin {
                 }
             } catch (IOException e) {
                 e.printStackTrace(); // So they notice
-                log.severe("[PlayerVaults] Couldn't create language file.");
-                log.severe("[PlayerVaults] This is a fatal error. Now disabling");
+                LOG.severe("[PlayerVaults] Couldn't create language file.");
+                LOG.severe("[PlayerVaults] This is a fatal error. Now disabling");
                 this.setEnabled(false); // Without it loaded, we can't send them messages
             } finally {
                 if (defLangStream != null) {
@@ -275,8 +282,8 @@ public class PlayerVaults extends JavaPlugin {
         try {
             conf.save(getLangFile());
         } catch (IOException e) {
-            log.log(Level.WARNING, "PlayerVaults: Failed to save lang.yml.");
-            log.log(Level.WARNING, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
+            LOG.log(Level.WARNING, "PlayerVaults: Failed to save lang.yml.");
+            LOG.log(Level.WARNING, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
             e.printStackTrace();
         }
     }

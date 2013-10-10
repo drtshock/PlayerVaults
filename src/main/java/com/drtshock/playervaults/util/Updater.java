@@ -69,6 +69,10 @@ public class Updater {
     private String updateFolder = YamlConfiguration.loadConfiguration(new File("bukkit.yml")).getString("settings.update-folder"); // The folder that downloads will be placed in
     private Updater.UpdateResult result = Updater.UpdateResult.SUCCESS; // Used for determining the outcome of the update process
 
+    public Updater(Runnable aThis, int i, File file, UpdateType updateType, boolean b) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     /**
      * Gives the dev the result of the update process. Can be obtained by called getResult().
      */

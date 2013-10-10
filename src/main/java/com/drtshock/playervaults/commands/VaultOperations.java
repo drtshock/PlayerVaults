@@ -1,6 +1,7 @@
 package com.drtshock.playervaults.commands;
 
 import com.drtshock.playervaults.PlayerVaults;
+import static com.drtshock.playervaults.PlayerVaults.LOG;
 import com.drtshock.playervaults.util.EconomyOperations;
 import com.drtshock.playervaults.util.Lang;
 
@@ -46,7 +47,7 @@ public class VaultOperations {
             }
             if (checkPerms(player, number)) {
                 if (EconomyOperations.payToOpen(player, number)) {
-                    PlayerVaults.log.info(String.valueOf(player.hasPermission("playervaults.small")));
+                    PlayerVaults.LOG.info(String.valueOf(player.hasPermission("playervaults.small")));
                     Inventory inv = PlayerVaults.VM.loadVault(player.getName(), number);
                     player.openInventory(inv);
                     player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
