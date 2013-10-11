@@ -8,12 +8,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * A class that contains a method to drop the contents of a player's vault when they die.
+ * A class that contains a method to drop the contents of a player's vault when
+ * they die.
  */
 public class DropOnDeath {
 
     /**
      * Drops all items when a player dies.
+     *
      * @param player The player to drop the inventory of.
      */
     public static void drop(Player player) {
@@ -26,5 +28,4 @@ public class DropOnDeath {
             }
         }
     }
-
 }

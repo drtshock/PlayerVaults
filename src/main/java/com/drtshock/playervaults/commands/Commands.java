@@ -1,5 +1,7 @@
 package com.drtshock.playervaults.commands;
 
+import com.drtshock.playervaults.vaultmanagement.VaultOperations;
+import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
 
@@ -18,18 +20,22 @@ public class Commands implements CommandExecutor {
                 Player p = (Player) sender;
                 switch (args.length) {
                     case 1:
-                        if (VaultOperations.openOwnVault(p, args[0]))
+                        if (VaultOperations.openOwnVault(p, args[0])) {
                             PlayerVaults.IN_VAULT.put(sender.getName(), new VaultViewInfo(sender.getName(), Integer.parseInt(args[0])));
+                        }
                         break;
                     case 2:
-                        if (VaultOperations.openOtherVault(p, args[0], args[1]))
+                        if (VaultOperations.openOtherVault(p, args[0], args[1])) {
                             PlayerVaults.IN_VAULT.put(sender.getName(), new VaultViewInfo(args[0], Integer.parseInt(args[1])));
+                        }
                         break;
                     default:
                         sender.sendMessage(Lang.TITLE + "/pv <number>");
                         sender.sendMessage(Lang.TITLE + "/pv <player> <number>");
                 }
-            } else sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.PLAYER_ONLY);
+            } else {
+                sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.PLAYER_ONLY);
+            }
         } else if (cmd.getName().equalsIgnoreCase("pvdel")) {
             switch (args.length) {
                 case 1:

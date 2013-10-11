@@ -1,10 +1,11 @@
-package com.drtshock.playervaults;
+package com.drtshock.playervaults.listeners;
 
-import com.drtshock.playervaults.commands.VaultOperations;
-import com.drtshock.playervaults.commands.VaultViewInfo;
+import com.drtshock.playervaults.PlayerVaults;
+import com.drtshock.playervaults.vaultmanagement.VaultOperations;
+import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import com.drtshock.playervaults.util.DropOnDeath;
 import com.drtshock.playervaults.util.Lang;
-import com.drtshock.playervaults.util.VaultManager;
+import com.drtshock.playervaults.vaultmanagement.VaultManager;
 
 import java.io.IOException;
 
@@ -168,7 +169,7 @@ public class Listeners implements Listener {
                         if (!self) {
                             owner = PlayerVaults.SIGNS.getString(world + ";;" + x + ";;" + y + ";;" + z + ".owner");
                         }
-                        Inventory inv = PlayerVaults.VM.loadVault((self) ? player.getName() : owner, num);
+                        Inventory inv = PlayerVaults.VM.loadVault((self) ? player.getName() : owner, num, VaultOperations.getMaxVaultSize(player));
                         player.openInventory(inv);
                         PlayerVaults.IN_VAULT.put(player.getName(), new VaultViewInfo((self) ? player.getName() : owner, num));
                         event.setCancelled(true);

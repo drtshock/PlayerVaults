@@ -1,4 +1,4 @@
-package com.drtshock.playervaults.util;
+package com.drtshock.playervaults.vaultmanagement;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;

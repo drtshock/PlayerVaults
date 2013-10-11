@@ -1,4 +1,4 @@
-package com.drtshock.playervaults.util;
+package com.drtshock.playervaults.vaultmanagement;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 /**
  * Fancy JSON serialization mostly by evilmidget38.
+ *
  * @author evilmidget38, gomeow
  *
  */
@@ -71,9 +72,9 @@ public class Serialization {
         return result;
     }
 
-    public static Inventory toInventory(List<String> stringItems, int number) {
+    public static Inventory toInventory(List<String> stringItems, int number, int size) {
         VaultHolder holder = new VaultHolder(number);
-        Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.RED + "Vault #" + number);
+        Inventory inv = Bukkit.createInventory(holder, size, ChatColor.RED + "Vault #" + number);
         holder.setInventory(inv);
         List<ItemStack> contents = new ArrayList<ItemStack>();
         for (String piece : stringItems) {
@@ -89,8 +90,9 @@ public class Serialization {
             }
         }
         ItemStack[] items = new ItemStack[contents.size()];
-        for (int x = 0; x < contents.size(); x++)
+        for (int x = 0; x < contents.size(); x++) {
             items[x] = contents.get(x);
+        }
         inv.setContents(items);
         return inv;
     }
@@ -123,5 +125,4 @@ public class Serialization {
         }
         return ConfigurationSerialization.deserializeObject(map);
     }
-
 }

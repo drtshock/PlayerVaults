@@ -1,8 +1,8 @@
-package com.drtshock.playervaults.commands;
+package com.drtshock.playervaults.vaultmanagement;
 
 /**
- * A class that stores information about a vault viewing including the holder of the vault,
- * and the vault number.
+ * A class that stores information about a vault viewing including the holder of
+ * the vault, and the vault number.
  */
 public class VaultViewInfo {
 
@@ -11,6 +11,7 @@ public class VaultViewInfo {
 
     /**
      * Make a VaultViewObject
+     *
      * @param s The holder of the vault.
      * @param i The vault number.
      */
@@ -21,6 +22,7 @@ public class VaultViewInfo {
 
     /**
      * Get the holder of the vault.
+     *
      * @return The holder of the vault.
      */
     public String getHolder() {
@@ -29,6 +31,7 @@ public class VaultViewInfo {
 
     /**
      * Get the vault number.
+     *
      * @return The vault number.
      */
     public int getNumber() {
@@ -39,5 +42,4 @@ public class VaultViewInfo {
     public String toString() {
         return this.holder + " " + this.number;
     }
-
 }

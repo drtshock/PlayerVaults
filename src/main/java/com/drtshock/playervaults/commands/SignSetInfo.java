@@ -12,6 +12,7 @@ public class SignSetInfo {
 
     /**
      * Construct a SignSetInfo object for another person.
+     *
      * @param s The vault owner.
      * @param i The vault number.
      */
@@ -22,6 +23,7 @@ public class SignSetInfo {
 
     /**
      * Construct a SignSetInfo object for opening to self.
+     *
      * @param i The vault number.
      */
     public SignSetInfo(int i) {
@@ -30,7 +32,9 @@ public class SignSetInfo {
     }
 
     /**
-     * Get whether or not the sign will open their own vault or another person's.
+     * Get whether or not the sign will open their own vault or another
+     * person's.
+     *
      * @return Whether or not it is a 'self' sign.
      */
     public boolean isSelf() {
@@ -39,6 +43,7 @@ public class SignSetInfo {
 
     /**
      * Get the owner of the vault.
+     *
      * @return The owner of the vault.
      */
     public String getOwner() {
@@ -47,10 +52,10 @@ public class SignSetInfo {
 
     /**
      * Get the vault number.
+     *
      * @return The vault number.
      */
     public int getChest() {
         return this.number;
     }
-
 }

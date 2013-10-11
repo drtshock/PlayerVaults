@@ -1,14 +1,15 @@
 package com.drtshock.playervaults;
 
+import com.drtshock.playervaults.listeners.Listeners;
 import com.drtshock.playervaults.commands.Commands;
 import com.drtshock.playervaults.commands.SignSetInfo;
-import com.drtshock.playervaults.commands.VaultViewInfo;
+import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.Metrics;
 import com.drtshock.playervaults.util.Updater;
 import com.drtshock.playervaults.util.Updater.UpdateResult;
 import com.drtshock.playervaults.util.Updater.UpdateType;
-import com.drtshock.playervaults.util.VaultManager;
+import com.drtshock.playervaults.vaultmanagement.VaultManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -111,7 +112,7 @@ public class PlayerVaults extends JavaPlugin {
         if (getConfig().getBoolean("check-update")) {
             final PlayerVaults plugin = this;
             final File file = this.getFile();
-            final Updater.UpdateType updateType = (getConfig().getBoolean("download-update") ? UpdateType.DEFAULT : UpdateType.NO_DOWNLOAD);
+            final Updater.UpdateType updateType = (getConfig().getBoolean("download-update", false) ? UpdateType.DEFAULT : UpdateType.NO_DOWNLOAD);
             getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
                 @Override
                 public void run() {

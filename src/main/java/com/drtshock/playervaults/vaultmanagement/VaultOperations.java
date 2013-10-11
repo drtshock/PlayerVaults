@@ -1,12 +1,12 @@
-package com.drtshock.playervaults.commands;
+package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
-import static com.drtshock.playervaults.PlayerVaults.LOG;
 import com.drtshock.playervaults.util.EconomyOperations;
 import com.drtshock.playervaults.util.Lang;
 
 import java.io.IOException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,21 +15,44 @@ import org.bukkit.inventory.Inventory;
 public class VaultOperations {
 
     /**
-     * Check whether or not the player has permission to open the requested vault.
+     * Check whether or not the player has permission to open the requested
+     * vault.
+     *
      * @param sender The person to check.
      * @param number The vault number.
      * @return Whether or not they have permission.
      */
     public static boolean checkPerms(CommandSender sender, int number) {
-        if (sender.hasPermission("playervaults.amount." + String.valueOf(number))) return true;
+        if (sender.hasPermission("playervaults.amount." + String.valueOf(number))) {
+            return true;
+        }
         for (int x = number; x <= 99; x++) {
-            if (sender.hasPermission("playervaults.amount." + String.valueOf(x))) return true;
+            if (sender.hasPermission("playervaults.amount." + String.valueOf(x))) {
+                return true;
+            }
         }
         return false;
     }
 
     /**
+     * Get the max size vault a player is allowed to have.
+     *
+     * @param player that is having his permissions checked.
+     * @return max size as integer. If no max size is set then it will default
+     * to 54.
+     */
+    public static int getMaxVaultSize(Player player) {
+        for (int i = 6; i != 0; i--) {
+            if (player.hasPermission("playervaults.size." + i)) {
+                return i * 9;
+            }
+        }
+        return 54;
+    }
+
+    /**
      * Open a player's own vault.
+     *
      * @param player The player to open to.
      * @param arg The vault number to open.
      * @return Whether or not the player was allowed to open it.
@@ -39,8 +62,9 @@ public class VaultOperations {
             int number;
             try {
                 number = Integer.parseInt(arg);
-                if (number == 0)
+                if (number == 0) {
                     return false;
+                }
             } catch (NumberFormatException nfe) {
                 player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 return false;
@@ -48,7 +72,7 @@ public class VaultOperations {
             if (checkPerms(player, number)) {
                 if (EconomyOperations.payToOpen(player, number)) {
                     PlayerVaults.LOG.info(String.valueOf(player.hasPermission("playervaults.small")));
-                    Inventory inv = PlayerVaults.VM.loadVault(player.getName(), number);
+                    Inventory inv = PlayerVaults.VM.loadVault(player.getName(), number, getMaxVaultSize(player));
                     player.openInventory(inv);
                     player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
                     return true;
@@ -67,6 +91,7 @@ public class VaultOperations {
 
     /**
      * Open another player's vault.
+     *
      * @param player The player to open to.
      * @param holder The user to whom the requested vault belongs.
      * @param arg The vault number to open.
@@ -78,12 +103,13 @@ public class VaultOperations {
                 int number = 0;
                 try {
                     number = Integer.parseInt(arg);
-                    if (number == 0)
+                    if (number == 0) {
                         return false;
+                    }
                 } catch (NumberFormatException nfe) {
                     player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
-                Inventory inv = PlayerVaults.VM.loadVault(holder, number);
+                Inventory inv = PlayerVaults.VM.loadVault(holder, number, getMaxVaultSize(Bukkit.getPlayerExact(holder)));
                 player.openInventory(inv);
                 player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", holder));
                 return true;
@@ -98,6 +124,7 @@ public class VaultOperations {
 
     /**
      * Delete a player's own vault.
+     *
      * @param player The player to delete.
      * @param arg The vault number to delete.
      */
@@ -106,8 +133,9 @@ public class VaultOperations {
             int number = 0;
             try {
                 number = Integer.parseInt(arg);
-                if (number == 0)
+                if (number == 0) {
                     player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+                }
                 return;
             } catch (NumberFormatException nfe) {
                 player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
@@ -126,6 +154,7 @@ public class VaultOperations {
 
     /**
      * Delete a player's vault.
+     *
      * @param sender The sender executing the deletion.
      * @param holder The user to whom the deleted vault belongs.
      * @param arg The vault number to delete.
@@ -155,5 +184,4 @@ public class VaultOperations {
             sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
         }
     }
-
 }

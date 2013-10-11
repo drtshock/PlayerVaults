@@ -1,7 +1,7 @@
-package com.drtshock.playervaults.util;
+package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.commands.VaultViewInfo;
+import com.drtshock.playervaults.util.Lang;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class VaultManager {
         if (size == 54) {
             yaml.set("vault" + number, null);
         } else {
-            for (int x = 0; x < 27; x++) {
+            for (int x = 0; x < size; x++) {
                 yaml.set("vault" + number + "." + x, null);
             }
         }
@@ -62,7 +62,10 @@ public class VaultManager {
      * @param holder The holder of the vault.
      * @param number The vault number.
      */
-    public Inventory loadVault(String holder, int number) {
+    public Inventory loadVault(String holder, int number, int size) {
+        if (size % 9 != 0) {
+            size = 54;
+        }
         VaultViewInfo info = new VaultViewInfo(holder, number);
         Inventory inv = null;
         if (PlayerVaults.OPENINVENTORIES.containsKey(info.toString())) {
@@ -71,11 +74,11 @@ public class VaultManager {
             YamlConfiguration playerFile = getPlayerVaultFile(holder);
             if (playerFile.getConfigurationSection("vault" + number) == null) {
                 VaultHolder vaultHolder = new VaultHolder(number);
-                inv = Bukkit.createInventory(vaultHolder, 54, ChatColor.DARK_RED + "Vault #" + String.valueOf(number));
+                inv = Bukkit.createInventory(vaultHolder, size, ChatColor.DARK_RED + "Vault #" + number);
                 vaultHolder.setInventory(inv);
             } else {
                 List<String> data = new ArrayList<String>();
-                for (int x = 0; x < 54; x++) {
+                for (int x = 0; x < size; x++) {
                     String line = playerFile.getString("vault" + number + "." + x);
                     if (line != null) {
                         data.add(line);
@@ -83,7 +86,7 @@ public class VaultManager {
                         data.add("null");
                     }
                 }
-                inv = Serialization.toInventory(data, number);
+                inv = Serialization.toInventory(data, number, size);
             }
             PlayerVaults.OPENINVENTORIES.put(info.toString(), inv);
         }
@@ -103,11 +106,11 @@ public class VaultManager {
         List<String> data = playerFile.getStringList("vault" + number);
         if (data == null) {
             VaultHolder vaultHolder = new VaultHolder(number);
-            Inventory inv = Bukkit.createInventory(vaultHolder, 54, ChatColor.GREEN + "Vault #" + String.valueOf(number));
+            Inventory inv = Bukkit.createInventory(vaultHolder, VaultOperations.getMaxVaultSize(Bukkit.getPlayerExact(holder)), ChatColor.DARK_RED + "Vault #" + number);
             vaultHolder.setInventory(inv);
             return inv;
         } else {
-            Inventory inv = Serialization.toInventory(data, number);
+            Inventory inv = Serialization.toInventory(data, number, VaultOperations.getMaxVaultSize(Bukkit.getPlayerExact(holder)));
             return inv;
         }
     }
