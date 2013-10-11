@@ -6,6 +6,7 @@ import com.drtshock.playervaults.commands.VaultViewInfo;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.Metrics;
 import com.drtshock.playervaults.util.Updater;
+import com.drtshock.playervaults.util.Updater.UpdateResult;
 import com.drtshock.playervaults.util.Updater.UpdateType;
 import com.drtshock.playervaults.util.VaultManager;
 
@@ -26,7 +27,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerVaults extends JavaPlugin {
 
@@ -118,8 +118,10 @@ public class PlayerVaults extends JavaPlugin {
                     Updater updater = new Updater(plugin, 50123, file, updateType, false);
                     PlayerVaults.UPDATE = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
                     PlayerVaults.NEWVERSION = updater.getLatestName();
-                    if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
-                        getLogger().info("Successfully updated Playervaults for next restart!");
+                    if (updater.getResult() == UpdateResult.SUCCESS) {
+                        getLogger().log(Level.INFO, "Successfully updated Playervaults to version {0} for next restart!", updater.getLatestName());
+                    } else if (updater.getResult() == UpdateResult.NO_UPDATE) {
+                        getLogger().log(Level.INFO, "We didn't find an update!");
                     }
                 }
             });
