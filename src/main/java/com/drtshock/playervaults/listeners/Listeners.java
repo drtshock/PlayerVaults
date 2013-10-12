@@ -43,20 +43,20 @@ public class Listeners implements Listener {
     /**
      * Save a players vault. Sends to method in VaultManager class.
      *
-     * @param Player The player of whose vault to save
+     * @param player The player of whose vault to save
      */
-    public void saveVault(Player p) {
-        if (PlayerVaults.IN_VAULT.containsKey(p.getName())) {
-            Inventory inv = p.getOpenInventory().getTopInventory();
+    public void saveVault(Player player) {
+        if (PlayerVaults.IN_VAULT.containsKey(player.getName())) {
+            Inventory inv = player.getOpenInventory().getTopInventory();
             if (inv.getViewers().size() == 1) {
-                VaultViewInfo info = PlayerVaults.IN_VAULT.get(p.getName());
+                VaultViewInfo info = PlayerVaults.IN_VAULT.get(player.getName());
                 try {
                     vm.saveVault(inv, info.getHolder(), info.getNumber());
                 } catch (IOException e) {
                 }
                 PlayerVaults.OPENINVENTORIES.remove(info.toString());
             }
-            PlayerVaults.IN_VAULT.remove(p.getName());
+            PlayerVaults.IN_VAULT.remove(player.getName());
         }
     }
 

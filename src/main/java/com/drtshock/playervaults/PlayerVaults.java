@@ -77,6 +77,9 @@ public class PlayerVaults extends JavaPlugin {
         VM = new VaultManager(this);
     }
 
+    /**
+     * Start sending data to mcstats.
+     */
     private void startMetrics() {
         try {
             Metrics metrics = new Metrics(this);
@@ -130,7 +133,7 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     /**
-     * Setup economy
+     * Setup economy.
      *
      * @return Whether or not economy exists.
      */

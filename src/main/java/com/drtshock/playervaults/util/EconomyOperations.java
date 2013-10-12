@@ -30,6 +30,7 @@ public class EconomyOperations {
      * Have a player pay to open a vault.
      *
      * @param player The player to pay.
+     * @param number The vault number to open.
      * @return The transaction success.
      */
     public static boolean payToOpen(Player player, int number) {
@@ -74,6 +75,7 @@ public class EconomyOperations {
      * Have a player get his money back when vault is deleted.
      *
      * @param player The player to receive the money.
+     * @param number The vault number to delete.
      * @return The transaction success.
      */
     public static boolean refundOnDelete(Player player, int number) {
