@@ -3,7 +3,6 @@ package com.drtshock.playervaults.listeners;
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
-import com.drtshock.playervaults.util.DropOnDeath;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
 
@@ -85,9 +84,6 @@ public class Listeners implements Listener {
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         saveVault(player);
-        if (PlayerVaults.DROP_ON_DEATH && (!player.hasPermission("playervaults.ignore.drops"))) {
-            DropOnDeath.drop(event.getEntity());
-        }
     }
 
     @EventHandler

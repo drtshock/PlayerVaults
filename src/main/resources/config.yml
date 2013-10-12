@@ -17,13 +17,3 @@ economy:
   cost-to-create: 100
   cost-to-open: 10
   refund-on-delete: 50
-  
-# Configuration for dropping inventories on death.
-# Bypass with playervaults.ignore.drop
-drop-on-death:
-  enabled: false
-  
-# Max amount of inventories you want to be dropped.
-# Set to 99 (or highest amount you give people) if you want all inventories to be dropped.
-# WARNING: This can cause a lot of items to be dropped on the ground. Use caution :3
-  inventories: 1
