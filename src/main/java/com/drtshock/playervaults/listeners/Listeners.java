@@ -75,7 +75,7 @@ public class Listeners implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if (player.isOp() && PlayerVaults.UPDATE) {
+        if ((player.isOp() || player.hasPermission("playervaults.notify")) && PlayerVaults.UPDATE) {
             player.sendMessage(ChatColor.GREEN + "Version " + PlayerVaults.NEWVERSION + " of PlayerVaults is up for download!");
             player.sendMessage(ChatColor.GREEN + PlayerVaults.LINK + " to view the changelog and download!");
         }
