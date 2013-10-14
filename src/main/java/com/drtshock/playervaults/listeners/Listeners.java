@@ -56,11 +56,6 @@ public class Listeners implements Listener {
     }
     VaultManager vm = new VaultManager(plugin);
 
-    /**
-     * Save a players vault. Sends to method in VaultManager class.
-     *
-     * @param player The player of whose vault to save
-     */
     public void saveVault(Player player) {
         if (PlayerVaults.IN_VAULT.containsKey(player.getName())) {
             Inventory inv = player.getOpenInventory().getTopInventory();
@@ -111,10 +106,6 @@ public class Listeners implements Listener {
         }
     }
 
-    /**
-     * Check if a player is trying to do something while in a vault. Don't let
-     * them open up another chest.
-     */
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -226,10 +217,6 @@ public class Listeners implements Listener {
         }
     }
 
-    /**
-     * Don't let a player open a trading inventory OR a minecart while he has
-     * his vault open.
-     */
     @EventHandler
     public void onInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();

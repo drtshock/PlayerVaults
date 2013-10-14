@@ -83,7 +83,6 @@ public class EconomyOperations {
             player.sendMessage(Lang.TITLE.toString() + Lang.COST_TO_CREATE.toString().replaceAll("%price", "" + cost));
             return true;
         }
-
         return false;
     }
 

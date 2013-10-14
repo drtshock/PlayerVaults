@@ -93,9 +93,6 @@ public class PlayerVaults extends JavaPlugin {
         VM = new VaultManager(this);
     }
 
-    /**
-     * Start sending data to mcstats.
-     */
     private void startMetrics() {
         try {
             Metrics metrics = new Metrics(this);
@@ -124,9 +121,6 @@ public class PlayerVaults extends JavaPlugin {
         }
     }
 
-    /**
-     * Checks for available updates.
-     */
     public void checkUpdate() {
         if (getConfig().getBoolean("check-update")) {
             final PlayerVaults plugin = this;
@@ -148,11 +142,6 @@ public class PlayerVaults extends JavaPlugin {
         }
     }
 
-    /**
-     * Setup economy.
-     *
-     * @return Whether or not economy exists.
-     */
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
@@ -166,10 +155,7 @@ public class PlayerVaults extends JavaPlugin {
         return ECON != null;
     }
 
-    /**
-     * Load the config.yml file.
-     */
-    public void loadConfig() {
+    private void loadConfig() {
         File config = new File(getDataFolder() + File.separator + "config.yml");
         if (!config.exists()) {
             saveDefaultConfig();
@@ -178,10 +164,7 @@ public class PlayerVaults extends JavaPlugin {
         }
     }
 
-    /**
-     * Load the signs.yml file.
-     */
-    public void loadSigns() {
+    private void loadSigns() {
         File signs = new File(getDataFolder(), "signs.yml");
         if (!signs.exists()) {
             try {
@@ -218,9 +201,6 @@ public class PlayerVaults extends JavaPlugin {
         }
     }
 
-    /**
-     * Update the config.yml file.
-     */
     public void updateConfig() {
         boolean checkUpdate = getConfig().getBoolean("check-update", true);
         boolean ecoEnabled = getConfig().getBoolean("economy.enabled", false);
@@ -257,10 +237,7 @@ public class PlayerVaults extends JavaPlugin {
         conf.set(path, object);
     }
 
-    /**
-     * Load the lang.yml file.
-     */
-    public void loadLang() {
+    private void loadLang() {
         File lang = new File(getDataFolder(), "lang.yml");
         OutputStream out = null;
         InputStream defLangStream = this.getResource("lang.yml");
