@@ -24,6 +24,7 @@ import java.io.IOException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -58,8 +59,11 @@ public class VaultOperations {
      * to 54.
      */
     public static int getMaxVaultSize(Player player) {
+        if(player == null) {
+            return 54;
+        }
         for (int i = 6; i != 0; i--) {
-            if (player.hasPermission("playervaults.size." + i)) {
+            if (player.getPlayer().hasPermission("playervaults.size." + i)) {
                 return i * 9;
             }
         }
