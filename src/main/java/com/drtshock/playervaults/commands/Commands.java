@@ -20,11 +20,13 @@ import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 public class Commands implements CommandExecutor {
@@ -38,11 +40,27 @@ public class Commands implements CommandExecutor {
                     case 1:
                         if (VaultOperations.openOwnVault(p, args[0])) {
                             PlayerVaults.IN_VAULT.put(sender.getName(), new VaultViewInfo(sender.getName(), Integer.parseInt(args[0])));
+                        } else if (sender.hasPermission("playervaults.admin")) {
+                            YamlConfiguration file = PlayerVaults.VM.getPlayerVaultFile(args[0]);
+                            if (file == null) {
+                                sender.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
+                            } else {
+                                StringBuilder sb = new StringBuilder();
+                                for (String key : file.getKeys(false)) {
+                                    sb.append(key.replace("vault", "")).append(" ");
+                                }
+                                String vaults = sb.toString().trim();
+                                sender.sendMessage(Lang.TITLE.toString() + Lang.EXISTING_VAULTS.toString().replaceAll("%p", args[0]).replaceAll("%v", vaults));
+                            }
+                        } else {
+                            sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER.toString());
                         }
                         break;
                     case 2:
                         if (VaultOperations.openOtherVault(p, args[0], args[1])) {
                             PlayerVaults.IN_VAULT.put(sender.getName(), new VaultViewInfo(args[0], Integer.parseInt(args[1])));
+                        } else {
+                            // ????
                         }
                         break;
                     default:

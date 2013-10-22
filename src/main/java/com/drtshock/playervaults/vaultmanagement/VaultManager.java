@@ -29,6 +29,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 /**
@@ -78,7 +79,7 @@ public class VaultManager {
      * @param holder The holder of the vault.
      * @param number The vault number.
      */
-    public Inventory loadVault(String holder, int number, int size) {
+    public Inventory loadOwnVault(String holder, int number, int size) {
         if (size % 9 != 0) {
             size = 54;
         }
@@ -90,23 +91,79 @@ public class VaultManager {
             YamlConfiguration playerFile = getPlayerVaultFile(holder);
             if (playerFile.getConfigurationSection("vault" + number) == null) {
                 VaultHolder vaultHolder = new VaultHolder(number);
-                inv = Bukkit.createInventory(vaultHolder, size, ChatColor.DARK_RED + "Vault #" + number);
-                vaultHolder.setInventory(inv);
-            } else {
-                List<String> data = new ArrayList<String>();
-                for (int x = 0; x < size; x++) {
-                    String line = playerFile.getString("vault" + number + "." + x);
-                    if (line != null) {
-                        data.add(line);
-                    } else {
-                        data.add("null");
-                    }
+                Player player = Bukkit.getPlayer(holder);
+                if(player == null) {
+                    return null;
                 }
-                inv = Serialization.toInventory(data, number, size);
+                if (EconomyOperations.payToCreate(player)) {
+                    inv = Bukkit.createInventory(vaultHolder, size, ChatColor.DARK_RED + "Vault #" + number);
+                    vaultHolder.setInventory(inv);
+                } else {
+                    player.sendMessage(Lang.TITLE.toString() + Lang.INSUFFICIENT_FUNDS.toString());
+                    return null;
+                }
+            } else {
+                if (getInventory(playerFile, size, number) == null) {
+                    return null;
+                } else {
+                    inv = getInventory(playerFile, size, number);
+                }
             }
             PlayerVaults.OPENINVENTORIES.put(info.toString(), inv);
         }
         return inv;
+    }
+
+    /**
+     * Load the player's vault and return it.
+     *
+     * @param holder The holder of the vault.
+     * @param number The vault number.
+     */
+    public Inventory loadOtherVault(String holder, int number, int size) {
+        if (size % 9 != 0) {
+            size = 54;
+        }
+        VaultViewInfo info = new VaultViewInfo(holder, number);
+        Inventory inv = null;
+        if (PlayerVaults.OPENINVENTORIES.containsKey(info.toString())) {
+            inv = PlayerVaults.OPENINVENTORIES.get(info.toString());
+        } else {
+            YamlConfiguration playerFile = getPlayerVaultFile(holder);
+            if (playerFile.getConfigurationSection("vault" + number) == null) {
+                return null;
+            } else {
+                if (getInventory(playerFile, size, number) == null) {
+                    return null;
+                } else {
+                    inv = getInventory(playerFile, size, number);
+                }
+            }
+            PlayerVaults.OPENINVENTORIES.put(info.toString(), inv);
+        }
+        return inv;
+    }
+
+    /**
+     * Get an inventory from file. Returns null if the inventory doesn't exist.
+     * SHOULD ONLY BE USED INTERNALLY
+     *
+     * @param playerFile the YamlConfiguration file.
+     * @param size the size of the vault.
+     * @param number the vault number.
+     * @return inventory if exists, otherwise null.
+     */
+    private Inventory getInventory(YamlConfiguration playerFile, int size, int number) {
+        List<String> data = new ArrayList<String>();
+        for (int x = 0; x < size; x++) {
+            String line = playerFile.getString("vault" + number + "." + x);
+            if (line != null) {
+                data.add(line);
+            } else {
+                data.add("null");
+            }
+        }
+        return Serialization.toInventory(data, number, size);
     }
 
     /**

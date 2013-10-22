@@ -172,7 +172,7 @@ public class Listeners implements Listener {
                         if (!self) {
                             owner = PlayerVaults.SIGNS.getString(world + ";;" + x + ";;" + y + ";;" + z + ".owner");
                         }
-                        Inventory inv = PlayerVaults.VM.loadVault((self) ? player.getName() : owner, num, VaultOperations.getMaxVaultSize(player));
+                        Inventory inv = PlayerVaults.VM.loadOwnVault((self) ? player.getName() : owner, num, VaultOperations.getMaxVaultSize(player));
                         player.openInventory(inv);
                         PlayerVaults.IN_VAULT.put(player.getName(), new VaultViewInfo((self) ? player.getName() : owner, num));
                         event.setCancelled(true);

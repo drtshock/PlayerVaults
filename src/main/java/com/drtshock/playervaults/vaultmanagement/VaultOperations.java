@@ -57,7 +57,7 @@ public class VaultOperations {
      * to 54.
      */
     public static int getMaxVaultSize(Player player) {
-        if(player == null) {
+        if (player == null) {
             return 54;
         }
         for (int i = 6; i != 0; i--) {
@@ -76,32 +76,27 @@ public class VaultOperations {
      * @return Whether or not the player was allowed to open it.
      */
     public static boolean openOwnVault(Player player, String arg) {
-        if (arg.matches("^[0-9]{1,2}$")) {
-            int number;
-            try {
-                number = Integer.parseInt(arg);
-                if (number == 0) {
-                    return false;
-                }
-            } catch (NumberFormatException nfe) {
-                player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+        int number;
+        try {
+            number = Integer.parseInt(arg);
+            if (number == 0) {
                 return false;
             }
-            if (checkPerms(player, number)) {
-                if (EconomyOperations.payToOpen(player, number)) {
-                    Inventory inv = PlayerVaults.VM.loadVault(player.getName(), number, getMaxVaultSize(player));
-                    player.openInventory(inv);
-                    player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
-                    return true;
-                } else {
-                    player.sendMessage(Lang.TITLE.toString() + Lang.INSUFFICIENT_FUNDS);
-                    return false;
-                }
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        if (checkPerms(player, number)) {
+            if (EconomyOperations.payToOpen(player, number)) {
+                Inventory inv = PlayerVaults.VM.loadOwnVault(player.getName(), number, getMaxVaultSize(player));
+                player.openInventory(inv);
+                player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
+                return true;
             } else {
-                player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
+                player.sendMessage(Lang.TITLE.toString() + Lang.INSUFFICIENT_FUNDS);
+                return false;
             }
         } else {
-            player.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
+            player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
         }
         return false;
     }
@@ -116,22 +111,22 @@ public class VaultOperations {
      */
     public static boolean openOtherVault(Player player, String holder, String arg) {
         if (player.hasPermission("playervaults.admin")) {
-            if (arg.matches("^[0-9]{1,2}$")) {
-                int number = 0;
-                try {
-                    number = Integer.parseInt(arg);
-                    if (number == 0) {
-                        return false;
-                    }
-                } catch (NumberFormatException nfe) {
-                    player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+            int number = 0;
+            try {
+                number = Integer.parseInt(arg);
+                if (number == 0) {
+                    return false;
                 }
-                Inventory inv = PlayerVaults.VM.loadVault(holder, number, getMaxVaultSize(Bukkit.getPlayerExact(holder)));
+            } catch (NumberFormatException nfe) {
+                player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+            }
+            Inventory inv = PlayerVaults.VM.loadOtherVault(holder, number, getMaxVaultSize(Bukkit.getPlayerExact(holder)));
+            if (inv == null) {
+                player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
+            } else {
                 player.openInventory(inv);
                 player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", holder));
                 return true;
-            } else {
-                player.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
             }
         } else {
             player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);

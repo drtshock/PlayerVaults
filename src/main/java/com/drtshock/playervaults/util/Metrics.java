@@ -74,7 +74,7 @@ public class Metrics {
     /**
      * The base url of the metrics domain
      */
-    private static final String BASE_URL = "http://stats.drtshock.net";
+    private static final String BASE_URL = "http://report.mcstats.org";
     /**
      * The url used to report a server's status
      */
