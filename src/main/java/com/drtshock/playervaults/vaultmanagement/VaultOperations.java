@@ -17,14 +17,12 @@
 package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.util.EconomyOperations;
 import com.drtshock.playervaults.util.Lang;
 
 import java.io.IOException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

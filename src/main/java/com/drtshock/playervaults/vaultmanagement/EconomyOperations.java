@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.drtshock.playervaults.util;
+package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
+import com.drtshock.playervaults.util.Lang;
 
 import java.io.File;
 import java.io.IOException;
