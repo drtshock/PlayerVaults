@@ -89,7 +89,6 @@ public class VaultOperations {
             }
             if (checkPerms(player, number)) {
                 if (EconomyOperations.payToOpen(player, number)) {
-                    PlayerVaults.LOG.info(String.valueOf(player.hasPermission("playervaults.small")));
                     Inventory inv = PlayerVaults.VM.loadVault(player.getName(), number, getMaxVaultSize(player));
                     player.openInventory(inv);
                     player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
