@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.drtshock</groupId>
     <artifactId>PlayerVaults</artifactId>
-    <version>3.4.1</version>
+    <version>3.4.2-SNAPSHOT</version>
     <name>PlayerVaults</name>
     <url>http://dev.bukkit.org/server-mods/playervaults/</url>
 
