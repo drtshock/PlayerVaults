@@ -114,6 +114,7 @@ public class Listeners implements Listener {
                 Block block = event.getClickedBlock();
                 // Different inventories that we don't want the player to open.
                 if (block.getType() == Material.CHEST
+                        || block.getType() == Material.TRAPPED_CHEST
                         || block.getType() == Material.ENDER_CHEST
                         || block.getType() == Material.FURNACE
                         || block.getType() == Material.BURNING_FURNACE
