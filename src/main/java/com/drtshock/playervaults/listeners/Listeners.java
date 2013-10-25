@@ -119,6 +119,7 @@ public class Listeners implements Listener {
                         || block.getType() == Material.FURNACE
                         || block.getType() == Material.BURNING_FURNACE
                         || block.getType() == Material.BREWING_STAND
+                        || block.getType() == Material.ENCHANTMENT_TABLE
                         || block.getType() == Material.BEACON) {
                     event.setCancelled(true);
                 }
