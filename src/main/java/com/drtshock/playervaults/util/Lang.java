@@ -43,6 +43,7 @@ public enum Lang {
     NOT_A_SIGN("not-a-sign", "&cYou must click a sign!"),
     SET_SIGN("set-sign-success", "&fYou have successfully set a PlayerVault access sign!"),
     EXISTING_VAULTS("existing-vaults", "&f%p has vaults: &a%v"),
+    VAULT_TITLE("vault-title", "&4Vault #%number"),
     OPEN_WITH_SIGN("open-with-sign", "&fOpening vault &a%v &fof &a%p");
 
     private String path;

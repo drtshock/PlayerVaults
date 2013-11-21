@@ -96,7 +96,7 @@ public class VaultManager {
                     return null;
                 }
                 if (EconomyOperations.payToCreate(player)) {
-                    inv = Bukkit.createInventory(vaultHolder, size, ChatColor.DARK_RED + "Vault #" + number);
+                    inv = Bukkit.createInventory(vaultHolder, size, Lang.VAULT_TITLE.toString().replaceAll("%number", String.valueOf(number)));
                     vaultHolder.setInventory(inv);
                 } else {
                     player.sendMessage(Lang.TITLE.toString() + Lang.INSUFFICIENT_FUNDS.toString());
@@ -179,7 +179,7 @@ public class VaultManager {
         List<String> data = playerFile.getStringList("vault" + number);
         if (data == null) {
             VaultHolder vaultHolder = new VaultHolder(number);
-            Inventory inv = Bukkit.createInventory(vaultHolder, VaultOperations.getMaxVaultSize(Bukkit.getPlayerExact(holder)), ChatColor.DARK_RED + "Vault #" + number);
+            Inventory inv = Bukkit.createInventory(vaultHolder, VaultOperations.getMaxVaultSize(Bukkit.getPlayerExact(holder)), Lang.VAULT_TITLE.toString().replaceAll("%number", String.valueOf(number)));
             vaultHolder.setInventory(inv);
             return inv;
         } else {
