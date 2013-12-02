@@ -79,7 +79,7 @@ public class VaultOperations {
         int number;
         try {
             number = Integer.parseInt(arg);
-            if (number == 0) {
+            if (number < 1) {
                 return false;
             }
         } catch (NumberFormatException nfe) {
@@ -114,7 +114,7 @@ public class VaultOperations {
             int number = 0;
             try {
                 number = Integer.parseInt(arg);
-                if (number == 0) {
+                if (number < 1) {
                     return false;
                 }
             } catch (NumberFormatException nfe) {
