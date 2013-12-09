@@ -137,7 +137,7 @@ public class PlayerVaults extends JavaPlugin {
                     update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
                     name = updater.getLatestName();
                     if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
-                        getLogger().log(Level.INFO, "Successfully updated ObsidianDestroyer to version {0} for next restart!", updater.getLatestName());
+                        getLogger().log(Level.INFO, "Successfully updated PlayerVaults to version {0} for next restart!", updater.getLatestName());
                     } else if (updater.getResult() == Updater.UpdateResult.NO_UPDATE) {
                         getLogger().log(Level.INFO, "We didn't find an update!");
                     }
