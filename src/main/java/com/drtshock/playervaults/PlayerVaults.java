@@ -67,6 +67,8 @@ public class PlayerVaults extends JavaPlugin {
     public static String DIRECTORY = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
     public static VaultManager VM;
     public static Listeners listener;
+    private boolean update = false;
+    private String name = "";
 
     @Override
     public void onEnable() {
@@ -119,22 +121,24 @@ public class PlayerVaults extends JavaPlugin {
             }
             p.closeInventory();
         }
+        LANG = null;
+        LANG_FILE = null;
     }
 
-    public void checkUpdate() {
-        if (getConfig().getBoolean("check-update")) {
+    protected void checkUpdate() {
+        if (getConfig().getBoolean("check-update", true)) {
             final PlayerVaults plugin = this;
             final File file = this.getFile();
-            final Updater.UpdateType updateType = (getConfig().getBoolean("download-update", false) ? UpdateType.DEFAULT : UpdateType.NO_DOWNLOAD);
+            final Updater.UpdateType updateType = (getConfig().getBoolean("download-update", true) ? Updater.UpdateType.DEFAULT : Updater.UpdateType.NO_DOWNLOAD);
             getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
                 @Override
                 public void run() {
                     Updater updater = new Updater(plugin, 50123, file, updateType, false);
-                    PlayerVaults.UPDATE = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-                    PlayerVaults.NEWVERSION = updater.getLatestName();
-                    if (updater.getResult() == UpdateResult.SUCCESS) {
-                        getLogger().log(Level.INFO, "Successfully updated Playervaults to version {0} for next restart!", updater.getLatestName());
-                    } else if (updater.getResult() == UpdateResult.NO_UPDATE) {
+                    update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+                    name = updater.getLatestName();
+                    if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
+                        getLogger().log(Level.INFO, "Successfully updated ObsidianDestroyer to version {0} for next restart!", updater.getLatestName());
+                    } else if (updater.getResult() == Updater.UpdateResult.NO_UPDATE) {
                         getLogger().log(Level.INFO, "We didn't find an update!");
                     }
                 }
