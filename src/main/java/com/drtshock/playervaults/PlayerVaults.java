@@ -16,16 +16,14 @@
  */
 package com.drtshock.playervaults;
 
-import com.drtshock.playervaults.listeners.Listeners;
 import com.drtshock.playervaults.commands.Commands;
 import com.drtshock.playervaults.commands.SignSetInfo;
-import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
+import com.drtshock.playervaults.listeners.Listeners;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.Metrics;
 import com.drtshock.playervaults.util.Updater;
-import com.drtshock.playervaults.util.Updater.UpdateResult;
-import com.drtshock.playervaults.util.Updater.UpdateType;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
+import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -44,6 +42,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerVaults extends JavaPlugin {
 
@@ -96,12 +95,17 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     private void startMetrics() {
-        try {
-            Metrics metrics = new Metrics(this);
-            metrics.start();
-        } catch (IOException ex) {
-            getLogger().warning("Failed to load metrics :(");
-        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    Metrics metrics = new Metrics(PlayerVaults.this);
+                    metrics.start();
+                } catch (IOException ex) {
+                    getLogger().warning("Failed to load metrics :(");
+                }
+            }
+        }.runTaskAsynchronously(this);
     }
 
     @Override
