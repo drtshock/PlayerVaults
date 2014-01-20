@@ -204,6 +204,9 @@ public class VaultManager {
     public void deleteVault(CommandSender sender, String holder, int number) throws IOException {
         String name = holder.toLowerCase();
         File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
+        if(!file.exists()) {
+            return;
+        }
         FileConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
         if (file.exists()) {
             playerFile.set("vault" + number, null);

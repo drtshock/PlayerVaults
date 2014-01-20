@@ -19,6 +19,7 @@ package com.drtshock.playervaults;
 import com.drtshock.playervaults.commands.Commands;
 import com.drtshock.playervaults.commands.SignSetInfo;
 import com.drtshock.playervaults.listeners.Listeners;
+import com.drtshock.playervaults.tasks.Cleanup;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.Metrics;
 import com.drtshock.playervaults.util.Updater;
@@ -92,6 +93,10 @@ public class PlayerVaults extends JavaPlugin {
 
         new File(DIRECTORY + File.separator + "backups").mkdirs();
         VM = new VaultManager(this);
+
+        if(getConfig().getBoolean("cleanup.enable", false)) {
+            getServer().getScheduler().runTaskAsynchronously(this, new Cleanup(getConfig().getInt("cleanup.lastEdit", 30)));
+        }
     }
 
     private void startMetrics() {

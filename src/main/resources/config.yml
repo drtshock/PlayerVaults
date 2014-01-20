@@ -17,3 +17,14 @@ economy:
   cost-to-create: 100
   cost-to-open: 10
   refund-on-delete: 50
+
+# Cleanup
+# Should we cleanup vaults that haven't been used in awhile?
+# Only checks on restarts. Runs on another thread so it won't
+#      lag the server.
+cleanup:
+  enable: false
+
+  # If a file hasn't been edited for this long, we'll clean it up.
+  # Time is in days.
+  lastEdit: 30
