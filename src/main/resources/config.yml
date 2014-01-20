@@ -22,6 +22,8 @@ economy:
 # Should we cleanup vaults that haven't been used in awhile?
 # Only checks on restarts. Runs on another thread so it won't
 #      lag the server.
+#
+# This will not touch the backups folder. You will have to delete those yourself.
 cleanup:
   enable: false
 
