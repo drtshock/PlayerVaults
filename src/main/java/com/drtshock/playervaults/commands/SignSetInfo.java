@@ -17,8 +17,8 @@
 package com.drtshock.playervaults.commands;
 
 /**
- * A class for setting signs. Stores information about the sign owner, number,
- * and whether or not is opens a self vault or another person's vault.
+ * A class for setting signs. Stores information about the sign owner, number, and whether or not is opens a self vault
+ * or another person's vault.
  */
 public class SignSetInfo {
 
@@ -48,8 +48,7 @@ public class SignSetInfo {
     }
 
     /**
-     * Get whether or not the sign will open their own vault or another
-     * person's.
+     * Get whether or not the sign will open their own vault or another person's.
      *
      * @return Whether or not it is a 'self' sign.
      */

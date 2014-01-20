@@ -17,8 +17,7 @@
 package com.drtshock.playervaults.vaultmanagement;
 
 /**
- * A class that stores information about a vault viewing including the holder of
- * the vault, and the vault number.
+ * A class that stores information about a vault viewing including the holder of the vault, and the vault number.
  */
 public class VaultViewInfo {
 

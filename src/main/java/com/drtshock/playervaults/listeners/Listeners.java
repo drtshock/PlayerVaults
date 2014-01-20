@@ -17,13 +17,10 @@
 package com.drtshock.playervaults.listeners;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.vaultmanagement.VaultOperations;
-import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
-
-import java.io.IOException;
-
+import com.drtshock.playervaults.vaultmanagement.VaultOperations;
+import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -40,12 +37,10 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
+
+import java.io.IOException;
 
 public class Listeners implements Listener {
 
@@ -54,6 +49,7 @@ public class Listeners implements Listener {
     public Listeners(PlayerVaults playerVaults) {
         this.plugin = playerVaults;
     }
+
     VaultManager vm = new VaultManager(plugin);
 
     public void saveVault(Player player) {
@@ -203,8 +199,7 @@ public class Listeners implements Listener {
     }
 
     /**
-     * Check if the location given is a sign, and if so, remove it from the
-     * signs.yml file
+     * Check if the location given is a sign, and if so, remove it from the signs.yml file
      *
      * @param location The location to check
      */

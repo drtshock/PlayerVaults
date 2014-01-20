@@ -18,16 +18,14 @@ package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
-
-import java.io.File;
-import java.io.IOException;
-
 import net.milkbowl.vault.economy.EconomyResponse;
-
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * A class that handles all economy operations.
@@ -48,6 +46,7 @@ public class EconomyOperations {
      *
      * @param player The player to pay.
      * @param number The vault number to open.
+     *
      * @return The transaction success.
      */
     public static boolean payToOpen(Player player, int number) {
@@ -71,6 +70,7 @@ public class EconomyOperations {
      * Have a player pay to create a vault.
      *
      * @param player The player to pay.
+     *
      * @return The transaction success
      */
     public static boolean payToCreate(Player player) {
@@ -92,6 +92,7 @@ public class EconomyOperations {
      *
      * @param player The player to receive the money.
      * @param number The vault number to delete.
+     *
      * @return The transaction success.
      */
     public static boolean refundOnDelete(Player player, int number) {

@@ -18,23 +18,20 @@ package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * A class for managing actual IO to the files, loading inventories, and saving
- * them.
+ * A class for managing actual IO to the files, loading inventories, and saving them.
  */
 public class VaultManager {
 
@@ -43,6 +40,7 @@ public class VaultManager {
     public VaultManager(PlayerVaults instance) {
         this.plugin = instance;
     }
+
     private final String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
 
     /**
@@ -51,6 +49,7 @@ public class VaultManager {
      * @param inventory The inventory to be saved.
      * @param player The player of whose file to save to.
      * @param number The vault number.
+     *
      * @throws IOException Uh oh!
      */
     public void saveVault(Inventory inventory, String player, int number) throws IOException {
@@ -92,7 +91,7 @@ public class VaultManager {
             if (playerFile.getConfigurationSection("vault" + number) == null) {
                 VaultHolder vaultHolder = new VaultHolder(number);
                 Player player = Bukkit.getPlayer(holder);
-                if(player == null) {
+                if (player == null) {
                     return null;
                 }
                 if (EconomyOperations.payToCreate(player)) {
@@ -145,12 +144,12 @@ public class VaultManager {
     }
 
     /**
-     * Get an inventory from file. Returns null if the inventory doesn't exist.
-     * SHOULD ONLY BE USED INTERNALLY
+     * Get an inventory from file. Returns null if the inventory doesn't exist. SHOULD ONLY BE USED INTERNALLY
      *
      * @param playerFile the YamlConfiguration file.
      * @param size the size of the vault.
      * @param number the vault number.
+     *
      * @return inventory if exists, otherwise null.
      */
     private Inventory getInventory(YamlConfiguration playerFile, int size, int number) {
@@ -167,11 +166,11 @@ public class VaultManager {
     }
 
     /**
-     * Gets an inventory without storing references to it. Used for dropping a
-     * players inventories on death.
+     * Gets an inventory without storing references to it. Used for dropping a players inventories on death.
      *
      * @param holder The holder of the vault.
      * @param number The vault number.
+     *
      * @return The inventory of the specified holder and vault number.
      */
     public Inventory getVault(String holder, int number) {
@@ -199,12 +198,13 @@ public class VaultManager {
      * @param sender The sender of whom to send messages to.
      * @param holder The vault holder.
      * @param number The vault number.
+     *
      * @throws IOException Uh oh!
      */
     public void deleteVault(CommandSender sender, String holder, int number) throws IOException {
         String name = holder.toLowerCase();
         File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
-        if(!file.exists()) {
+        if (!file.exists()) {
             return;
         }
         FileConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
@@ -223,6 +223,7 @@ public class VaultManager {
      * Get the holder's vault file. Create if doesn't exist.
      *
      * @param holder The vault holder.
+     *
      * @return The holder's vault config file.
      */
     public YamlConfiguration getPlayerVaultFile(String holder) {
@@ -247,6 +248,7 @@ public class VaultManager {
      *
      * @param holder The vault holder of whose file to save.
      * @param yaml The config to save.
+     *
      * @throws IOException Uh oh!
      */
     public void saveFile(String holder, YamlConfiguration yaml) throws IOException {

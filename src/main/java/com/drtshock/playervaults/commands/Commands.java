@@ -16,12 +16,10 @@
  */
 package com.drtshock.playervaults.commands;
 
-import com.drtshock.playervaults.vaultmanagement.VaultOperations;
-import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
-import java.util.Set;
-
+import com.drtshock.playervaults.vaultmanagement.VaultOperations;
+import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

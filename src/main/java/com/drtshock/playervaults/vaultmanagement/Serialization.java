@@ -16,13 +16,6 @@
  */
 package com.drtshock.playervaults.vaultmanagement;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -33,11 +26,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.*;
+import java.util.Map.Entry;
+
 /**
  * Fancy JSON serialization mostly by evilmidget38.
  *
  * @author evilmidget38, gomeow
- *
  */
 public class Serialization {
 

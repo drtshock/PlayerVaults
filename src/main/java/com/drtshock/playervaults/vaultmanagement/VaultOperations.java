@@ -18,23 +18,22 @@ package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
-
-import java.io.IOException;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import java.io.IOException;
+
 public class VaultOperations {
 
     /**
-     * Check whether or not the player has permission to open the requested
-     * vault.
+     * Check whether or not the player has permission to open the requested vault.
      *
      * @param sender The person to check.
      * @param number The vault number.
+     *
      * @return Whether or not they have permission.
      */
     public static boolean checkPerms(CommandSender sender, int number) {
@@ -53,8 +52,8 @@ public class VaultOperations {
      * Get the max size vault a player is allowed to have.
      *
      * @param player that is having his permissions checked.
-     * @return max size as integer. If no max size is set then it will default
-     * to 54.
+     *
+     * @return max size as integer. If no max size is set then it will default to 54.
      */
     public static int getMaxVaultSize(Player player) {
         if (player == null) {
@@ -73,6 +72,7 @@ public class VaultOperations {
      *
      * @param player The player to open to.
      * @param arg The vault number to open.
+     *
      * @return Whether or not the player was allowed to open it.
      */
     public static boolean openOwnVault(Player player, String arg) {
@@ -107,6 +107,7 @@ public class VaultOperations {
      * @param player The player to open to.
      * @param holder The user to whom the requested vault belongs.
      * @param arg The vault number to open.
+     *
      * @return Whether or not the player was allowed to open it.
      */
     public static boolean openOtherVault(Player player, String holder, String arg) {

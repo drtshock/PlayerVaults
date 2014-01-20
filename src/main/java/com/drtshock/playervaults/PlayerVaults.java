@@ -25,18 +25,7 @@ import com.drtshock.playervaults.util.Metrics;
 import com.drtshock.playervaults.util.Updater;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -44,6 +33,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PlayerVaults extends JavaPlugin {
 
@@ -94,7 +88,7 @@ public class PlayerVaults extends JavaPlugin {
         new File(DIRECTORY + File.separator + "backups").mkdirs();
         VM = new VaultManager(this);
 
-        if(getConfig().getBoolean("cleanup.enable", false)) {
+        if (getConfig().getBoolean("cleanup.enable", false)) {
             getServer().getScheduler().runTaskAsynchronously(this, new Cleanup(getConfig().getInt("cleanup.lastEdit", 30)));
         }
     }

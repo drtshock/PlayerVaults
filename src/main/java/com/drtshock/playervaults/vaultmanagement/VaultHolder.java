@@ -20,8 +20,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 /**
- * Represents a VaultHolder to assist in detection of Player Vaults from other
- * plugins.
+ * Represents a VaultHolder to assist in detection of Player Vaults from other plugins.
  */
 public class VaultHolder implements InventoryHolder {
 
