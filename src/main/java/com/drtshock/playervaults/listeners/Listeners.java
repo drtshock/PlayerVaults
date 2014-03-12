@@ -55,6 +55,7 @@ public class Listeners implements Listener {
     public void saveVault(Player player) {
         if (PlayerVaults.IN_VAULT.containsKey(player.getName())) {
             Inventory inv = player.getOpenInventory().getTopInventory();
+            player.closeInventory(); // close the player's inventory just in case.
             if (inv.getViewers().size() == 1) {
                 VaultViewInfo info = PlayerVaults.IN_VAULT.get(player.getName());
                 try {
@@ -81,7 +82,7 @@ public class Listeners implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if ((player.isOp() || player.hasPermission("playervaults.notify")) && PlayerVaults.UPDATE) {
+        if (PlayerVaults.UPDATE && (player.isOp() || player.hasPermission("playervaults.notify"))) {
             player.sendMessage(ChatColor.GREEN + "Version " + PlayerVaults.NEWVERSION + " of PlayerVaults is up for download!");
             player.sendMessage(ChatColor.GREEN + PlayerVaults.LINK + " to view the changelog and download!");
         }
