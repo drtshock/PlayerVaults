@@ -34,6 +34,7 @@ public class Commands implements CommandExecutor {
         if (cmd.getName().equalsIgnoreCase("pv")) {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
+                if(PlayerVaults.IN_VAULT.containsKey(p.getName())) return true; // don't let them open another vault.
                 switch (args.length) {
                     case 1:
                         if (VaultOperations.openOwnVault(p, args[0])) {
