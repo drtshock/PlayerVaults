@@ -16,10 +16,9 @@
  */
 package com.drtshock.playervaults.vaultmanagement;
 
-import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -55,7 +54,7 @@ public class VaultOperations {
      *
      * @return max size as integer. If no max size is set then it will default to 54.
      */
-    public static int getMaxVaultSize(Player player) {
+    public static int getMaxVaultSize(OfflinePlayer player) {
         if (player == null) {
             return 54;
         }
@@ -87,7 +86,7 @@ public class VaultOperations {
         }
         if (checkPerms(player, number)) {
             if (EconomyOperations.payToOpen(player, number)) {
-                Inventory inv = PlayerVaults.VM.loadOwnVault(player.getName(), number, getMaxVaultSize(player));
+                Inventory inv = UUIDVaultManager.getInstance().loadOwnVault(player, number, getMaxVaultSize(player));
                 player.openInventory(inv);
                 player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
                 return true;
@@ -110,7 +109,7 @@ public class VaultOperations {
      *
      * @return Whether or not the player was allowed to open it.
      */
-    public static boolean openOtherVault(Player player, String holder, String arg) {
+    public static boolean openOtherVault(Player player, Player holder, String arg) {
         if (player.hasPermission("playervaults.admin")) {
             int number = 0;
             try {
@@ -121,12 +120,12 @@ public class VaultOperations {
             } catch (NumberFormatException nfe) {
                 player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
             }
-            Inventory inv = PlayerVaults.VM.loadOtherVault(holder, number, getMaxVaultSize(Bukkit.getPlayerExact(holder)));
+            Inventory inv = UUIDVaultManager.getInstance().loadOtherVault(holder.getUniqueId(), number, getMaxVaultSize(holder));
             if (inv == null) {
                 player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
             } else {
                 player.openInventory(inv);
-                player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", holder));
+                player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", holder.getName()));
                 return true;
             }
         } else {
@@ -155,7 +154,7 @@ public class VaultOperations {
             }
             try {
                 if (EconomyOperations.refundOnDelete(player, number)) {
-                    PlayerVaults.VM.deleteVault(player, player.getName(), number);
+                    UUIDVaultManager.getInstance().deleteVault(player, player.getUniqueId(), number);
                 }
             } catch (IOException e) {
                 player.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
@@ -172,7 +171,7 @@ public class VaultOperations {
      * @param holder The user to whom the deleted vault belongs.
      * @param arg The vault number to delete.
      */
-    public static void deleteOtherVault(CommandSender sender, String holder, String arg) {
+    public static void deleteOtherVault(CommandSender sender, Player holder, String arg) {
         if (sender.hasPermission("playervaults.delete")) {
             if (arg.matches("^[0-9]{1,2}$")) {
                 int number = 0;
@@ -186,7 +185,7 @@ public class VaultOperations {
                     sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
                 try {
-                    PlayerVaults.VM.deleteVault(sender, holder, number);
+                    UUIDVaultManager.getInstance().deleteVault(sender, holder.getUniqueId(), number);
                 } catch (IOException e) {
                     sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
                 }

@@ -1,24 +1,9 @@
-/* 
- * Copyright (C) 2013 drtshock
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -29,19 +14,20 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
- * A class for managing actual IO to the files, loading inventories, and saving them.
+ * Class to handle vault operations with new UUIDs.
  */
-public class VaultManager {
+public class UUIDVaultManager {
 
-    public PlayerVaults plugin;
+    private static UUIDVaultManager instance;
 
-    public VaultManager(PlayerVaults instance) {
-        this.plugin = instance;
+    public UUIDVaultManager() {
+        instance = this;
     }
 
-    private final String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
+    private final String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "uuidvaults";
 
     /**
      * Saves the inventory to the specified player and vault number.
@@ -50,10 +36,9 @@ public class VaultManager {
      * @param player The player of whose file to save to.
      * @param number The vault number.
      *
-     * @throws IOException Uh oh!
+     * @throws java.io.IOException Uh oh!
      */
-    @Deprecated
-    public void saveVault(Inventory inventory, String player, int number) throws IOException {
+    public void saveVault(Inventory inventory, UUID player, int number) throws IOException {
         int size = inventory.getSize();
         YamlConfiguration yaml = getPlayerVaultFile(player);
         if (size == 54) {
@@ -76,28 +61,23 @@ public class VaultManager {
     /**
      * Load the player's vault and return it.
      *
-     * @param holder The holder of the vault.
+     * @param player The holder of the vault.
      * @param number The vault number.
      */
-    @Deprecated
-    public Inventory loadOwnVault(String holder, int number, int size) {
+    public Inventory loadOwnVault(Player player, int number, int size) {
         if (size % 9 != 0) {
             size = 54;
         }
-        VaultViewInfo info = new VaultViewInfo(holder, number);
+        VaultViewInfo info = new VaultViewInfo(player.getUniqueId().toString(), number);
         Inventory inv = null;
         if (PlayerVaults.OPENINVENTORIES.containsKey(info.toString())) {
             inv = PlayerVaults.OPENINVENTORIES.get(info.toString());
         } else {
-            YamlConfiguration playerFile = getPlayerVaultFile(holder);
+            YamlConfiguration playerFile = getPlayerVaultFile(player.getUniqueId());
             if (playerFile.getConfigurationSection("vault" + number) == null) {
                 VaultHolder vaultHolder = new VaultHolder(number);
-                Player player = Bukkit.getPlayer(holder);
-                if (player == null) {
-                    return null;
-                }
                 if (EconomyOperations.payToCreate(player)) {
-                    inv = Bukkit.createInventory(vaultHolder, size, Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", holder));
+                    inv = Bukkit.createInventory(vaultHolder, size, Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", player.getName()));
                     vaultHolder.setInventory(inv);
                 } else {
                     player.sendMessage(Lang.TITLE.toString() + Lang.INSUFFICIENT_FUNDS.toString());
@@ -121,12 +101,11 @@ public class VaultManager {
      * @param holder The holder of the vault.
      * @param number The vault number.
      */
-    @Deprecated
-    public Inventory loadOtherVault(String holder, int number, int size) {
+    public Inventory loadOtherVault(UUID holder, int number, int size) {
         if (size % 9 != 0) {
             size = 54;
         }
-        VaultViewInfo info = new VaultViewInfo(holder, number);
+        VaultViewInfo info = new VaultViewInfo(holder.toString(), number);
         Inventory inv = null;
         if (PlayerVaults.OPENINVENTORIES.containsKey(info.toString())) {
             inv = PlayerVaults.OPENINVENTORIES.get(info.toString());
@@ -155,9 +134,8 @@ public class VaultManager {
      *
      * @return inventory if exists, otherwise null.
      */
-    @Deprecated
     private Inventory getInventory(YamlConfiguration playerFile, int size, int number) {
-        List<String> data = new ArrayList<String>();
+        List<String> data = new ArrayList<>();
         for (int x = 0; x < size; x++) {
             String line = playerFile.getString("vault" + number + "." + x);
             if (line != null) {
@@ -177,23 +155,23 @@ public class VaultManager {
      *
      * @return The inventory of the specified holder and vault number.
      */
-    @Deprecated
-    public Inventory getVault(String holder, int number) {
+    public Inventory getVault(UUID holder, int number) {
         YamlConfiguration playerFile = getPlayerVaultFile(holder);
         List<String> data = playerFile.getStringList("vault" + number);
+        OfflinePlayer player = Bukkit.getPlayer(holder);
+        if (player == null) return null;
         if (data == null) {
             VaultHolder vaultHolder = new VaultHolder(number);
-            Inventory inv = Bukkit.createInventory(vaultHolder, VaultOperations.getMaxVaultSize(Bukkit.getPlayerExact(holder)), Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", holder));
+            Inventory inv = Bukkit.createInventory(vaultHolder, VaultOperations.getMaxVaultSize(player), Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", player.getName()));
             vaultHolder.setInventory(inv);
             return inv;
         } else {
-            Inventory inv = Serialization.toInventory(data, number, VaultOperations.getMaxVaultSize(Bukkit.getPlayerExact(holder)));
+            Inventory inv = Serialization.toInventory(data, number, VaultOperations.getMaxVaultSize(player));
             return inv;
         }
     }
 
-    @Deprecated
-    public boolean vaultExists(String holder, int number) {
+    public boolean vaultExists(UUID holder, int number) {
         YamlConfiguration playerFile = getPlayerVaultFile(holder);
         return playerFile.contains("vault" + number);
     }
@@ -207,9 +185,8 @@ public class VaultManager {
      *
      * @throws IOException Uh oh!
      */
-    @Deprecated
-    public void deleteVault(CommandSender sender, String holder, int number) throws IOException {
-        String name = holder.toLowerCase();
+    public void deleteVault(CommandSender sender, UUID holder, int number) throws IOException {
+        String name = holder.toString();
         File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
         if (!file.exists()) {
             return;
@@ -219,10 +196,11 @@ public class VaultManager {
             playerFile.set("vault" + number, null);
             playerFile.save(file);
         }
-        if (sender.getName().equalsIgnoreCase(holder)) {
+        OfflinePlayer player = Bukkit.getPlayer(holder);
+        if (player != null && sender.getName().equalsIgnoreCase(player.getName())) {
             sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT.toString().replace("%v", String.valueOf(number)));
         } else {
-            sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_OTHER_VAULT.toString().replace("%v", String.valueOf(number)).replaceAll("%p", holder));
+            sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_OTHER_VAULT.toString().replace("%v", String.valueOf(number)).replaceAll("%p", player.getName()));
         }
     }
 
@@ -233,13 +211,12 @@ public class VaultManager {
      *
      * @return The holder's vault config file.
      */
-    @Deprecated
-    public YamlConfiguration getPlayerVaultFile(String holder) {
+    public YamlConfiguration getPlayerVaultFile(UUID holder) {
         File folder = new File(directory);
         if (!folder.exists()) {
             folder.mkdir();
         }
-        File file = new File(directory + File.separator + holder.toLowerCase() + ".yml");
+        File file = new File(directory + File.separator + holder.toString() + ".yml");
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -259,12 +236,20 @@ public class VaultManager {
      *
      * @throws IOException Uh oh!
      */
-    @Deprecated
-    public void saveFile(String holder, YamlConfiguration yaml) throws IOException {
-        File file = new File(directory + File.separator + holder.toLowerCase() + ".yml");
+    public void saveFile(UUID holder, YamlConfiguration yaml) throws IOException {
+        File file = new File(directory + File.separator + holder.toString() + ".yml");
         if (file.exists()) {
-            file.renameTo(new File(directory + File.separator + "backups" + File.separator + holder.toLowerCase() + ".yml"));
+            file.renameTo(new File(directory + File.separator + "backups" + File.separator + holder.toString() + ".yml"));
         }
         yaml.save(file);
+    }
+
+    /**
+     * Get the instance of this class.
+     *
+     * @return - instance of this class.
+     */
+    public static UUIDVaultManager getInstance() {
+        return instance;
     }
 }

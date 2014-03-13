@@ -18,9 +18,12 @@ package com.drtshock.playervaults.commands;
 
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
+import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,13 +37,18 @@ public class Commands implements CommandExecutor {
         if (cmd.getName().equalsIgnoreCase("pv")) {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
-                if(PlayerVaults.IN_VAULT.containsKey(p.getName())) return true; // don't let them open another vault.
+                if (PlayerVaults.IN_VAULT.containsKey(p.getName())) return true; // don't let them open another vault.
                 switch (args.length) {
                     case 1:
                         if (VaultOperations.openOwnVault(p, args[0])) {
                             PlayerVaults.IN_VAULT.put(sender.getName(), new VaultViewInfo(sender.getName(), Integer.parseInt(args[0])));
                         } else if (sender.hasPermission("playervaults.admin")) {
-                            YamlConfiguration file = PlayerVaults.VM.getPlayerVaultFile(args[0]);
+                            OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
+                            if(player == null) {
+                                sender.sendMessage(Lang.TITLE.toString() + "Cannot find player " + args[0]);
+                                break;
+                            }
+                            YamlConfiguration file = UUIDVaultManager.getInstance().getPlayerVaultFile(player.getUniqueId());
                             if (file == null) {
                                 sender.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
                             } else {
@@ -56,10 +64,12 @@ public class Commands implements CommandExecutor {
                         }
                         break;
                     case 2:
-                        if (VaultOperations.openOtherVault(p, args[0], args[1])) {
+                        Player player = Bukkit.getPlayer(args[0]);
+                        if (player == null) break;
+                        if (VaultOperations.openOtherVault(p, player, args[1])) {
                             PlayerVaults.IN_VAULT.put(sender.getName(), new VaultViewInfo(args[0], Integer.parseInt(args[1])));
                         } else {
-                            // ????
+                            sender.sendMessage(Lang.TITLE.toString() + "Failed to open vault.");
                         }
                         break;
                     default:
@@ -80,7 +90,9 @@ public class Commands implements CommandExecutor {
                     }
                     break;
                 case 2:
-                    VaultOperations.deleteOtherVault(sender, args[0], args[1]);
+                    Player player = Bukkit.getPlayer(args[0]);
+                    if (player == null) break;
+                    VaultOperations.deleteOtherVault(sender, player, args[1]);
                     break;
                 default:
                     sender.sendMessage(Lang.TITLE + "/pvdel <number>");
