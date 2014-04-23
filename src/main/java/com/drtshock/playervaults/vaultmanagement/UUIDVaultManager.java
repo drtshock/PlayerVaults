@@ -27,7 +27,7 @@ public class UUIDVaultManager {
         instance = this;
     }
 
-    private final String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
+    private final String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "uuidvaults";
 
     /**
      * Saves the inventory to the specified player and vault number.

@@ -20,6 +20,7 @@ import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -56,7 +57,9 @@ public class Commands implements CommandExecutor {
                         }
                         break;
                     case 2:
-                        if (VaultOperations.openOtherVault(p, args[0], args[1])) {
+                        Player player = Bukkit.getPlayer(args[0]);
+                        if (player == null) break;
+                        if (VaultOperations.openOtherVault(p, player, args[1])) {
                             PlayerVaults.IN_VAULT.put(sender.getName(), new VaultViewInfo(args[0], Integer.parseInt(args[1])));
                         } else {
                             // ????
@@ -80,7 +83,9 @@ public class Commands implements CommandExecutor {
                     }
                     break;
                 case 2:
-                    VaultOperations.deleteOtherVault(sender, args[0], args[1]);
+                    Player player = Bukkit.getPlayer(args[0]);
+                    if (player == null) break;
+                    VaultOperations.deleteOtherVault(sender, player, args[1]);
                     break;
                 default:
                     sender.sendMessage(Lang.TITLE + "/pvdel <number>");

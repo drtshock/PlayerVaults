@@ -20,6 +20,7 @@ import com.drtshock.playervaults.commands.Commands;
 import com.drtshock.playervaults.commands.SignSetInfo;
 import com.drtshock.playervaults.listeners.Listeners;
 import com.drtshock.playervaults.tasks.Cleanup;
+import com.drtshock.playervaults.tasks.UUIDConversion;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.Metrics;
 import com.drtshock.playervaults.util.Updater;
@@ -41,6 +42,7 @@ import java.util.logging.Logger;
 
 public class PlayerVaults extends JavaPlugin {
 
+    // TODO: *reads down* really..? :c
     public static PlayerVaults PLUGIN;
     public static Logger LOG;
     public static boolean UPDATE = false;
@@ -66,6 +68,7 @@ public class PlayerVaults extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        getServer().getScheduler().runTask(this, new UUIDConversion()); // Convert to UUID first. Class checks if necessary.
         loadLang();
         LOG = getServer().getLogger();
         getServer().getPluginManager().registerEvents(listener = new Listeners(this), this);
