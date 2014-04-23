@@ -52,6 +52,7 @@ public class VaultManager {
      *
      * @throws IOException Uh oh!
      */
+    @Deprecated
     public void saveVault(Inventory inventory, String player, int number) throws IOException {
         int size = inventory.getSize();
         YamlConfiguration yaml = getPlayerVaultFile(player);
@@ -78,6 +79,7 @@ public class VaultManager {
      * @param holder The holder of the vault.
      * @param number The vault number.
      */
+    @Deprecated
     public Inventory loadOwnVault(String holder, int number, int size) {
         if (size % 9 != 0) {
             size = 54;
@@ -119,6 +121,7 @@ public class VaultManager {
      * @param holder The holder of the vault.
      * @param number The vault number.
      */
+    @Deprecated
     public Inventory loadOtherVault(String holder, int number, int size) {
         if (size % 9 != 0) {
             size = 54;
@@ -152,6 +155,7 @@ public class VaultManager {
      *
      * @return inventory if exists, otherwise null.
      */
+    @Deprecated
     private Inventory getInventory(YamlConfiguration playerFile, int size, int number) {
         List<String> data = new ArrayList<String>();
         for (int x = 0; x < size; x++) {
@@ -173,6 +177,7 @@ public class VaultManager {
      *
      * @return The inventory of the specified holder and vault number.
      */
+    @Deprecated
     public Inventory getVault(String holder, int number) {
         YamlConfiguration playerFile = getPlayerVaultFile(holder);
         List<String> data = playerFile.getStringList("vault" + number);
@@ -187,6 +192,7 @@ public class VaultManager {
         }
     }
 
+    @Deprecated
     public boolean vaultExists(String holder, int number) {
         YamlConfiguration playerFile = getPlayerVaultFile(holder);
         return playerFile.contains("vault" + number);
@@ -201,6 +207,7 @@ public class VaultManager {
      *
      * @throws IOException Uh oh!
      */
+    @Deprecated
     public void deleteVault(CommandSender sender, String holder, int number) throws IOException {
         String name = holder.toLowerCase();
         File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
@@ -226,6 +233,7 @@ public class VaultManager {
      *
      * @return The holder's vault config file.
      */
+    @Deprecated
     public YamlConfiguration getPlayerVaultFile(String holder) {
         File folder = new File(directory);
         if (!folder.exists()) {
@@ -251,6 +259,7 @@ public class VaultManager {
      *
      * @throws IOException Uh oh!
      */
+    @Deprecated
     public void saveFile(String holder, YamlConfiguration yaml) throws IOException {
         File file = new File(directory + File.separator + holder.toLowerCase() + ".yml");
         if (file.exists()) {
