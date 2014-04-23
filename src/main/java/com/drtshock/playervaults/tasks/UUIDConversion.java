@@ -2,7 +2,6 @@ package com.drtshock.playervaults.tasks;
 
 import com.drtshock.playervaults.PlayerVaults;
 import net.minecraft.util.org.apache.commons.io.FileUtils;
-import net.minecraft.util.org.apache.commons.io.FilenameUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -19,23 +18,26 @@ public final class UUIDConversion extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (new File(PlayerVaults.PLUGIN.getDataFolder(), "uuidvaults").exists()) {
+        File newDir = new File(PlayerVaults.PLUGIN.getDataFolder(), "uuidvaults");
+        if (newDir.exists()) {
             PlayerVaults.LOG.log(Level.INFO, "Files already converted to UUID.");
             return;
         }
+        newDir.mkdirs();
 
         PlayerVaults.LOG.log(Level.INFO, "********** Starting PlayerVault conversion to UUIDs **********");
         PlayerVaults.LOG.log(Level.INFO, "This might take awhile.");
         PlayerVaults.LOG.log(Level.INFO, "plugins/PlayerVaults/vaults will still be there as a backup but unused.");
 
         for (File file : new File(PlayerVaults.PLUGIN.getDataFolder() + File.separator + "vaults").listFiles()) {
-            OfflinePlayer player = Bukkit.getOfflinePlayer(FilenameUtils.removeExtension(file.toString()).replace(".yml", ""));
+            if (file.isDirectory()) break; // backups folder.
+            OfflinePlayer player = Bukkit.getOfflinePlayer(file.getName().replace(".yml", ""));
             if (player == null) {
                 PlayerVaults.LOG.log(Level.WARNING, "Unable to convert file because player never joined the server: " + file.getName());
                 break;
             }
             UUID uuid = player.getUniqueId();
-            File newFile = new File(PlayerVaults.PLUGIN.getDataFolder(), "uuidvaults" + uuid.toString() + ".yml");
+            File newFile = new File(PlayerVaults.PLUGIN.getDataFolder(), "uuidvaults" + File.separator + uuid.toString() + ".yml");
             file.mkdirs();
             try {
                 FileUtils.copyFile(file, newFile);
