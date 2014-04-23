@@ -24,6 +24,7 @@ import com.drtshock.playervaults.tasks.UUIDConversion;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.Metrics;
 import com.drtshock.playervaults.util.Updater;
+import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import net.milkbowl.vault.economy.Economy;
@@ -68,8 +69,10 @@ public class PlayerVaults extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        PLUGIN = this;
         getServer().getScheduler().runTask(this, new UUIDConversion()); // Convert to UUID first. Class checks if necessary.
         loadLang();
+        new UUIDVaultManager();
         LOG = getServer().getLogger();
         getServer().getPluginManager().registerEvents(listener = new Listeners(this), this);
         loadConfig();
