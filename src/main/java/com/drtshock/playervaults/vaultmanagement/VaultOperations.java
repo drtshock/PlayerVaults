@@ -20,6 +20,7 @@ import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -55,7 +56,7 @@ public class VaultOperations {
      *
      * @return max size as integer. If no max size is set then it will default to 54.
      */
-    public static int getMaxVaultSize(Player player) {
+    public static int getMaxVaultSize(OfflinePlayer player) {
         if (player == null) {
             return 54;
         }
