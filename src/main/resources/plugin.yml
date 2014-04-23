@@ -12,7 +12,7 @@ commands:
     description: Delete a vault.
     aliases: [vaultdel]
   pvsign:
-    description: Delete a vault.
+    description: Do pv signs.
     aliases: [vaultsign]
   workbench:
     description: Opens a workbench.
