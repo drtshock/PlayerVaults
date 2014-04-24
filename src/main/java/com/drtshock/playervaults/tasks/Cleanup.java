@@ -16,14 +16,14 @@ public class Cleanup extends BukkitRunnable {
 
     @Override
     public void run() {
-        File file = new File(PlayerVaults.DIRECTORY);
+        File file = new File(PlayerVaults.getInstance().getDataFolder(), "vaults");
         if (!file.exists()) return;
 
         long time = System.currentTimeMillis();
         for (File f : file.listFiles()) {
             if (time - f.lastModified() > diff) {
                 f.delete();
-                PlayerVaults.PLUGIN.getLogger().info("Deleting vault file: " + f.getName());
+                PlayerVaults.getInstance().getLogger().info("Deleting vault file: " + f.getName());
             }
         }
     }

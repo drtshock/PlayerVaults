@@ -25,7 +25,6 @@ import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.Metrics;
 import com.drtshock.playervaults.util.Updater;
 import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
-import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -39,41 +38,32 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.*;
 import java.util.HashMap;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class PlayerVaults extends JavaPlugin {
 
-    // TODO: *reads down* really..? :c
-    public static PlayerVaults PLUGIN;
-    public static Logger LOG;
-    public static boolean UPDATE = false;
-    public static String NEWVERSION = "";
-    public static String LINK = "";
-    public static Commands commands;
-    public static HashMap<String, SignSetInfo> SET_SIGN = new HashMap<String, SignSetInfo>();
-    public static HashMap<String, VaultViewInfo> IN_VAULT = new HashMap<String, VaultViewInfo>();
-    public static HashMap<String, Inventory> OPENINVENTORIES = new HashMap<String, Inventory>();
-    public static Economy ECON = null;
-    public static boolean DROP_ON_DEATH = false;
-    public static int INVENTORIES_TO_DROP = 0;
-    public static boolean USE_VAULT = false;
-    public static YamlConfiguration LANG;
-    public static File LANG_FILE;
-    public static YamlConfiguration SIGNS;
-    public static File SIGNS_FILE;
-    public static String DIRECTORY = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
-    public static VaultManager VM;
-    public static Listeners listener;
+    private static PlayerVaults instance;
     private boolean update = false;
+    private String newVersion = "";
+    private String link = "";
+    private Commands commands;
+    private HashMap<String, SignSetInfo> setSign = new HashMap<>();
+    private HashMap<String, VaultViewInfo> inVault = new HashMap<>();
+    private HashMap<String, Inventory> openInventories = new HashMap<>();
+    private static Economy econ = null;
+    private boolean dropOnDeath = false;
+    private boolean useVault = false;
+    private int inventoriesToDrop = 0;
+    private YamlConfiguration signs;
+    private File signsFile;
+    private Listeners listener;
     private String name = "";
 
     @Override
     public void onEnable() {
-        PLUGIN = this;
+        instance = this;
         getServer().getScheduler().runTask(this, new UUIDConversion()); // Convert to UUID first. Class checks if necessary.
         loadLang();
         new UUIDVaultManager();
-        LOG = getServer().getLogger();
         getServer().getPluginManager().registerEvents(listener = new Listeners(this), this);
         loadConfig();
         loadSigns();
@@ -87,12 +77,11 @@ public class PlayerVaults extends JavaPlugin {
         startMetrics();
 
         if (getConfig().getBoolean("drop-on-death.enabled")) {
-            DROP_ON_DEATH = true;
-            INVENTORIES_TO_DROP = getConfig().getInt("drop-on-death.inventories");
+            dropOnDeath = true;
+            inventoriesToDrop = getConfig().getInt("drop-on-death.inventories");
         }
 
-        new File(DIRECTORY + File.separator + "backups").mkdirs();
-        VM = new VaultManager(this);
+        new File(getDataFolder() + File.separator + "vaults" + File.separator + "backups").mkdirs();
 
         if (getConfig().getBoolean("cleanup.enable", false)) {
             getServer().getScheduler().runTaskAsynchronously(this, new Cleanup(getConfig().getInt("cleanup.lastEdit", 30)));
@@ -116,22 +105,20 @@ public class PlayerVaults extends JavaPlugin {
     @Override
     public void onDisable() {
         for (Player p : Bukkit.getOnlinePlayers()) {
-            if (IN_VAULT.containsKey(p.getName())) {
+            if (getInVault().containsKey(p.getName())) {
                 Inventory inv = p.getOpenInventory().getTopInventory();
                 if (inv.getViewers().size() == 1) {
-                    VaultViewInfo info = PlayerVaults.IN_VAULT.get(p.getName());
+                    VaultViewInfo info = getInVault().get(p.getName());
                     try {
-                        VM.saveVault(inv, info.getHolder(), info.getNumber());
+                        UUIDVaultManager.getInstance().saveVault(inv, p.getUniqueId(), info.getNumber());
                     } catch (IOException e) {
                     }
-                    PlayerVaults.OPENINVENTORIES.remove(info.toString());
+                    getOpenInventories().remove(info.toString());
                 }
-                PlayerVaults.IN_VAULT.remove(p.getName());
+                getInVault().remove(p.getName());
             }
             p.closeInventory();
         }
-        LANG = null;
-        LANG_FILE = null;
     }
 
     protected void checkUpdate() {
@@ -163,9 +150,9 @@ public class PlayerVaults extends JavaPlugin {
         if (rsp == null) {
             return false;
         }
-        ECON = rsp.getProvider();
-        USE_VAULT = true;
-        return ECON != null;
+        econ = rsp.getProvider();
+        useVault = true;
+        return econ != null;
     }
 
     private void loadConfig() {
@@ -183,13 +170,13 @@ public class PlayerVaults extends JavaPlugin {
             try {
                 signs.createNewFile();
             } catch (IOException e) {
-                LOG.severe("PlayerVaults has encountered a fatal error trying to load the signs file.");
-                LOG.severe("Please report this error to drtshock and gomeow.");
+                getLogger().severe("PlayerVaults has encountered a fatal error trying to load the signs file.");
+                getLogger().severe("Please report this error to drtshock.");
                 e.printStackTrace();
             }
         }
-        PlayerVaults.SIGNS_FILE = signs;
-        PlayerVaults.SIGNS = YamlConfiguration.loadConfiguration(signs);
+        this.signsFile = signs;
+        this.signs = YamlConfiguration.loadConfiguration(signs);
     }
 
     /**
@@ -198,7 +185,7 @@ public class PlayerVaults extends JavaPlugin {
      * @return The signs.yml config.
      */
     public YamlConfiguration getSigns() {
-        return PlayerVaults.SIGNS;
+        return this.signs;
     }
 
     /**
@@ -206,10 +193,10 @@ public class PlayerVaults extends JavaPlugin {
      */
     public void saveSigns() {
         try {
-            PlayerVaults.SIGNS.save(PlayerVaults.SIGNS_FILE);
+            signs.save(this.signsFile);
         } catch (IOException e) {
-            LOG.severe("PlayerVaults has encountered an error trying to save the signs file.");
-            LOG.severe("Please report this error to drtshock and gomeow.");
+            getLogger().severe("PlayerVaults has encountered an error trying to save the signs file.");
+            getLogger().severe("Please report this error to drtshock.");
             e.printStackTrace();
         }
     }
@@ -272,8 +259,8 @@ public class PlayerVaults extends JavaPlugin {
                 }
             } catch (IOException e) {
                 e.printStackTrace(); // So they notice
-                LOG.severe("[PlayerVaults] Couldn't create language file.");
-                LOG.severe("[PlayerVaults] This is a fatal error. Now disabling");
+                getLogger().severe("[PlayerVaults] Couldn't create language file.");
+                getLogger().severe("[PlayerVaults] This is a fatal error. Now disabling");
                 this.setEnabled(false); // Without it loaded, we can't send them messages
             } finally {
                 if (defLangStream != null) {
@@ -300,32 +287,44 @@ public class PlayerVaults extends JavaPlugin {
             }
         }
         Lang.setFile(conf);
-        PlayerVaults.LANG = conf;
-        PlayerVaults.LANG_FILE = lang;
         try {
-            conf.save(getLangFile());
+            conf.save(lang);
         } catch (IOException e) {
-            LOG.log(Level.WARNING, "PlayerVaults: Failed to save lang.yml.");
-            LOG.log(Level.WARNING, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
+            getLogger().log(Level.WARNING, "PlayerVaults: Failed to save lang.yml.");
+            getLogger().log(Level.WARNING, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
             e.printStackTrace();
         }
     }
 
-    /**
-     * Gets the lang.yml config.
-     *
-     * @return The lang.yml config.
-     */
-    public YamlConfiguration getLang() {
-        return LANG;
+    public HashMap<String, SignSetInfo> getSetSign() {
+        return this.setSign;
     }
 
-    /**
-     * Get the lang.yml file.
-     *
-     * @return The lang.yml file.
-     */
-    public File getLangFile() {
-        return LANG_FILE;
+    public HashMap<String, VaultViewInfo> getInVault() {
+        return this.inVault;
+    }
+
+    public HashMap<String, Inventory> getOpenInventories() {
+        return this.openInventories;
+    }
+
+    public boolean needsUpdate() {
+        return this.update;
+    }
+
+    public String getNewVersion() {
+        return this.newVersion;
+    }
+
+    public String getLink() {
+        return this.link;
+    }
+
+    public Economy getEconomy() {
+        return this.econ;
+    }
+
+    public static PlayerVaults getInstance() {
+        return instance;
     }
 }

@@ -37,14 +37,15 @@ public class Commands implements CommandExecutor {
         if (cmd.getName().equalsIgnoreCase("pv")) {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
-                if (PlayerVaults.IN_VAULT.containsKey(p.getName())) return true; // don't let them open another vault.
+                if (PlayerVaults.getInstance().getInVault().containsKey(p.getName()))
+                    return true; // don't let them open another vault.
                 switch (args.length) {
                     case 1:
                         if (VaultOperations.openOwnVault(p, args[0])) {
-                            PlayerVaults.IN_VAULT.put(sender.getName(), new VaultViewInfo(sender.getName(), Integer.parseInt(args[0])));
+                            PlayerVaults.getInstance().getInVault().put(sender.getName(), new VaultViewInfo(sender.getName(), Integer.parseInt(args[0])));
                         } else if (sender.hasPermission("playervaults.admin")) {
                             OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
-                            if(player == null) {
+                            if (player == null) {
                                 sender.sendMessage(Lang.TITLE.toString() + "Cannot find player " + args[0]);
                                 break;
                             }
@@ -67,7 +68,7 @@ public class Commands implements CommandExecutor {
                         Player player = Bukkit.getPlayer(args[0]);
                         if (player == null) break;
                         if (VaultOperations.openOtherVault(p, player, args[1])) {
-                            PlayerVaults.IN_VAULT.put(sender.getName(), new VaultViewInfo(args[0], Integer.parseInt(args[1])));
+                            PlayerVaults.getInstance().getInVault().put(sender.getName(), new VaultViewInfo(args[0], Integer.parseInt(args[1])));
                         } else {
                             sender.sendMessage(Lang.TITLE.toString() + "Failed to open vault.");
                         }
@@ -122,7 +123,7 @@ public class Commands implements CommandExecutor {
                             sender.sendMessage(Lang.TITLE.toString() + "Usage: /" + label + " <owner> <#>");
                             return true;
                         }
-                        PlayerVaults.SET_SIGN.put(sender.getName(), new SignSetInfo(i));
+                        PlayerVaults.getInstance().getSetSign().put(sender.getName(), new SignSetInfo(i));
                         sender.sendMessage(Lang.TITLE.toString() + Lang.CLICK_A_SIGN);
                     } else if (args.length >= 2) {
                         int i;
@@ -133,7 +134,7 @@ public class Commands implements CommandExecutor {
                             sender.sendMessage(Lang.TITLE.toString() + "Usage: /" + label + " <owner> <#>");
                             return true;
                         }
-                        PlayerVaults.SET_SIGN.put(sender.getName(), new SignSetInfo(args[0].toLowerCase(), i));
+                        PlayerVaults.getInstance().getSetSign().put(sender.getName(), new SignSetInfo(args[0].toLowerCase(), i));
                         sender.sendMessage(Lang.TITLE.toString() + Lang.CLICK_A_SIGN);
                     } else {
                         sender.sendMessage(Lang.TITLE.toString() + Lang.INVALID_ARGS);

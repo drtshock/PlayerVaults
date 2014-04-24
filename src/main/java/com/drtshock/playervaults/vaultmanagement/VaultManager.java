@@ -86,8 +86,8 @@ public class VaultManager {
         }
         VaultViewInfo info = new VaultViewInfo(holder, number);
         Inventory inv = null;
-        if (PlayerVaults.OPENINVENTORIES.containsKey(info.toString())) {
-            inv = PlayerVaults.OPENINVENTORIES.get(info.toString());
+        if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
+            inv = PlayerVaults.getInstance().getOpenInventories().get(info.toString());
         } else {
             YamlConfiguration playerFile = getPlayerVaultFile(holder);
             if (playerFile.getConfigurationSection("vault" + number) == null) {
@@ -110,7 +110,7 @@ public class VaultManager {
                     inv = getInventory(playerFile, size, number);
                 }
             }
-            PlayerVaults.OPENINVENTORIES.put(info.toString(), inv);
+            PlayerVaults.getInstance().getOpenInventories().put(info.toString(), inv);
         }
         return inv;
     }
@@ -128,8 +128,8 @@ public class VaultManager {
         }
         VaultViewInfo info = new VaultViewInfo(holder, number);
         Inventory inv = null;
-        if (PlayerVaults.OPENINVENTORIES.containsKey(info.toString())) {
-            inv = PlayerVaults.OPENINVENTORIES.get(info.toString());
+        if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
+            inv = PlayerVaults.getInstance().getOpenInventories().get(info.toString());
         } else {
             YamlConfiguration playerFile = getPlayerVaultFile(holder);
             if (playerFile.getConfigurationSection("vault" + number) == null) {
@@ -141,7 +141,7 @@ public class VaultManager {
                     inv = getInventory(playerFile, size, number);
                 }
             }
-            PlayerVaults.OPENINVENTORIES.put(info.toString(), inv);
+            PlayerVaults.getInstance().getOpenInventories().put(info.toString(), inv);
         }
         return inv;
     }

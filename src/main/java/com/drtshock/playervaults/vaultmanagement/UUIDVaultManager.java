@@ -70,8 +70,8 @@ public class UUIDVaultManager {
         }
         VaultViewInfo info = new VaultViewInfo(player.getUniqueId().toString(), number);
         Inventory inv = null;
-        if (PlayerVaults.OPENINVENTORIES.containsKey(info.toString())) {
-            inv = PlayerVaults.OPENINVENTORIES.get(info.toString());
+        if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
+            inv = PlayerVaults.getInstance().getOpenInventories().get(info.toString());
         } else {
             YamlConfiguration playerFile = getPlayerVaultFile(player.getUniqueId());
             if (playerFile.getConfigurationSection("vault" + number) == null) {
@@ -90,7 +90,7 @@ public class UUIDVaultManager {
                     inv = getInventory(playerFile, size, number);
                 }
             }
-            PlayerVaults.OPENINVENTORIES.put(info.toString(), inv);
+            PlayerVaults.getInstance().getOpenInventories().put(info.toString(), inv);
         }
         return inv;
     }
@@ -107,8 +107,8 @@ public class UUIDVaultManager {
         }
         VaultViewInfo info = new VaultViewInfo(holder.toString(), number);
         Inventory inv = null;
-        if (PlayerVaults.OPENINVENTORIES.containsKey(info.toString())) {
-            inv = PlayerVaults.OPENINVENTORIES.get(info.toString());
+        if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
+            inv = PlayerVaults.getInstance().getOpenInventories().get(info.toString());
         } else {
             YamlConfiguration playerFile = getPlayerVaultFile(holder);
             if (playerFile.getConfigurationSection("vault" + number) == null) {
@@ -120,7 +120,7 @@ public class UUIDVaultManager {
                     inv = getInventory(playerFile, size, number);
                 }
             }
-            PlayerVaults.OPENINVENTORIES.put(info.toString(), inv);
+            PlayerVaults.getInstance().getOpenInventories().put(info.toString(), inv);
         }
         return inv;
     }
