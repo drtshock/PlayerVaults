@@ -109,21 +109,36 @@ public class Serialization {
     }
 
     public static Map<String, Object> serialize(ConfigurationSerializable cs) {
-        Map<String, Object> serialized = recreateMap(cs.serialize());
+        Map<String,Object> returnVal = handleSerialization(cs.serialize());
+        returnVal.put(ConfigurationSerialization.SERIALIZED_TYPE_KEY, ConfigurationSerialization.getAlias(cs.getClass()));
+        return returnVal;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> handleSerialization(Map<String, Object> map) {
+        Map<String, Object> serialized = recreateMap(map);
         for (Entry<String, Object> entry : serialized.entrySet()) {
             if (entry.getValue() instanceof ConfigurationSerializable) {
                 entry.setValue(serialize((ConfigurationSerializable) entry.getValue()));
+            } else if (entry.getValue() instanceof Iterable<?>) {
+                List<Object> newList = new ArrayList<>();
+                for (Object object : ((Iterable) entry.getValue())) {
+                    if (object instanceof ConfigurationSerializable) {
+                        object = serialize((ConfigurationSerializable) object);
+                    }
+                    newList.add(object);
+                }
+                entry.setValue(newList);
+            } else if (entry.getValue() instanceof Map<?,?>) {
+                // unchecked cast here.  If you're serializing to a non-standard Map you deserve ClassCastExceptions
+                entry.setValue(handleSerialization((Map<String, Object>) entry.getValue()));
             }
         }
-        serialized.put(ConfigurationSerialization.SERIALIZED_TYPE_KEY, ConfigurationSerialization.getAlias(cs.getClass()));
         return serialized;
     }
-
     public static Map<String, Object> recreateMap(Map<String, Object> original) {
         Map<String, Object> map = new HashMap<String, Object>();
-        for (Entry<String, Object> entry : original.entrySet()) {
-            map.put(entry.getKey(), entry.getValue());
-        }
+        map.putAll(original);
         return map;
     }
 
@@ -132,8 +147,23 @@ public class Serialization {
         for (Entry<String, Object> entry : map.entrySet()) {
             if (entry.getValue() instanceof Map && ((Map) entry.getValue()).containsKey(ConfigurationSerialization.SERIALIZED_TYPE_KEY)) {
                 entry.setValue(deserialize((Map) entry.getValue()));
+            } else if (entry.getValue() instanceof Iterable) {
+                entry.setValue(convertIterable((Iterable) entry.getValue()));
             }
         }
         return ConfigurationSerialization.deserializeObject(map);
+    }
+
+    private static List<?> convertIterable(Iterable<?> iterable) {
+        List<Object> newList = new ArrayList<>();
+        for (Object object : iterable) {
+            if (object instanceof Map) {
+                object = deserialize((Map<String, Object>) object);
+            } else if (object instanceof List) {
+                object = convertIterable((Iterable) object);
+            }
+            newList.add(object);
+        }
+        return newList;
     }
 }
