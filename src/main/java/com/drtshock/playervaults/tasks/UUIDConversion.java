@@ -1,7 +1,7 @@
 package com.drtshock.playervaults.tasks;
 
 import com.drtshock.playervaults.PlayerVaults;
-import net.minecraft.util.org.apache.commons.io.FileUtils;
+import com.google.common.io.Files;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -36,16 +36,18 @@ public final class UUIDConversion extends BukkitRunnable {
                 PlayerVaults.getInstance().getLogger().log(Level.WARNING, "Unable to convert file because player never joined the server: " + file.getName());
                 break;
             }
+
             UUID uuid = player.getUniqueId();
             File newFile = new File(PlayerVaults.getInstance().getDataFolder(), "uuidvaults" + File.separator + uuid.toString() + ".yml");
             file.mkdirs();
             try {
-                FileUtils.copyFile(file, newFile);
+	            Files.copy(file, newFile);
                 PlayerVaults.getInstance().getLogger().log(Level.INFO, "Successfully converted vault file for " + player.getName());
             } catch (IOException e) {
                 PlayerVaults.getInstance().getLogger().log(Level.SEVERE, "Couldn't convert vault file for " + player.getName());
             }
         }
+
         PlayerVaults.getInstance().getLogger().log(Level.INFO, "********** Conversion done ;D **********");
     }
 }

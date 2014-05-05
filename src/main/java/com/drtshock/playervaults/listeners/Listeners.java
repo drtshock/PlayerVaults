@@ -19,7 +19,6 @@ package com.drtshock.playervaults.listeners;
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
-import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import org.bukkit.*;
@@ -49,7 +48,7 @@ public class Listeners implements Listener {
         this.plugin = playerVaults;
     }
 
-    VaultManager vm = new VaultManager(plugin);
+    UUIDVaultManager vm = UUIDVaultManager.getInstance();
 
     public void saveVault(Player player) {
         if (PlayerVaults.getInstance().getInVault().containsKey(player.getName())) {
@@ -57,7 +56,7 @@ public class Listeners implements Listener {
             if (inv.getViewers().size() == 1) {
                 VaultViewInfo info = PlayerVaults.getInstance().getInVault().get(player.getName());
                 try {
-                    vm.saveVault(inv, info.getHolder(), info.getNumber());
+                    vm.saveVault(inv, player.getUniqueId(), info.getNumber());
                 } catch (IOException e) {
                 }
                 PlayerVaults.getInstance().getOpenInventories().remove(info.toString());
