@@ -41,7 +41,7 @@ public final class UUIDConversion extends BukkitRunnable {
             File newFile = new File(PlayerVaults.getInstance().getDataFolder(), "uuidvaults" + File.separator + uuid.toString() + ".yml");
             file.mkdirs();
             try {
-	            Files.copy(file, newFile);
+                Files.copy(file, newFile);
                 PlayerVaults.getInstance().getLogger().log(Level.INFO, "Successfully converted vault file for " + player.getName());
             } catch (IOException e) {
                 PlayerVaults.getInstance().getLogger().log(Level.SEVERE, "Couldn't convert vault file for " + player.getName());
