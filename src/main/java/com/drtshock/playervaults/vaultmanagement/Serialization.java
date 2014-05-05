@@ -109,7 +109,7 @@ public class Serialization {
     }
 
     public static Map<String, Object> serialize(ConfigurationSerializable cs) {
-        Map<String, Object> returnVal = handleSerialization(cs.serialize());
+        Map<String,Object> returnVal = handleSerialization(cs.serialize());
         returnVal.put(ConfigurationSerialization.SERIALIZED_TYPE_KEY, ConfigurationSerialization.getAlias(cs.getClass()));
         return returnVal;
     }
@@ -129,14 +129,13 @@ public class Serialization {
                     newList.add(object);
                 }
                 entry.setValue(newList);
-            } else if (entry.getValue() instanceof Map<?, ?>) {
+            } else if (entry.getValue() instanceof Map<?,?>) {
                 // unchecked cast here.  If you're serializing to a non-standard Map you deserve ClassCastExceptions
                 entry.setValue(handleSerialization((Map<String, Object>) entry.getValue()));
             }
         }
         return serialized;
     }
-
     public static Map<String, Object> recreateMap(Map<String, Object> original) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.putAll(original);
