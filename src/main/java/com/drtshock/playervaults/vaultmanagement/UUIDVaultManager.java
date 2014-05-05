@@ -227,7 +227,7 @@ public class UUIDVaultManager {
                 // Who cares?
             }
         }
-	    return YamlConfiguration.loadConfiguration(file);
+        return YamlConfiguration.loadConfiguration(file);
     }
 
     /**

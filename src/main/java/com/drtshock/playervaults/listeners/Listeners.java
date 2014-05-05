@@ -57,7 +57,9 @@ public class Listeners implements Listener {
                 try {
                     vm.saveVault(inv, player.getUniqueId(), info.getNumber());
                 } catch (IOException e) {
+	                // ignore
                 }
+
                 PlayerVaults.getInstance().getOpenInventories().remove(info.toString());
             }
             PlayerVaults.getInstance().getInVault().remove(player.getName());
@@ -78,7 +80,7 @@ public class Listeners implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (PlayerVaults.getInstance().needsUpdate() && (player.isOp() || player.hasPermission("playervaults.notify"))) {
-            player.sendMessage(ChatColor.GREEN + "Version " + PlayerVaults.getInstance().getNewVersion() + " of PlayerVaults is up for download!");
+            player.sendMessage(ChatColor.GREEN + "Version " + PlayerVaults.getInstance().getNewVersion() + " of PlayerVaults is available for download!");
             player.sendMessage(ChatColor.GREEN + PlayerVaults.getInstance().getLink() + " to view the changelog and download!");
         }
     }
@@ -92,8 +94,7 @@ public class Listeners implements Listener {
     public void onClose(InventoryCloseEvent event) {
         HumanEntity he = event.getPlayer();
         if (he instanceof Player) {
-            Player player = (Player) he;
-            saveVault(player);
+            saveVault((Player) he);
         }
     }
 
