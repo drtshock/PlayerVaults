@@ -68,8 +68,9 @@ public class UUIDVaultManager {
         if (size % 9 != 0) {
             size = 54;
         }
+
         VaultViewInfo info = new VaultViewInfo(player.getUniqueId().toString(), number);
-        Inventory inv = null;
+        Inventory inv;
         if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
             inv = PlayerVaults.getInstance().getOpenInventories().get(info.toString());
         } else {
@@ -92,6 +93,7 @@ public class UUIDVaultManager {
             }
             PlayerVaults.getInstance().getOpenInventories().put(info.toString(), inv);
         }
+
         return inv;
     }
 
@@ -172,8 +174,7 @@ public class UUIDVaultManager {
     }
 
     public boolean vaultExists(UUID holder, int number) {
-        YamlConfiguration playerFile = getPlayerVaultFile(holder);
-        return playerFile.contains("vault" + number);
+        return getPlayerVaultFile(holder).contains("vault" + number);
     }
 
     /**
@@ -191,17 +192,21 @@ public class UUIDVaultManager {
         if (!file.exists()) {
             return;
         }
+
         FileConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
         if (file.exists()) {
             playerFile.set("vault" + number, null);
             playerFile.save(file);
         }
+
         OfflinePlayer player = Bukkit.getPlayer(holder);
         if (player != null && sender.getName().equalsIgnoreCase(player.getName())) {
             sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT.toString().replace("%v", String.valueOf(number)));
         } else {
             sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_OTHER_VAULT.toString().replace("%v", String.valueOf(number)).replaceAll("%p", player.getName()));
         }
+
+	    PlayerVaults.getInstance().getOpenInventories().remove(new VaultViewInfo(holder.toString(), number).toString());
     }
 
     /**

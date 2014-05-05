@@ -44,7 +44,8 @@ public enum Lang {
     SET_SIGN("set-sign-success", "&fYou have successfully set a PlayerVault access sign!"),
     EXISTING_VAULTS("existing-vaults", "&f%p has vaults: &a%v"),
     VAULT_TITLE("vault-title", "&4Vault #%number"),
-    OPEN_WITH_SIGN("open-with-sign", "&fOpening vault &a%v &fof &a%p");
+    OPEN_WITH_SIGN("open-with-sign", "&fOpening vault &a%v &fof &a%p"),
+    NO_PLAYER_FOUND("no-player-found", "&cCannot find player &a%p");
 
     private String path;
     private String def;

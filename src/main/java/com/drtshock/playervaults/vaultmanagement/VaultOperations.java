@@ -84,6 +84,7 @@ public class VaultOperations {
         } catch (NumberFormatException nfe) {
             return false;
         }
+
         if (checkPerms(player, number)) {
             if (EconomyOperations.payToOpen(player, number)) {
                 Inventory inv = UUIDVaultManager.getInstance().loadOwnVault(player, number, getMaxVaultSize(player));
@@ -147,11 +148,12 @@ public class VaultOperations {
                 number = Integer.parseInt(arg);
                 if (number == 0) {
                     player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+	                return;
                 }
-                return;
             } catch (NumberFormatException nfe) {
                 player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
             }
+
             try {
                 if (EconomyOperations.refundOnDelete(player, number)) {
                     UUIDVaultManager.getInstance().deleteVault(player, player.getUniqueId(), number);
@@ -184,6 +186,7 @@ public class VaultOperations {
                 } catch (NumberFormatException nfe) {
                     sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
+
                 try {
                     UUIDVaultManager.getInstance().deleteVault(sender, holder.getUniqueId(), number);
                 } catch (IOException e) {
