@@ -16,8 +16,11 @@
  */
 package com.drtshock.playervaults;
 
-import com.drtshock.playervaults.commands.Commands;
+import com.drtshock.playervaults.commands.DeleteCommand;
+import com.drtshock.playervaults.commands.SignCommand;
 import com.drtshock.playervaults.commands.SignSetInfo;
+import com.drtshock.playervaults.commands.VaultCommand;
+import com.drtshock.playervaults.commands.WorkbenchCommand;
 import com.drtshock.playervaults.listeners.Listeners;
 import com.drtshock.playervaults.tasks.Cleanup;
 import com.drtshock.playervaults.tasks.UUIDConversion;
@@ -45,7 +48,6 @@ public class PlayerVaults extends JavaPlugin {
     private boolean update = false;
     private String newVersion = "";
     private String link = "";
-    private Commands commands;
     private HashMap<String, SignSetInfo> setSign = new HashMap<>();
     private HashMap<String, VaultViewInfo> inVault = new HashMap<>();
     private HashMap<String, Inventory> openInventories = new HashMap<>();
@@ -68,11 +70,10 @@ public class PlayerVaults extends JavaPlugin {
         loadConfig();
         loadSigns();
         checkUpdate();
-        commands = new Commands();
-        getCommand("pv").setExecutor(commands);
-        getCommand("pvdel").setExecutor(commands);
-        getCommand("pvsign").setExecutor(commands);
-        getCommand("workbench").setExecutor(commands);
+        getCommand("pv").setExecutor(new VaultCommand());
+        getCommand("pvdel").setExecutor(new DeleteCommand());
+        getCommand("pvsign").setExecutor(new SignCommand());
+        getCommand("workbench").setExecutor(new WorkbenchCommand());
         setupEconomy();
         startMetrics();
 
