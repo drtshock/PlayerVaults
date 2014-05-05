@@ -30,7 +30,7 @@ public final class UUIDConversion extends BukkitRunnable {
         PlayerVaults.getInstance().getLogger().log(Level.INFO, "plugins/PlayerVaults/vaults will still be there as a backup but unused.");
 
         for (File file : new File(PlayerVaults.getInstance().getDataFolder() + File.separator + "vaults").listFiles()) {
-            if (file.isDirectory()) break; // backups folder.
+            if (file.isDirectory()) continue; // backups folder.
             OfflinePlayer player = Bukkit.getOfflinePlayer(file.getName().replace(".yml", ""));
             if (player == null) {
                 PlayerVaults.getInstance().getLogger().log(Level.WARNING, "Unable to convert file because player never joined the server: " + file.getName());
