@@ -206,7 +206,7 @@ public class UUIDVaultManager {
             sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_OTHER_VAULT.toString().replace("%v", String.valueOf(number)).replaceAll("%p", player.getName()));
         }
 
-	    PlayerVaults.getInstance().getOpenInventories().remove(new VaultViewInfo(holder.toString(), number).toString());
+        PlayerVaults.getInstance().getOpenInventories().remove(new VaultViewInfo(holder.toString(), number).toString());
     }
 
     /**
