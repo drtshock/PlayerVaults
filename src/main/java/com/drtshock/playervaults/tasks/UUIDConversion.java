@@ -18,7 +18,7 @@ public final class UUIDConversion extends BukkitRunnable {
 
     @Override
     public void run() {
-        File newDir = new File(PlayerVaults.getInstance().getDataFolder(), "uuidvaults");
+        File newDir = PlayerVaults.getInstance().getVaultData();
         if (newDir.exists()) {
             PlayerVaults.getInstance().getLogger().log(Level.INFO, "Files already converted to UUID.");
             return;
@@ -38,7 +38,7 @@ public final class UUIDConversion extends BukkitRunnable {
             }
 
             UUID uuid = player.getUniqueId();
-            File newFile = new File(PlayerVaults.getInstance().getDataFolder(), "uuidvaults" + File.separator + uuid.toString() + ".yml");
+            File newFile = new File(PlayerVaults.getInstance().getVaultData(), uuid.toString() + ".yml");
             file.mkdirs();
             try {
                 Files.copy(file, newFile);

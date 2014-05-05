@@ -85,7 +85,7 @@ public class VaultManager {
             size = 54;
         }
         VaultViewInfo info = new VaultViewInfo(holder, number);
-        Inventory inv = null;
+        Inventory inv;
         if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
             inv = PlayerVaults.getInstance().getOpenInventories().get(info.toString());
         } else {
@@ -127,7 +127,7 @@ public class VaultManager {
             size = 54;
         }
         VaultViewInfo info = new VaultViewInfo(holder, number);
-        Inventory inv = null;
+        Inventory inv;
         if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
             inv = PlayerVaults.getInstance().getOpenInventories().get(info.toString());
         } else {
@@ -157,7 +157,7 @@ public class VaultManager {
      */
     @Deprecated
     private Inventory getInventory(YamlConfiguration playerFile, int size, int number) {
-        List<String> data = new ArrayList<String>();
+        List<String> data = new ArrayList<>();
         for (int x = 0; x < size; x++) {
             String line = playerFile.getString("vault" + number + "." + x);
             if (line != null) {
@@ -187,8 +187,7 @@ public class VaultManager {
             vaultHolder.setInventory(inv);
             return inv;
         } else {
-            Inventory inv = Serialization.toInventory(data, number, VaultOperations.getMaxVaultSize(Bukkit.getPlayerExact(holder)));
-            return inv;
+            return Serialization.toInventory(data, number, VaultOperations.getMaxVaultSize(Bukkit.getPlayerExact(holder)));
         }
     }
 
@@ -247,8 +246,7 @@ public class VaultManager {
                 // Who cares?
             }
         }
-        YamlConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
-        return playerFile;
+        return YamlConfiguration.loadConfiguration(file);
     }
 
     /**

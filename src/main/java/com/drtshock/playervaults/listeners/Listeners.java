@@ -43,12 +43,11 @@ import java.io.IOException;
 public class Listeners implements Listener {
 
     public PlayerVaults plugin;
+    UUIDVaultManager vm = UUIDVaultManager.getInstance();
 
     public Listeners(PlayerVaults playerVaults) {
         this.plugin = playerVaults;
     }
-
-    UUIDVaultManager vm = UUIDVaultManager.getInstance();
 
     public void saveVault(Player player) {
         if (PlayerVaults.getInstance().getInVault().containsKey(player.getName())) {
@@ -58,7 +57,9 @@ public class Listeners implements Listener {
                 try {
                     vm.saveVault(inv, player.getUniqueId(), info.getNumber());
                 } catch (IOException e) {
+	                // ignore
                 }
+
                 PlayerVaults.getInstance().getOpenInventories().remove(info.toString());
             }
             PlayerVaults.getInstance().getInVault().remove(player.getName());
@@ -72,31 +73,28 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        saveVault(player);
+        saveVault(event.getPlayer());
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (PlayerVaults.getInstance().needsUpdate() && (player.isOp() || player.hasPermission("playervaults.notify"))) {
-            player.sendMessage(ChatColor.GREEN + "Version " + PlayerVaults.getInstance().getNewVersion() + " of PlayerVaults is up for download!");
+            player.sendMessage(ChatColor.GREEN + "Version " + PlayerVaults.getInstance().getNewVersion() + " of PlayerVaults is available for download!");
             player.sendMessage(ChatColor.GREEN + PlayerVaults.getInstance().getLink() + " to view the changelog and download!");
         }
     }
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
-        Player player = event.getEntity();
-        saveVault(player);
+        saveVault(event.getEntity());
     }
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
         HumanEntity he = event.getPlayer();
         if (he instanceof Player) {
-            Player player = (Player) he;
-            saveVault(player);
+            saveVault((Player) he);
         }
     }
 
@@ -137,7 +135,7 @@ public class Listeners implements Listener {
                     int y = l.getBlockY();
                     int z = l.getBlockZ();
                     if (self) {
-                        plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z + ".self", self);
+                        plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z + ".self", true);
                     } else {
                         plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z + ".owner", owner);
                     }

@@ -30,7 +30,7 @@ public enum Lang {
     INVALID_ARGS("invalid-args", "&cInvalid args!"),
     DELETE_VAULT("delete-vault", "&fDeleted vault &a%v"),
     DELETE_OTHER_VAULT("delete-other-vault", "&fDeleted vault &a%v &fof &a%p"),
-    PLAYER_ONLY("player-only", "Sorry but that can only be run by a player!"),
+    PLAYER_ONLY("player-only", "&cSorry but that can only be run by a player!"),
     MUST_BE_NUMBER("must-be-number", "&cYou need to specify a number between 1-99"),
     DELETE_VAULT_ERROR("delete-vault-error", "&cError deleting vault :("),
     NO_PERMS("no-permissions", "&cYou don''t have permission for that!"),

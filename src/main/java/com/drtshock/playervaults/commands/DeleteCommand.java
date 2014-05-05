@@ -23,7 +23,7 @@ public class DeleteCommand implements CommandExecutor {
             case 2:
                 Player player = Bukkit.getPlayer(args[0]);
                 if (player == null) {
-	                sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PLAYER_FOUND.toString().replaceAll("%p", args[0]));
+                    sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PLAYER_FOUND.toString().replaceAll("%p", args[0]));
                     break;
                 }
 

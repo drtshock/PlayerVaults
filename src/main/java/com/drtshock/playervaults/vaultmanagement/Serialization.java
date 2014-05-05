@@ -38,10 +38,10 @@ public class Serialization {
 
     @SuppressWarnings("unchecked")
     public static Map<String, Object> toMap(JSONObject object) throws JSONException {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         Iterator<String> keys = object.keys();
         while (keys.hasNext()) {
-            String key = (String) keys.next();
+            String key = keys.next();
             map.put(key, fromJson(object.get(key)));
         }
         return map;
@@ -60,7 +60,7 @@ public class Serialization {
     }
 
     public static List<Object> toList(JSONArray array) throws JSONException {
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         for (int i = 0; i < array.length(); i++) {
             list.add(fromJson(array.get(i)));
         }
@@ -68,11 +68,9 @@ public class Serialization {
     }
 
     public static List<String> toString(Inventory inv) {
-        List<String> result = new ArrayList<String>();
-        List<ConfigurationSerializable> items = new ArrayList<ConfigurationSerializable>();
-        for (ItemStack is : inv.getContents()) {
-            items.add(is);
-        }
+        List<String> result = new ArrayList<>();
+        List<ConfigurationSerializable> items = new ArrayList<>();
+        Collections.addAll(items, inv.getContents());
         for (ConfigurationSerializable cs : items) {
             if (cs == null) {
                 result.add("null");
@@ -87,7 +85,7 @@ public class Serialization {
         VaultHolder holder = new VaultHolder(number);
         Inventory inv = Bukkit.createInventory(holder, size, ChatColor.RED + "Vault #" + number);
         holder.setInventory(inv);
-        List<ItemStack> contents = new ArrayList<ItemStack>();
+        List<ItemStack> contents = new ArrayList<>();
         for (String piece : stringItems) {
             if (piece.equalsIgnoreCase("null")) {
                 contents.add(null);
@@ -137,7 +135,7 @@ public class Serialization {
         return serialized;
     }
     public static Map<String, Object> recreateMap(Map<String, Object> original) {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.putAll(original);
         return map;
     }

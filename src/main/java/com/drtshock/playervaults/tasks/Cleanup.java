@@ -13,10 +13,9 @@ public class Cleanup extends BukkitRunnable {
         this.diff = diff * 86400;
     }
 
-
     @Override
     public void run() {
-        File file = new File(PlayerVaults.getInstance().getDataFolder(), "vaults");
+        File file = PlayerVaults.getInstance().getVaultData();
         if (!file.exists()) return;
 
         long time = System.currentTimeMillis();

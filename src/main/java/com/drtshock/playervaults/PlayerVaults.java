@@ -57,7 +57,6 @@ public class PlayerVaults extends JavaPlugin {
     private int inventoriesToDrop = 0;
     private YamlConfiguration signs;
     private File signsFile;
-    private Listeners listener;
     private String name = "";
 
     @Override
@@ -66,7 +65,7 @@ public class PlayerVaults extends JavaPlugin {
         getServer().getScheduler().runTask(this, new UUIDConversion()); // Convert to UUID first. Class checks if necessary.
         loadLang();
         new UUIDVaultManager();
-        getServer().getPluginManager().registerEvents(listener = new Listeners(this), this);
+        getServer().getPluginManager().registerEvents(new Listeners(this), this);
         loadConfig();
         loadSigns();
         checkUpdate();
@@ -248,7 +247,7 @@ public class PlayerVaults extends JavaPlugin {
                 lang.createNewFile();
                 if (defLangStream != null) {
                     out = new FileOutputStream(lang);
-                    int read = 0;
+                    int read;
                     byte[] bytes = new byte[1024];
 
                     while ((read = defLangStream.read(bytes)) != -1) {
@@ -322,7 +321,11 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     public Economy getEconomy() {
-        return this.econ;
+        return econ;
+    }
+
+    public File getVaultData() {
+        return new File(this.getDataFolder(), "uuidvaults");
     }
 
     public static PlayerVaults getInstance() {
