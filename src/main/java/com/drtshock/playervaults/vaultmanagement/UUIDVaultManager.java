@@ -27,7 +27,7 @@ public class UUIDVaultManager {
         instance = this;
     }
 
-    private final String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "uuidvaults";
+    private final File directory = PlayerVaults.getInstance().getVaultData();
 
     /**
      * Saves the inventory to the specified player and vault number.
@@ -108,7 +108,7 @@ public class UUIDVaultManager {
             size = 54;
         }
         VaultViewInfo info = new VaultViewInfo(holder.toString(), number);
-        Inventory inv = null;
+        Inventory inv;
         if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
             inv = PlayerVaults.getInstance().getOpenInventories().get(info.toString());
         } else {
@@ -168,8 +168,7 @@ public class UUIDVaultManager {
             vaultHolder.setInventory(inv);
             return inv;
         } else {
-            Inventory inv = Serialization.toInventory(data, number, VaultOperations.getMaxVaultSize(player));
-            return inv;
+            return Serialization.toInventory(data, number, VaultOperations.getMaxVaultSize(player));
         }
     }
 
@@ -188,7 +187,7 @@ public class UUIDVaultManager {
      */
     public void deleteVault(CommandSender sender, UUID holder, int number) throws IOException {
         String name = holder.toString();
-        File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
+        File file = new File(directory, name.toLowerCase() + ".yml");
         if (!file.exists()) {
             return;
         }
@@ -217,11 +216,10 @@ public class UUIDVaultManager {
      * @return The holder's vault config file.
      */
     public YamlConfiguration getPlayerVaultFile(UUID holder) {
-        File folder = new File(directory);
-        if (!folder.exists()) {
-            folder.mkdir();
+        if (!directory.exists()) {
+            directory.mkdir();
         }
-        File file = new File(directory + File.separator + holder.toString() + ".yml");
+        File file = new File(directory, holder.toString() + ".yml");
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -229,8 +227,7 @@ public class UUIDVaultManager {
                 // Who cares?
             }
         }
-        YamlConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
-        return playerFile;
+	    return YamlConfiguration.loadConfiguration(file);
     }
 
     /**
@@ -242,9 +239,9 @@ public class UUIDVaultManager {
      * @throws IOException Uh oh!
      */
     public void saveFile(UUID holder, YamlConfiguration yaml) throws IOException {
-        File file = new File(directory + File.separator + holder.toString() + ".yml");
+        File file = new File(directory, holder.toString() + ".yml");
         if (file.exists()) {
-            file.renameTo(new File(directory + File.separator + "backups" + File.separator + holder.toString() + ".yml"));
+            file.renameTo(new File(directory, "backups" + File.separator + holder.toString() + ".yml"));
         }
         yaml.save(file);
     }

@@ -148,7 +148,7 @@ public class VaultOperations {
                 number = Integer.parseInt(arg);
                 if (number == 0) {
                     player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
-	                return;
+                    return;
                 }
             } catch (NumberFormatException nfe) {
                 player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
