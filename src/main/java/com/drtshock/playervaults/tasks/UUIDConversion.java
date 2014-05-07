@@ -8,14 +8,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 import java.util.logging.Level;
 
 /**
  * Class to convert vaults by name to vaults by UUID.
  */
 public final class UUIDConversion extends BukkitRunnable {
-
     @Override
     public void run() {
         File newDir = PlayerVaults.getInstance().getVaultData();
@@ -23,11 +21,12 @@ public final class UUIDConversion extends BukkitRunnable {
             PlayerVaults.getInstance().getLogger().log(Level.INFO, "Files already converted to UUID.");
             return;
         }
+
         newDir.mkdirs();
 
         PlayerVaults.getInstance().getLogger().log(Level.INFO, "********** Starting PlayerVault conversion to UUIDs **********");
         PlayerVaults.getInstance().getLogger().log(Level.INFO, "This might take awhile.");
-        PlayerVaults.getInstance().getLogger().log(Level.INFO, "plugins/PlayerVaults/vaults will still be there as a backup but unused.");
+        PlayerVaults.getInstance().getLogger().log(Level.INFO, "plugins/PlayerVaults/vaults will remain as a backup.");
 
         for (File file : new File(PlayerVaults.getInstance().getDataFolder() + File.separator + "vaults").listFiles()) {
             if (file.isDirectory()) continue; // backups folder.
@@ -37,8 +36,7 @@ public final class UUIDConversion extends BukkitRunnable {
                 break;
             }
 
-            UUID uuid = player.getUniqueId();
-            File newFile = new File(PlayerVaults.getInstance().getVaultData(), uuid.toString() + ".yml");
+            File newFile = new File(PlayerVaults.getInstance().getVaultData(), player.getUniqueId().toString() + ".yml");
             file.mkdirs();
             try {
                 Files.copy(file, newFile);

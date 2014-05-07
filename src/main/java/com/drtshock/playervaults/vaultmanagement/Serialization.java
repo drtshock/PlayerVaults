@@ -134,6 +134,7 @@ public class Serialization {
         }
         return serialized;
     }
+
     public static Map<String, Object> recreateMap(Map<String, Object> original) {
         Map<String, Object> map = new HashMap<>();
         map.putAll(original);

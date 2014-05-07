@@ -261,7 +261,7 @@ public class VaultManager {
     public void saveFile(String holder, YamlConfiguration yaml) throws IOException {
         File file = new File(directory + File.separator + holder.toLowerCase() + ".yml");
         if (file.exists()) {
-            file.renameTo(new File(directory + File.separator + "backups" + File.separator + holder.toLowerCase() + ".yml"));
+            file.renameTo(new File(PlayerVaults.getInstance().getBackupsFolder(), holder.toLowerCase() + ".yml"));
         }
         yaml.save(file);
     }

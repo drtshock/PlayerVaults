@@ -20,26 +20,18 @@ import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * A class that handles all economy operations.
  */
 public class EconomyOperations {
-
-    private static YamlConfiguration BUKKIT_CONFIG = new YamlConfiguration();
-    public static PlayerVaults PLUGIN;
-
-    public EconomyOperations(PlayerVaults instance) throws IOException, InvalidConfigurationException {
-        PLUGIN = instance;
-        File config = new File(PLUGIN.getDataFolder(), "config.yml");
-        BUKKIT_CONFIG.load(config);
-    }
+    private static PlayerVaults PLUGIN = PlayerVaults.getInstance();
+    private static FileConfiguration BUKKIT_CONFIG = PLUGIN.getConfig();
 
     /**
      * Have a player pay to open a vault.
@@ -50,9 +42,10 @@ public class EconomyOperations {
      * @return The transaction success.
      */
     public static boolean payToOpen(Player player, int number) {
-        if (!BUKKIT_CONFIG.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || PlayerVaults.getInstance().getEconomy() != null) {
+        if (!PLUGIN.isEconomyEnabled() || player.hasPermission("playervaults.free")) {
             return true;
         }
+
         if (UUIDVaultManager.getInstance().vaultExists(player.getUniqueId(), number)) {
             return payToCreate(player);
         } else {
@@ -63,6 +56,7 @@ public class EconomyOperations {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -74,7 +68,7 @@ public class EconomyOperations {
      * @return The transaction success
      */
     public static boolean payToCreate(Player player) {
-        if (!BUKKIT_CONFIG.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || PlayerVaults.getInstance().getEconomy() != null) {
+        if (!PLUGIN.isEconomyEnabled() || player.hasPermission("playervaults.free")) {
             return true;
         }
 
@@ -84,6 +78,7 @@ public class EconomyOperations {
             player.sendMessage(Lang.TITLE.toString() + Lang.COST_TO_CREATE.toString().replaceAll("%price", "" + cost));
             return true;
         }
+
         return false;
     }
 
@@ -96,15 +91,14 @@ public class EconomyOperations {
      * @return The transaction success.
      */
     public static boolean refundOnDelete(Player player, int number) {
-        String directory = "plugins" + File.separator + "PlayerVaults" + File.separator + "vaults";
-        if (!BUKKIT_CONFIG.getBoolean("economy.enabled") || player.hasPermission("playervaults.free") || PlayerVaults.getInstance().getEconomy() != null) {
+        if (!PLUGIN.isEconomyEnabled() || player.hasPermission("playervaults.free")) {
             return true;
         }
-        String name = player.getName().toLowerCase();
-        File file = new File(directory + File.separator + name.toLowerCase() + ".yml");
-        YamlConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
-        if (file.exists()) {
-            if (playerFile.getString("vault" + number) == null) {
+
+        File playerFile = new File(PLUGIN.getVaultData(), player.getUniqueId().toString() + ".yml");
+        if (playerFile.exists()) {
+            YamlConfiguration playerData = YamlConfiguration.loadConfiguration(playerFile);
+            if (playerData.getString("vault" + number) == null) {
                 player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.VAULT_DOES_NOT_EXIST);
                 return false;
             }
@@ -112,12 +106,14 @@ public class EconomyOperations {
             player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.VAULT_DOES_NOT_EXIST);
             return false;
         }
+
         double cost = BUKKIT_CONFIG.getDouble("economy.refund-on-delete");
         EconomyResponse resp = PlayerVaults.getInstance().getEconomy().depositPlayer(player.getName(), cost);
         if (resp.transactionSuccess()) {
             player.sendMessage(Lang.TITLE.toString() + Lang.REFUND_AMOUNT.toString().replaceAll("%price", String.valueOf(cost)));
             return true;
         }
+
         return false;
     }
 }

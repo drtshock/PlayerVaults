@@ -57,7 +57,7 @@ public class Listeners implements Listener {
                 try {
                     vm.saveVault(inv, player.getUniqueId(), info.getNumber());
                 } catch (IOException e) {
-	                // ignore
+                    // ignore
                 }
 
                 PlayerVaults.getInstance().getOpenInventories().remove(info.toString());

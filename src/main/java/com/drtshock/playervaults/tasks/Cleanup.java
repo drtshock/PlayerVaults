@@ -6,7 +6,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.File;
 
 public class Cleanup extends BukkitRunnable {
-
     private long diff;
 
     public Cleanup(int diff) {
@@ -15,14 +14,17 @@ public class Cleanup extends BukkitRunnable {
 
     @Override
     public void run() {
-        File file = PlayerVaults.getInstance().getVaultData();
-        if (!file.exists()) return;
+        File directory = PlayerVaults.getInstance().getVaultData();
+        if (!directory.exists()) {
+            // folder doesn't exist, don't run
+            return;
+        }
 
         long time = System.currentTimeMillis();
-        for (File f : file.listFiles()) {
-            if (time - f.lastModified() > diff) {
-                f.delete();
-                PlayerVaults.getInstance().getLogger().info("Deleting vault file: " + f.getName());
+        for (File file : directory.listFiles()) {
+            if (time - file.lastModified() > diff) {
+                PlayerVaults.getInstance().getLogger().info("Deleting vault file (cleanup): " + file.getName());
+                file.delete();
             }
         }
     }

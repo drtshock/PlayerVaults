@@ -51,7 +51,7 @@ public class PlayerVaults extends JavaPlugin {
     private HashMap<String, SignSetInfo> setSign = new HashMap<>();
     private HashMap<String, VaultViewInfo> inVault = new HashMap<>();
     private HashMap<String, Inventory> openInventories = new HashMap<>();
-    private static Economy econ = null;
+    private Economy economy = null;
     private boolean dropOnDeath = false;
     private boolean useVault = false;
     private int inventoriesToDrop = 0;
@@ -73,15 +73,13 @@ public class PlayerVaults extends JavaPlugin {
         getCommand("pvdel").setExecutor(new DeleteCommand());
         getCommand("pvsign").setExecutor(new SignCommand());
         getCommand("workbench").setExecutor(new WorkbenchCommand());
-        setupEconomy();
+        useVault = setupEconomy();
         startMetrics();
 
         if (getConfig().getBoolean("drop-on-death.enabled")) {
             dropOnDeath = true;
             inventoriesToDrop = getConfig().getInt("drop-on-death.inventories");
         }
-
-        new File(getDataFolder() + File.separator + "vaults" + File.separator + "backups").mkdirs();
 
         if (getConfig().getBoolean("cleanup.enable", false)) {
             getServer().getScheduler().runTaskAsynchronously(this, new Cleanup(getConfig().getInt("cleanup.lastEdit", 30)));
@@ -104,20 +102,24 @@ public class PlayerVaults extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            if (getInVault().containsKey(p.getName())) {
-                Inventory inv = p.getOpenInventory().getTopInventory();
-                if (inv.getViewers().size() == 1) {
-                    VaultViewInfo info = getInVault().get(p.getName());
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (this.inVault.containsKey(player.getName())) {
+                Inventory inventory = player.getOpenInventory().getTopInventory();
+                if (inventory.getViewers().size() == 1) {
+                    VaultViewInfo info = this.inVault.get(player.getName());
                     try {
-                        UUIDVaultManager.getInstance().saveVault(inv, p.getUniqueId(), info.getNumber());
+                        UUIDVaultManager.getInstance().saveVault(inventory, player.getUniqueId(), info.getNumber());
                     } catch (IOException e) {
+                        // ignore
                     }
-                    getOpenInventories().remove(info.toString());
+
+                    this.openInventories.remove(info.toString());
                 }
-                getInVault().remove(p.getName());
+
+                this.inVault.remove(player.getName());
             }
-            p.closeInventory();
+
+            player.closeInventory();
         }
     }
 
@@ -125,7 +127,7 @@ public class PlayerVaults extends JavaPlugin {
         if (getConfig().getBoolean("check-update", true)) {
             final PlayerVaults plugin = this;
             final File file = this.getFile();
-            final Updater.UpdateType updateType = (getConfig().getBoolean("download-update", true) ? Updater.UpdateType.DEFAULT : Updater.UpdateType.NO_DOWNLOAD);
+            final Updater.UpdateType updateType = getConfig().getBoolean("download-update", true) ? Updater.UpdateType.DEFAULT : Updater.UpdateType.NO_DOWNLOAD;
             getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
                 @Override
                 public void run() {
@@ -146,13 +148,15 @@ public class PlayerVaults extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
         }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
+
+        RegisteredServiceProvider<Economy> provider = getServer().getServicesManager().getRegistration(Economy.class);
+        if (provider == null) {
             return false;
         }
-        econ = rsp.getProvider();
-        useVault = true;
-        return econ != null;
+
+        economy = provider.getProvider();
+
+        return economy != null;
     }
 
     private void loadConfig() {
@@ -280,12 +284,14 @@ public class PlayerVaults extends JavaPlugin {
                 }
             }
         }
+
         YamlConfiguration conf = YamlConfiguration.loadConfiguration(lang);
         for (Lang item : Lang.values()) {
             if (conf.getString(item.getPath()) == null) {
                 conf.set(item.getPath(), item.getDefault());
             }
         }
+
         Lang.setFile(conf);
         try {
             conf.save(lang);
@@ -321,11 +327,22 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     public Economy getEconomy() {
-        return econ;
+        return this.economy;
+    }
+
+    public boolean isEconomyEnabled() {
+        return this.getConfig().getBoolean("economy.enabled", false) && this.useVault;
     }
 
     public File getVaultData() {
         return new File(this.getDataFolder(), "uuidvaults");
+    }
+
+    public File getBackupsFolder() {
+        File folder = new File(this.getVaultData(), "backups");
+        folder.mkdirs();
+
+        return folder;
     }
 
     public static PlayerVaults getInstance() {

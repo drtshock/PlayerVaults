@@ -1,13 +1,13 @@
 name: PlayerVaults
 main: com.drtshock.playervaults.PlayerVaults
-authors: [drtshock, gomeow, Chester]
+authors: [drtshock, Koalaaaa]
 version: ${project.version}
 website: http://dev.bukkit.org/server-mods/PlayerVaults
 softdepend: [Vault]
 commands:
   pv:
     description: Open a vault with /pv <number>
-    aliases: ['vault', 'chest', 'playervaults']
+    aliases: [vault, chest, playervaults]
   pvdel:
     description: Delete a vault.
     aliases: [vaultdel]
