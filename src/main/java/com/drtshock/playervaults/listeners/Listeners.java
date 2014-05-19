@@ -166,7 +166,7 @@ public class Listeners implements Listener {
                         if (!self) {
                             owner = PlayerVaults.getInstance().getSigns().getString(world + ";;" + x + ";;" + y + ";;" + z + ".owner");
                         }
-                        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(owner);
+                        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(owner != null ? owner : event.getPlayer().getName()); // Not best way but :\
                         if (offlinePlayer == null) {
                             player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
                             return;
