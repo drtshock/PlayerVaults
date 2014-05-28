@@ -16,11 +16,7 @@
  */
 package com.drtshock.playervaults;
 
-import com.drtshock.playervaults.commands.DeleteCommand;
-import com.drtshock.playervaults.commands.SignCommand;
-import com.drtshock.playervaults.commands.SignSetInfo;
-import com.drtshock.playervaults.commands.VaultCommand;
-import com.drtshock.playervaults.commands.WorkbenchCommand;
+import com.drtshock.playervaults.commands.*;
 import com.drtshock.playervaults.listeners.Listeners;
 import com.drtshock.playervaults.tasks.Cleanup;
 import com.drtshock.playervaults.tasks.UUIDConversion;
