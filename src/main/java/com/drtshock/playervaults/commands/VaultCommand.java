@@ -46,8 +46,6 @@ public class VaultCommand implements CommandExecutor {
 
                             sender.sendMessage(Lang.TITLE.toString() + Lang.EXISTING_VAULTS.toString().replaceAll("%p", args[0]).replaceAll("%v", sb.toString().trim()));
                         }
-                    } else {
-                        sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER.toString());
                     }
                     break;
                 case 2:

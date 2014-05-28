@@ -82,6 +82,7 @@ public class VaultOperations {
                 return false;
             }
         } catch (NumberFormatException nfe) {
+            player.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER.toString());
             return false;
         }
 

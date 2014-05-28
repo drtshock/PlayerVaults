@@ -102,6 +102,7 @@ public class PlayerVaults extends JavaPlugin {
 
     @Override
     public void onDisable() {
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (this.inVault.containsKey(player.getName())) {
                 Inventory inventory = player.getOpenInventory().getTopInventory();
