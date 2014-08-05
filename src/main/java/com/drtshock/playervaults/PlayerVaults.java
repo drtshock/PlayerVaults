@@ -55,10 +55,17 @@ public class PlayerVaults extends JavaPlugin {
     private File signsFile;
     private boolean saveQueued;
     private String name = "";
+    private File configFile;
+    private File backupsFolder;
+    private File vaultData;
 
     @Override
     public void onEnable() {
         instance = this;
+        backupsFolder = new File(this.getVaultData(), "backups");
+        backupsFolder.mkdirs();
+        configFile = new File(getDataFolder(), "config.yml");
+        vaultData = new File(this.getDataFolder(), "uuidvaults");
         getServer().getScheduler().runTask(this, new UUIDConversion()); // Convert to UUID first. Class checks if necessary.
         loadLang();
         new UUIDVaultManager();
@@ -168,8 +175,7 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     private void loadConfig() {
-        File config = new File(getDataFolder() + File.separator + "config.yml");
-        if (!config.exists()) {
+        if (!configFile.exists()) {
             saveDefaultConfig();
         } else {
             updateConfig();
@@ -226,7 +232,6 @@ public class PlayerVaults extends JavaPlugin {
         int ecoDelete = getConfig().getInt("economy.refund-on-delete", 50);
         boolean dropEnabled = getConfig().getBoolean("drop-on-death.enabled", false);
         int dropInvs = getConfig().getInt("drop-on-death.inventories", 50);
-        File configFile = new File(getDataFolder(), "config.yml");
         configFile.delete();
         YamlConfiguration conf = YamlConfiguration.loadConfiguration(getResource("config.yml"));
         setInConfig("check-update", checkUpdate, conf);
@@ -348,14 +353,11 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     public File getVaultData() {
-        return new File(this.getDataFolder(), "uuidvaults");
+        return this.vaultData;
     }
 
     public File getBackupsFolder() {
-        File folder = new File(this.getVaultData(), "backups");
-        folder.mkdirs();
-
-        return folder;
+        return this.backupsFolder;
     }
 
     public static PlayerVaults getInstance() {
