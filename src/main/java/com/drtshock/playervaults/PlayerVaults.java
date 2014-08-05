@@ -136,10 +136,10 @@ public class PlayerVaults extends JavaPlugin {
             final PlayerVaults plugin = this;
             final File file = this.getFile();
             final Updater.UpdateType updateType = getConfig().getBoolean("download-update", true) ? Updater.UpdateType.DEFAULT : Updater.UpdateType.NO_DOWNLOAD;
+            final Updater updater = new Updater(plugin, 50123, file, updateType, false);
             getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
                 @Override
                 public void run() {
-                    Updater updater = new Updater(plugin, 50123, file, updateType, false);
                     update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
                     name = updater.getLatestName();
                     if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
