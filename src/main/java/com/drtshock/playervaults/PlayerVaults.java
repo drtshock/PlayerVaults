@@ -53,6 +53,7 @@ public class PlayerVaults extends JavaPlugin {
     private int inventoriesToDrop = 0;
     private YamlConfiguration signs;
     private File signsFile;
+    private boolean saveQueued;
     private String name = "";
 
     @Override
@@ -80,6 +81,15 @@ public class PlayerVaults extends JavaPlugin {
         if (getConfig().getBoolean("cleanup.enable", false)) {
             getServer().getScheduler().runTaskAsynchronously(this, new Cleanup(getConfig().getInt("cleanup.lastEdit", 30)));
         }
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (saveQueued) {
+                    saveSignsFile();
+                }
+            }
+        }.runTaskTimer(this, 20, 20);
     }
 
     private void startMetrics() {
@@ -118,6 +128,7 @@ public class PlayerVaults extends JavaPlugin {
 
             player.closeInventory();
         }
+        saveSignsFile();
     }
 
     protected void checkUpdate() {
@@ -193,6 +204,11 @@ public class PlayerVaults extends JavaPlugin {
      * Save the signs.yml file.
      */
     public void saveSigns() {
+        saveQueued = true;
+    }
+
+    private void saveSignsFile() {
+        saveQueued = false;
         try {
             signs.save(this.signsFile);
         } catch (IOException e) {
