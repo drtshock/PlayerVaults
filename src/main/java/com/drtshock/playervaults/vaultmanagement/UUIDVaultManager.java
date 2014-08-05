@@ -187,7 +187,7 @@ public class UUIDVaultManager {
      */
     public void deleteVault(CommandSender sender, UUID holder, int number) throws IOException {
         String name = holder.toString();
-        File file = new File(directory, name.toLowerCase() + ".yml");
+        File file = new File(directory, holder.toString() + ".yml");
         if (!file.exists()) {
             return;
         }
