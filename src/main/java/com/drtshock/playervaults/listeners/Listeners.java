@@ -21,13 +21,19 @@ import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
-import org.bukkit.*;
+import java.io.IOException;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -38,12 +44,10 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 
-import java.io.IOException;
-
 public class Listeners implements Listener {
 
     public PlayerVaults plugin;
-    UUIDVaultManager vm = UUIDVaultManager.getInstance();
+    private UUIDVaultManager vm = UUIDVaultManager.getInstance();
 
     public Listeners(PlayerVaults playerVaults) {
         this.plugin = playerVaults;
@@ -66,17 +70,17 @@ public class Listeners implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority= EventPriority.HIGHEST, ignoreCancelled = true)
     public void onTeleport(PlayerTeleportEvent event) {
         saveVault(event.getPlayer());
     }
 
-    @EventHandler
+    @EventHandler(priority= EventPriority.HIGHEST)
     public void onQuit(PlayerQuitEvent event) {
         saveVault(event.getPlayer());
     }
 
-    @EventHandler
+    @EventHandler(priority= EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (PlayerVaults.getInstance().needsUpdate() && (player.isOp() || player.hasPermission("playervaults.notify"))) {
@@ -85,12 +89,12 @@ public class Listeners implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority= EventPriority.HIGHEST)
     public void onDeath(PlayerDeathEvent event) {
         saveVault(event.getEntity());
     }
 
-    @EventHandler
+    @EventHandler(priority= EventPriority.HIGHEST)
     public void onClose(InventoryCloseEvent event) {
         HumanEntity he = event.getPlayer();
         if (he instanceof Player) {
@@ -98,7 +102,7 @@ public class Listeners implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority= EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -189,17 +193,17 @@ public class Listeners implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority= EventPriority.HIGHEST, ignoreCancelled= true)
     public void onBlockPhysics(BlockPhysicsEvent event) {
         blockChangeCheck(event.getBlock().getLocation());
     }
 
-    @EventHandler
+    @EventHandler(priority= EventPriority.HIGHEST, ignoreCancelled= true)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
         blockChangeCheck(event.getBlock().getLocation());
     }
 
-    @EventHandler
+    @EventHandler(priority= EventPriority.HIGHEST, ignoreCancelled= true)
     public void onBlockBreak(BlockBreakEvent event) {
         blockChangeCheck(event.getBlock().getLocation());
     }
@@ -220,7 +224,7 @@ public class Listeners implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority= EventPriority.HIGHEST, ignoreCancelled= true)
     public void onInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         EntityType type = event.getRightClicked().getType();
