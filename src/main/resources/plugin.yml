@@ -17,3 +17,6 @@ commands:
   workbench:
     description: Opens a workbench.
     aliases: [wb]
+  pvconvert:
+    description: Convert other plugins to PlayerVaults
+    aliases: [vaultconvert]
