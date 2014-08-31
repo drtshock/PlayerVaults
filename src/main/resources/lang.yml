@@ -3,6 +3,7 @@
 # %v is where the vault number will get inserted.
 # %price is the price.
 # %number is the vault number
+# %converted is the number of vaults converted (where applicable)
 # Made with love :)
 title-name: "&4[&fPlayerVaults&4]:"
 open-vault: "&fOpening vault &a%v"
@@ -21,3 +22,5 @@ cost-to-open: "&fYou were charged &c%price &ffor opening that vault."
 vault-number: "&4Vault #%number"
 existing-vaults: "&f%p has vaults: &a%v"
 no-player-found: "&cCannot find player &a%p"
+plugin-not-found: "&cNo converter found for that plugin"
+conversion-complete: "&aConverted %converted players to PlayerVaults"

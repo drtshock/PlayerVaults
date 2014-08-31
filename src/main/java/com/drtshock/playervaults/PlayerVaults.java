@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2013 drtshock
  *
  * This program is free software: you can redistribute it and/or modify
@@ -77,6 +77,7 @@ public class PlayerVaults extends JavaPlugin {
         getCommand("pvdel").setExecutor(new DeleteCommand());
         getCommand("pvsign").setExecutor(new SignCommand());
         getCommand("workbench").setExecutor(new WorkbenchCommand());
+        getCommand("pvconvert").setExecutor(new ConvertCommand());
         useVault = setupEconomy();
         startMetrics();
 

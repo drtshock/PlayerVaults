@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2013 drtshock
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,7 +45,9 @@ public enum Lang {
     EXISTING_VAULTS("existing-vaults", "&f%p has vaults: &a%v"),
     VAULT_TITLE("vault-title", "&4Vault #%number"),
     OPEN_WITH_SIGN("open-with-sign", "&fOpening vault &a%v &fof &a%p"),
-    NO_PLAYER_FOUND("no-player-found", "&cCannot find player &a%p");
+    NO_PLAYER_FOUND("no-player-found", "&cCannot find player &a%p"),
+    CONVERT_PLUGIN_NOT_FOUND("plugin-not-found", "&cNo converter found for that plugin"),
+    CONVERT_COMPLETE("conversion-complete", "&aConverted %converted players to PlayerVaults");
 
     private String path;
     private String def;
