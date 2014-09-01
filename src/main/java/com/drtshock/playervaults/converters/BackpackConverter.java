@@ -24,7 +24,7 @@ public class BackpackConverter implements Converter {
 
     @Override
     public int run(CommandSender initiator, ServiceProvider uuidProvider) {
-        if(uuidProvider == null)throw new IllegalArgumentException();
+        if (uuidProvider == null) throw new IllegalArgumentException();
 
         PlayerVaults plugin = PlayerVaults.getInstance();
         File destination = new File(plugin.getDataFolder().getParentFile(), "Backpack" + File.separator + "backpacks");
@@ -52,37 +52,43 @@ public class BackpackConverter implements Converter {
         File[] files = worldFolder.listFiles();
         for (File file : files != null ? files : new File[0]) {
             if (file.isFile() && file.getName().toLowerCase().endsWith(".yml")) {
-                PlayerRecord player = uuidProvider.doLookup(file.getName().substring(0,file.getName().lastIndexOf('.')));
-                if (player == null || player.getUuid() == null) {
-                    plugin.getLogger().warning("Unable to convert Backpack for player: " + (player != null ? player.getName() : file.getName()));
-                } else {
-                    UUID uuid = player.getUuid();
-                    FileConfiguration yaml = YamlConfiguration.loadConfiguration(file);
-                    ConfigurationSection section = yaml.getConfigurationSection("backpack");
-                    if (section.getKeys(false).size() <= 0) continue; // No slots
+                try {
+                    PlayerRecord player = uuidProvider.doLookup(file.getName().substring(0, file.getName().lastIndexOf('.')));
+                    if (player == null || player.getUuid() == null) {
+                        plugin.getLogger().warning("Unable to convert Backpack for player: " + (player != null ? player.getName() : file.getName()));
+                    } else {
+                        UUID uuid = player.getUuid();
+                        FileConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+                        ConfigurationSection section = yaml.getConfigurationSection("backpack");
+                        if (section.getKeys(false).size() <= 0) continue; // No slots
 
-                    Inventory vault = vaults.getVault(uuid, intoVaultNum);
-                    if (vault == null) vault = plugin.getServer().createInventory(null, section.getKeys(false).size());
-                    for (String key : section.getKeys(false)) {
-                        ConfigurationSection slotSection = section.getConfigurationSection(key);
-                        ItemStack item = slotSection.getItemStack("ItemStack");
-                        if (item == null) continue;
+                        Inventory vault = vaults.getVault(uuid, intoVaultNum);
+                        if (vault == null)
+                            vault = plugin.getServer().createInventory(null, section.getKeys(false).size());
+                        for (String key : section.getKeys(false)) {
+                            ConfigurationSection slotSection = section.getConfigurationSection(key);
+                            ItemStack item = slotSection.getItemStack("ItemStack");
+                            if (item == null) continue;
 
-                        // Overwrite
-                        vault.setItem(Integer.parseInt(key.split(" ")[1]), item);
-                    }
-                    try {
-                        vaults.saveVault(vault, uuid, intoVaultNum);
-                        converted++;
-                    } catch (IOException e) {
-                        plugin.getLogger().severe("Error converting Backpack: " + file.getName());
-                        e.printStackTrace();
-                    }
+                            // Overwrite
+                            vault.setItem(Integer.parseInt(key.split(" ")[1]), item);
+                        }
+                        try {
+                            vaults.saveVault(vault, uuid, intoVaultNum);
+                            converted++;
+                        } catch (IOException e) {
+                            plugin.getLogger().severe("Error converting Backpack: " + file.getName());
+                            e.printStackTrace();
+                        }
 
-                    if (System.currentTimeMillis() - lastUpdate >= 1500) {
-                        plugin.getLogger().info(converted + " backpacks have been converted in " + worldFolder.getAbsolutePath());
-                        lastUpdate = System.currentTimeMillis();
+                        if (System.currentTimeMillis() - lastUpdate >= 1500) {
+                            plugin.getLogger().info(converted + " backpacks have been converted in " + worldFolder.getAbsolutePath());
+                            lastUpdate = System.currentTimeMillis();
+                        }
                     }
+                } catch (Exception e) {
+                    plugin.getLogger().warning("Error converting " + file.getAbsolutePath());
+                    e.printStackTrace();
                 }
             }
         }
