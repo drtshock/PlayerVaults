@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2013 drtshock
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,16 +16,52 @@
  */
 package com.drtshock.playervaults.vaultmanagement;
 
+import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VaultOperations {
+
+    private static AtomicBoolean LOCKED = new AtomicBoolean(false);
+
+    /**
+     * Gets whether or not player vaults are locked
+     *
+     * @return true if locked, false otherwise
+     */
+    public static boolean isLocked() {
+        return LOCKED.get();
+    }
+
+    /**
+     * Sets whether or not player vaults are locked. If set to true, this
+     * will kick anyone who is currently using their vaults out.
+     *
+     * @param locked true for locked, false otherwise
+     */
+    public static void setLocked(boolean locked) {
+        LOCKED.set(locked);
+
+        if (locked) {
+            for (Player player : PlayerVaults.getInstance().getServer().getOnlinePlayers()) {
+                if (player.getOpenInventory() != null) {
+                    InventoryView view = player.getOpenInventory();
+                    if (view.getTopInventory().getHolder() instanceof VaultHolder) {
+                        player.closeInventory();
+                        player.sendMessage(Lang.TITLE + Lang.LOCKED.toString());
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Check whether or not the player has permission to open the requested vault.
@@ -70,11 +106,12 @@ public class VaultOperations {
      * Open a player's own vault.
      *
      * @param player The player to open to.
-     * @param arg The vault number to open.
+     * @param arg    The vault number to open.
      *
      * @return Whether or not the player was allowed to open it.
      */
     public static boolean openOwnVault(Player player, String arg) {
+        if (isLocked()) return false;
         int number;
         try {
             number = Integer.parseInt(arg);
@@ -107,11 +144,12 @@ public class VaultOperations {
      *
      * @param player The player to open to.
      * @param holder The user to whom the requested vault belongs.
-     * @param arg The vault number to open.
+     * @param arg    The vault number to open.
      *
      * @return Whether or not the player was allowed to open it.
      */
     public static boolean openOtherVault(Player player, Player holder, String arg) {
+        if (isLocked()) return false;
         if (player.hasPermission("playervaults.admin")) {
             int number = 0;
             try {
@@ -140,9 +178,10 @@ public class VaultOperations {
      * Delete a player's own vault.
      *
      * @param player The player to delete.
-     * @param arg The vault number to delete.
+     * @param arg    The vault number to delete.
      */
     public static void deleteOwnVault(Player player, String arg) {
+        if (isLocked()) return;
         if (arg.matches("^[0-9]{1,2}$")) {
             int number = 0;
             try {
@@ -172,9 +211,10 @@ public class VaultOperations {
      *
      * @param sender The sender executing the deletion.
      * @param holder The user to whom the deleted vault belongs.
-     * @param arg The vault number to delete.
+     * @param arg    The vault number to delete.
      */
     public static void deleteOtherVault(CommandSender sender, Player holder, String arg) {
+        if (isLocked()) return;
         if (sender.hasPermission("playervaults.delete")) {
             if (arg.matches("^[0-9]{1,2}$")) {
                 int number = 0;

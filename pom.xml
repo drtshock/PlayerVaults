@@ -33,6 +33,32 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>com.turt2live:UUID-Library</include>
+                                </includes>
+                            </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.turt2live.uuid</pattern>
+                                    <shadedPattern>com.drtshock.playervaults.lib.uuid</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -44,6 +70,10 @@
         <repository>
             <id>vault-repo</id>
             <url>http://nexus.theyeticave.net/content/repositories/pub_releases/</url>
+        </repository>
+        <repository>
+            <id>turt2live-repo</id>
+            <url>http://repo.turt2live.com</url>
         </repository>
     </repositories>
 
@@ -57,6 +87,11 @@
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>Vault</artifactId>
             <version>1.2.32</version>
+        </dependency>
+        <dependency>
+            <groupId>com.turt2live</groupId>
+            <artifactId>UUID-Library</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

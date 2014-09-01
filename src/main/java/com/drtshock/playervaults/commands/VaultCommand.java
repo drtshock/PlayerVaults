@@ -17,6 +17,11 @@ import org.bukkit.entity.Player;
 public class VaultCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if(VaultOperations.isLocked()){
+            sender.sendMessage(Lang.TITLE+Lang.LOCKED.toString());
+            return true;
+        }
+
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (PlayerVaults.getInstance().getInVault().containsKey(player.getName())) {

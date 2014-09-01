@@ -2,7 +2,9 @@ package com.drtshock.playervaults.converters;
 
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
-import org.bukkit.OfflinePlayer;
+import com.turt2live.uuid.PlayerRecord;
+import com.turt2live.uuid.ServiceProvider;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -21,7 +23,9 @@ import java.util.UUID;
 public class BackpackConverter implements Converter {
 
     @Override
-    public int doConvert() {
+    public int run(CommandSender initiator, ServiceProvider uuidProvider) {
+        if(uuidProvider == null)throw new IllegalArgumentException();
+
         PlayerVaults plugin = PlayerVaults.getInstance();
         File destination = new File(plugin.getDataFolder().getParentFile(), "Backpack" + File.separator + "backpacks");
         if (!destination.exists()) return -1;
@@ -32,7 +36,7 @@ public class BackpackConverter implements Converter {
         int vaultNum = 1;
         for (File file : worldDirs != null ? worldDirs : new File[0]) {
             if (file.isDirectory()) {
-                converted += convert(file, vaultNum);
+                converted += convert(file, vaultNum, uuidProvider);
                 vaultNum++;
             }
         }
@@ -40,18 +44,19 @@ public class BackpackConverter implements Converter {
         return converted;
     }
 
-    private int convert(File worldFolder, int intoVaultNum) {
+    private int convert(File worldFolder, int intoVaultNum, ServiceProvider uuidProvider) {
         PlayerVaults plugin = PlayerVaults.getInstance();
         UUIDVaultManager vaults = UUIDVaultManager.getInstance();
         int converted = 0;
+        long lastUpdate = 0;
         File[] files = worldFolder.listFiles();
         for (File file : files != null ? files : new File[0]) {
             if (file.isFile() && file.getName().toLowerCase().endsWith(".yml")) {
-                OfflinePlayer player = plugin.getServer().getOfflinePlayer(file.getName().substring(0, file.getName().lastIndexOf('.')));
-                if (player == null || player.getUniqueId() == null) {
+                PlayerRecord player = uuidProvider.doLookup(file.getName().substring(0,file.getName().lastIndexOf('.')));
+                if (player == null || player.getUuid() == null) {
                     plugin.getLogger().warning("Unable to convert Backpack for player: " + (player != null ? player.getName() : file.getName()));
                 } else {
-                    UUID uuid = player.getUniqueId();
+                    UUID uuid = player.getUuid();
                     FileConfiguration yaml = YamlConfiguration.loadConfiguration(file);
                     ConfigurationSection section = yaml.getConfigurationSection("backpack");
                     if (section.getKeys(false).size() <= 0) continue; // No slots
@@ -72,6 +77,11 @@ public class BackpackConverter implements Converter {
                     } catch (IOException e) {
                         plugin.getLogger().severe("Error converting Backpack: " + file.getName());
                         e.printStackTrace();
+                    }
+
+                    if (System.currentTimeMillis() - lastUpdate >= 1500) {
+                        plugin.getLogger().info(converted + " backpacks have been converted in " + worldFolder.getAbsolutePath());
+                        lastUpdate = System.currentTimeMillis();
                     }
                 }
             }

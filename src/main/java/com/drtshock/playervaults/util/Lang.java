@@ -47,7 +47,9 @@ public enum Lang {
     OPEN_WITH_SIGN("open-with-sign", "&fOpening vault &a%v &fof &a%p"),
     NO_PLAYER_FOUND("no-player-found", "&cCannot find player &a%p"),
     CONVERT_PLUGIN_NOT_FOUND("plugin-not-found", "&cNo converter found for that plugin"),
-    CONVERT_COMPLETE("conversion-complete", "&aConverted %converted players to PlayerVaults");
+    CONVERT_COMPLETE("conversion-complete", "&aConverted %converted players to PlayerVaults"),
+    CONVERT_BACKGROUND("conversion-background", "&fConversion has been forked to the background. See console for updates."),
+    LOCKED("vaults-locked", "&cVaults are currently locked while conversion occurs. Please try again in a moment!");
 
     private String path;
     private String def;
