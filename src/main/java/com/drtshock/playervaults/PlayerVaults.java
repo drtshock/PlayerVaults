@@ -21,7 +21,6 @@ import com.drtshock.playervaults.listeners.Listeners;
 import com.drtshock.playervaults.tasks.Cleanup;
 import com.drtshock.playervaults.tasks.UUIDConversion;
 import com.drtshock.playervaults.util.Lang;
-import com.drtshock.playervaults.util.Metrics;
 import com.drtshock.playervaults.util.Updater;
 import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
@@ -79,7 +78,6 @@ public class PlayerVaults extends JavaPlugin {
         getCommand("workbench").setExecutor(new WorkbenchCommand());
         getCommand("pvconvert").setExecutor(new ConvertCommand());
         useVault = setupEconomy();
-        startMetrics();
 
         if (getConfig().getBoolean("drop-on-death.enabled")) {
             dropOnDeath = true;
@@ -98,20 +96,6 @@ public class PlayerVaults extends JavaPlugin {
                 }
             }
         }.runTaskTimer(this, 20, 20);
-    }
-
-    private void startMetrics() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try {
-                    Metrics metrics = new Metrics(PlayerVaults.this);
-                    metrics.start();
-                } catch (IOException ex) {
-                    getLogger().warning("Failed to load metrics :(");
-                }
-            }
-        }.runTaskAsynchronously(this);
     }
 
     @Override
