@@ -8,7 +8,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class to convert vaults by name to vaults by UUID.
@@ -16,36 +16,41 @@ import java.util.logging.Level;
 public final class UUIDConversion extends BukkitRunnable {
     @Override
     public void run() {
+        Logger logger = PlayerVaults.getInstance().getLogger();
+
         File newDir = PlayerVaults.getInstance().getVaultData();
         if (newDir.exists()) {
-            PlayerVaults.getInstance().getLogger().log(Level.INFO, "Files already converted to UUID.");
+            logger.info("** Vaults have already been converted to UUIDs. If this is incorrect, shutdown your server and rename the " + newDir.toString() + " directory.");
             return;
         }
 
         newDir.mkdirs();
 
-        PlayerVaults.getInstance().getLogger().log(Level.INFO, "********** Starting PlayerVault conversion to UUIDs **********");
-        PlayerVaults.getInstance().getLogger().log(Level.INFO, "This might take awhile.");
-        PlayerVaults.getInstance().getLogger().log(Level.INFO, "plugins/PlayerVaults/vaults will remain as a backup.");
+        File oldVaults = new File(PlayerVaults.getInstance().getDataFolder() + File.separator + "vaults");
+        if (oldVaults.exists()) {
+            logger.info("********** Starting conversion to UUIDs **********");
+            logger.info("This might take awhile.");
+            logger.info(oldVaults.toString() + " will remain as a backup.");
 
-        for (File file : new File(PlayerVaults.getInstance().getDataFolder() + File.separator + "vaults").listFiles()) {
-            if (file.isDirectory()) continue; // backups folder.
-            OfflinePlayer player = Bukkit.getOfflinePlayer(file.getName().replace(".yml", ""));
-            if (player == null) {
-                PlayerVaults.getInstance().getLogger().log(Level.WARNING, "Unable to convert file because player never joined the server: " + file.getName());
-                break;
+            for (File file : oldVaults.listFiles()) {
+                if (file.isDirectory()) continue; // backups folder.
+                OfflinePlayer player = Bukkit.getOfflinePlayer(file.getName().replace(".yml", ""));
+                if (player == null) {
+                    logger.warning("Unable to convert file because player never joined the server: " + file.getName());
+                    break;
+                }
+
+                File newFile = new File(PlayerVaults.getInstance().getVaultData(), player.getUniqueId().toString() + ".yml");
+                file.mkdirs();
+                try {
+                    Files.copy(file, newFile);
+                    logger.info("Successfully converted vault file for " + player.getName());
+                } catch (IOException e) {
+                    logger.severe("Couldn't convert vault file for " + player.getName());
+                }
             }
 
-            File newFile = new File(PlayerVaults.getInstance().getVaultData(), player.getUniqueId().toString() + ".yml");
-            file.mkdirs();
-            try {
-                Files.copy(file, newFile);
-                PlayerVaults.getInstance().getLogger().log(Level.INFO, "Successfully converted vault file for " + player.getName());
-            } catch (IOException e) {
-                PlayerVaults.getInstance().getLogger().log(Level.SEVERE, "Couldn't convert vault file for " + player.getName());
-            }
+            logger.info("********** Conversion done ;D **********");
         }
-
-        PlayerVaults.getInstance().getLogger().log(Level.INFO, "********** Conversion done ;D **********");
     }
 }

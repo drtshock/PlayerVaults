@@ -55,17 +55,15 @@ public class PlayerVaults extends JavaPlugin {
     private boolean saveQueued;
     private String name = "";
     private File configFile;
-    private File backupsFolder;
+    private File backupsFolder = null;
     private File vaultData;
 
     @Override
     public void onEnable() {
         instance = this;
-        backupsFolder = new File(this.getVaultData(), "backups");
-        backupsFolder.mkdirs();
         configFile = new File(getDataFolder(), "config.yml");
         vaultData = new File(this.getDataFolder(), "uuidvaults");
-        getServer().getScheduler().runTask(this, new UUIDConversion()); // Convert to UUID first. Class checks if necessary.
+        getServer().getScheduler().runTask(this, new UUIDConversion()); // Convert to UUIDs first. Class checks if necessary.
         loadLang();
         new UUIDVaultManager();
         getServer().getPluginManager().registerEvents(new Listeners(this), this);
@@ -100,7 +98,6 @@ public class PlayerVaults extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (this.inVault.containsKey(player.getName())) {
                 Inventory inventory = player.getOpenInventory().getTopInventory();
@@ -342,6 +339,12 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     public File getBackupsFolder() {
+        // having this in #onEnable() creates the 'uuidvaults' directory, preventing the conversion from running
+        if (this.backupsFolder == null) {
+            this.backupsFolder = new File(this.getVaultData(), "backups");
+            this.backupsFolder.mkdirs();
+        }
+
         return this.backupsFolder;
     }
 
