@@ -33,6 +33,7 @@ import java.util.List;
 /**
  * A class for managing actual IO to the files, loading inventories, and saving them.
  */
+@Deprecated
 public class VaultManager {
 
     public PlayerVaults plugin;
@@ -260,7 +261,7 @@ public class VaultManager {
     @Deprecated
     public void saveFile(String holder, YamlConfiguration yaml) throws IOException {
         File file = new File(directory + File.separator + holder.toLowerCase() + ".yml");
-        if (file.exists()) {
+        if (file.exists() && PlayerVaults.getInstance().isBackupsEnabled()) {
             file.renameTo(new File(PlayerVaults.getInstance().getBackupsFolder(), holder.toLowerCase() + ".yml"));
         }
         yaml.save(file);

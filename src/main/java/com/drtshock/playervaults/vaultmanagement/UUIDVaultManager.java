@@ -239,7 +239,7 @@ public class UUIDVaultManager {
      */
     public void saveFile(UUID holder, YamlConfiguration yaml) throws IOException {
         File file = new File(directory, holder.toString() + ".yml");
-        if (file.exists()) {
+        if (file.exists() && PlayerVaults.getInstance().isBackupsEnabled()) {
             file.renameTo(new File(PlayerVaults.getInstance().getBackupsFolder(), holder.toString() + ".yml"));
         }
         yaml.save(file);

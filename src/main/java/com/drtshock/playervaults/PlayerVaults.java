@@ -55,6 +55,7 @@ public class PlayerVaults extends JavaPlugin {
     private boolean saveQueued;
     private String name = "";
     private File configFile;
+    private boolean backupsEnabled;
     private File backupsFolder = null;
     private File vaultData;
 
@@ -68,6 +69,7 @@ public class PlayerVaults extends JavaPlugin {
         new UUIDVaultManager();
         getServer().getPluginManager().registerEvents(new Listeners(this), this);
         loadConfig();
+        this.backupsEnabled = this.getConfig().getBoolean("backups.enabled", true);
         loadSigns();
         checkUpdate();
         getCommand("pv").setExecutor(new VaultCommand());
@@ -214,6 +216,7 @@ public class PlayerVaults extends JavaPlugin {
         int ecoDelete = getConfig().getInt("economy.refund-on-delete", 50);
         boolean dropEnabled = getConfig().getBoolean("drop-on-death.enabled", false);
         int dropInvs = getConfig().getInt("drop-on-death.inventories", 50);
+        boolean backupsEnabled = getConfig().getBoolean("backups.enabled", true);
         configFile.delete();
         YamlConfiguration conf = YamlConfiguration.loadConfiguration(getResource("config.yml"));
         setInConfig("check-update", checkUpdate, conf);
@@ -223,6 +226,7 @@ public class PlayerVaults extends JavaPlugin {
         setInConfig("economy.refund-on-delete", ecoDelete, conf);
         setInConfig("drop-on-death.enabled", dropEnabled, conf);
         setInConfig("drop-on-death.inventories", dropInvs, conf);
+        setInConfig("backups.enabled", backupsEnabled, conf);
         try {
             conf.save(configFile);
         } catch (IOException e) {
@@ -336,6 +340,10 @@ public class PlayerVaults extends JavaPlugin {
 
     public File getVaultData() {
         return this.vaultData;
+    }
+
+    public boolean isBackupsEnabled() {
+        return this.backupsEnabled;
     }
 
     public File getBackupsFolder() {

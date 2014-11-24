@@ -1,4 +1,4 @@
-# PlayerVaults by drsthock and gomeow!
+# PlayerVaults by https://github.com/drtshock/PlayerVaults/graphs/contributors
 # http://dev.bukkit.org/bukkit-plugins/playervaults/
 # Made with love :3
 
@@ -30,3 +30,7 @@ cleanup:
   # If a file hasn't been edited for this long, we'll clean it up.
   # Time is in days.
   lastEdit: 30
+
+backups:
+  # If you don't want any backups created change this to false.
+  enabled: true
