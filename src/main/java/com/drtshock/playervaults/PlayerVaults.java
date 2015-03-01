@@ -45,7 +45,6 @@ public class PlayerVaults extends JavaPlugin {
     private String link = "";
     private HashMap<String, SignSetInfo> setSign = new HashMap<>();
     private HashMap<String, VaultViewInfo> inVault = new HashMap<>();
-    private HashMap<String, Inventory> openInventories = new HashMap<>();
     private Economy economy = null;
     private boolean dropOnDeath = false;
     private boolean useVault = false;
@@ -111,7 +110,7 @@ public class PlayerVaults extends JavaPlugin {
                         // ignore
                     }
 
-                    this.openInventories.remove(info.toString());
+
                 }
 
                 this.inVault.remove(player.getName());
@@ -312,10 +311,6 @@ public class PlayerVaults extends JavaPlugin {
 
     public HashMap<String, VaultViewInfo> getInVault() {
         return this.inVault;
-    }
-
-    public HashMap<String, Inventory> getOpenInventories() {
-        return this.openInventories;
     }
 
     public boolean needsUpdate() {

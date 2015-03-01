@@ -87,31 +87,26 @@ public class VaultManager {
         }
         VaultViewInfo info = new VaultViewInfo(holder, number);
         Inventory inv;
-        if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
-            inv = PlayerVaults.getInstance().getOpenInventories().get(info.toString());
-        } else {
-            YamlConfiguration playerFile = getPlayerVaultFile(holder);
-            if (playerFile.getConfigurationSection("vault" + number) == null) {
-                VaultHolder vaultHolder = new VaultHolder(number);
-                Player player = Bukkit.getPlayer(holder);
-                if (player == null) {
-                    return null;
-                }
-                if (EconomyOperations.payToCreate(player)) {
-                    inv = Bukkit.createInventory(vaultHolder, size, Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", holder));
-                    vaultHolder.setInventory(inv);
-                } else {
-                    player.sendMessage(Lang.TITLE.toString() + Lang.INSUFFICIENT_FUNDS.toString());
-                    return null;
-                }
-            } else {
-                if (getInventory(playerFile, size, number) == null) {
-                    return null;
-                } else {
-                    inv = getInventory(playerFile, size, number);
-                }
+        YamlConfiguration playerFile = getPlayerVaultFile(holder);
+        if (playerFile.getConfigurationSection("vault" + number) == null) {
+            VaultHolder vaultHolder = new VaultHolder(number);
+            Player player = Bukkit.getPlayer(holder);
+            if (player == null) {
+                return null;
             }
-            PlayerVaults.getInstance().getOpenInventories().put(info.toString(), inv);
+            if (EconomyOperations.payToCreate(player)) {
+                inv = Bukkit.createInventory(vaultHolder, size, Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", holder));
+                vaultHolder.setInventory(inv);
+            } else {
+                player.sendMessage(Lang.TITLE.toString() + Lang.INSUFFICIENT_FUNDS.toString());
+                return null;
+            }
+        } else {
+            if (getInventory(playerFile, size, number) == null) {
+                return null;
+            } else {
+                inv = getInventory(playerFile, size, number);
+            }
         }
         return inv;
     }
@@ -129,20 +124,15 @@ public class VaultManager {
         }
         VaultViewInfo info = new VaultViewInfo(holder, number);
         Inventory inv;
-        if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
-            inv = PlayerVaults.getInstance().getOpenInventories().get(info.toString());
+        YamlConfiguration playerFile = getPlayerVaultFile(holder);
+        if (playerFile.getConfigurationSection("vault" + number) == null) {
+            return null;
         } else {
-            YamlConfiguration playerFile = getPlayerVaultFile(holder);
-            if (playerFile.getConfigurationSection("vault" + number) == null) {
+            if (getInventory(playerFile, size, number) == null) {
                 return null;
             } else {
-                if (getInventory(playerFile, size, number) == null) {
-                    return null;
-                } else {
-                    inv = getInventory(playerFile, size, number);
-                }
+                inv = getInventory(playerFile, size, number);
             }
-            PlayerVaults.getInstance().getOpenInventories().put(info.toString(), inv);
         }
         return inv;
     }
