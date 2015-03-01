@@ -59,8 +59,6 @@ public class Listeners implements Listener {
                 } catch (IOException e) {
                     // ignore
                 }
-
-                PlayerVaults.getInstance().getOpenInventories().remove(info.toString());
             }
             PlayerVaults.getInstance().getInVault().remove(player.getName());
         }
