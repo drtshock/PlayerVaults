@@ -172,7 +172,7 @@ public class VaultOperations {
             return false;
         }
         if (player.hasPermission("playervaults.admin")) {
-            if(!holder.hasPlayedBefore()) {
+            if (!holder.hasPlayedBefore()) {
                 player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
                 return false;
             }

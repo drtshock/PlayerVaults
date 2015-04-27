@@ -81,8 +81,8 @@ public class Listeners implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (PlayerVaults.getInstance().needsUpdate() && (player.isOp() || player.hasPermission("playervaults.notify"))) {
-            player.sendMessage(ChatColor.GREEN + "Version " + PlayerVaults.getInstance().getNewVersion() + " of PlayerVaults is available for download!");
-            player.sendMessage(ChatColor.GREEN + PlayerVaults.getInstance().getLink() + " to view the changelog and download!");
+            player.sendMessage(ChatColor.GREEN + "Version " + ChatColor.RED + PlayerVaults.getInstance().getNewVersion() + ChatColor.GREEN + " of PlayerVaults is available for download!");
+            player.sendMessage(ChatColor.GOLD + "http://dev.bukkit.org/pancakes/playervaults" + ChatColor.GREEN + " to view the changelog and download!");
         }
     }
 
@@ -114,10 +114,7 @@ public class Listeners implements Listener {
         if (PlayerVaults.getInstance().getSetSign().containsKey(player.getName())) {
             int i = PlayerVaults.getInstance().getSetSign().get(player.getName()).getChest();
             boolean self = PlayerVaults.getInstance().getSetSign().get(player.getName()).isSelf();
-            String owner = null;
-            if (!self) {
-                owner = PlayerVaults.getInstance().getSetSign().get(player.getName()).getOwner();
-            }
+            String owner = self ? null : PlayerVaults.getInstance().getSetSign().get(player.getName()).getOwner();
             PlayerVaults.getInstance().getSetSign().remove(player.getName());
             event.setCancelled(true);
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -164,7 +161,7 @@ public class Listeners implements Listener {
                         }
                         if (self) {
                             // We already checked that they can use signs, now lets check if they have this many vaults.
-                            if(VaultOperations.checkPerms(player, num)) {
+                            if (VaultOperations.checkPerms(player, num)) {
                                 Inventory inv = UUIDVaultManager.getInstance().loadOwnVault(player, num, VaultOperations.getMaxVaultSize(player));
                                 player.openInventory(inv);
                             } else {
@@ -173,7 +170,7 @@ public class Listeners implements Listener {
                             }
                         } else {
                             Inventory inv = UUIDVaultManager.getInstance().loadOtherVault(offlinePlayer.getUniqueId(), num, VaultOperations.getMaxVaultSize(offlinePlayer));
-                            if(inv == null) {
+                            if (inv == null) {
                                 player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
                             } else {
                                 player.openInventory(inv);

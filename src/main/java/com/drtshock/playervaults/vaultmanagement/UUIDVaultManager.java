@@ -87,7 +87,7 @@ public class UUIDVaultManager {
                 }
             } else {
                 Inventory i = getInventory(playerFile, size, number, title);
-                if(i == null) {
+                if (i == null) {
                     return null;
                 } else {
                     inv = i;
@@ -120,7 +120,7 @@ public class UUIDVaultManager {
                 return null;
             } else {
                 Inventory i = getInventory(playerFile, size, number, title);
-                if(i == null) {
+                if (i == null) {
                     return null;
                 } else {
                     inv = i;

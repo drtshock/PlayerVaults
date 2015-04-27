@@ -42,20 +42,16 @@ public class PlayerVaults extends JavaPlugin {
     private static PlayerVaults instance;
     private boolean update = false;
     private String newVersion = "";
-    private String link = "";
     private HashMap<String, SignSetInfo> setSign = new HashMap<>();
     // Player name - VaultViewInfo
     private HashMap<String, VaultViewInfo> inVault = new HashMap<>();
     // VaultViewInfo - Inventory
     private HashMap<String, Inventory> openInventories = new HashMap<>();
     private Economy economy = null;
-    private boolean dropOnDeath = false;
     private boolean useVault = false;
-    private int inventoriesToDrop = 0;
     private YamlConfiguration signs;
     private File signsFile;
     private boolean saveQueued;
-    private String name = "";
     private File configFile;
     private boolean backupsEnabled;
     private File backupsFolder = null;
@@ -80,11 +76,6 @@ public class PlayerVaults extends JavaPlugin {
         getCommand("workbench").setExecutor(new WorkbenchCommand());
         getCommand("pvconvert").setExecutor(new ConvertCommand());
         useVault = setupEconomy();
-
-        if (getConfig().getBoolean("drop-on-death.enabled")) {
-            dropOnDeath = true;
-            inventoriesToDrop = getConfig().getInt("drop-on-death.inventories");
-        }
 
         if (getConfig().getBoolean("cleanup.enable", false)) {
             getServer().getScheduler().runTaskAsynchronously(this, new Cleanup(getConfig().getInt("cleanup.lastEdit", 30)));
@@ -134,7 +125,7 @@ public class PlayerVaults extends JavaPlugin {
                 @Override
                 public void run() {
                     update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-                    name = updater.getLatestName();
+                    newVersion = updater.getLatestName();
                     if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
                         getLogger().log(Level.INFO, "Successfully updated PlayerVaults to version {0} for next restart!", updater.getLatestName());
                     } else if (updater.getResult() == Updater.UpdateResult.NO_UPDATE) {
@@ -156,7 +147,6 @@ public class PlayerVaults extends JavaPlugin {
         }
 
         economy = provider.getProvider();
-
         return economy != null;
     }
 
@@ -326,10 +316,6 @@ public class PlayerVaults extends JavaPlugin {
 
     public String getNewVersion() {
         return this.newVersion;
-    }
-
-    public String getLink() {
-        return this.link;
     }
 
     public Economy getEconomy() {
