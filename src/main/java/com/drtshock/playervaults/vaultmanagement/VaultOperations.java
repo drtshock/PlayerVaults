@@ -142,6 +142,23 @@ public class VaultOperations {
     }
 
     /**
+     * Open a player's own vault. If player is using a command, they'll need the required permission.
+     *
+     * @param player    The player to open to.
+     * @param arg       The vault number to open.
+     * @param isCommand - if player is opening via a command or not.
+     *
+     * @return Whether or not the player was allowed to open it.
+     */
+    public static boolean openOwnVault(Player player, String arg, boolean isCommand) {
+        if (isCommand && player.hasPermission("playervaults.commands.use")) {
+            return openOwnVault(player, arg);
+        }
+        player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS.toString());
+        return false;
+    }
+
+    /**
      * Open another player's vault.
      *
      * @param player The player to open to.
