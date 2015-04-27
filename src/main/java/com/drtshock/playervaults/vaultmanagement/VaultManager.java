@@ -33,8 +33,7 @@ import java.util.List;
 /**
  * A class for managing actual IO to the files, loading inventories, and saving them.
  */
-@Deprecated
-public class VaultManager {
+@Deprecated public class VaultManager {
 
     public PlayerVaults plugin;
 
@@ -48,8 +47,8 @@ public class VaultManager {
      * Saves the inventory to the specified player and vault number.
      *
      * @param inventory The inventory to be saved.
-     * @param player The player of whose file to save to.
-     * @param number The vault number.
+     * @param player    The player of whose file to save to.
+     * @param number    The vault number.
      *
      * @throws IOException Uh oh!
      */
@@ -151,8 +150,8 @@ public class VaultManager {
      * Get an inventory from file. Returns null if the inventory doesn't exist. SHOULD ONLY BE USED INTERNALLY
      *
      * @param playerFile the YamlConfiguration file.
-     * @param size the size of the vault.
-     * @param number the vault number.
+     * @param size       the size of the vault.
+     * @param number     the vault number.
      *
      * @return inventory if exists, otherwise null.
      */
@@ -254,7 +253,7 @@ public class VaultManager {
      * Save the players vault file.
      *
      * @param holder The vault holder of whose file to save.
-     * @param yaml The config to save.
+     * @param yaml   The config to save.
      *
      * @throws IOException Uh oh!
      */

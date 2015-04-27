@@ -24,11 +24,15 @@ public class BackpackConverter implements Converter {
 
     @Override
     public int run(CommandSender initiator, ServiceProvider uuidProvider) {
-        if (uuidProvider == null) throw new IllegalArgumentException();
+        if (uuidProvider == null) {
+            throw new IllegalArgumentException();
+        }
 
         PlayerVaults plugin = PlayerVaults.getInstance();
         File destination = new File(plugin.getDataFolder().getParentFile(), "Backpack" + File.separator + "backpacks");
-        if (!destination.exists()) return -1;
+        if (!destination.exists()) {
+            return -1;
+        }
 
         int converted = 0;
 
@@ -60,15 +64,20 @@ public class BackpackConverter implements Converter {
                         UUID uuid = player.getUuid();
                         FileConfiguration yaml = YamlConfiguration.loadConfiguration(file);
                         ConfigurationSection section = yaml.getConfigurationSection("backpack");
-                        if (section.getKeys(false).size() <= 0) continue; // No slots
+                        if (section.getKeys(false).size() <= 0) {
+                            continue; // No slots
+                        }
 
                         Inventory vault = vaults.getVault(uuid, intoVaultNum);
-                        if (vault == null)
+                        if (vault == null) {
                             vault = plugin.getServer().createInventory(null, section.getKeys(false).size());
+                        }
                         for (String key : section.getKeys(false)) {
                             ConfigurationSection slotSection = section.getConfigurationSection(key);
                             ItemStack item = slotSection.getItemStack("ItemStack");
-                            if (item == null) continue;
+                            if (item == null) {
+                                continue;
+                            }
 
                             // Overwrite
                             vault.setItem(Integer.parseInt(key.split(" ")[1]), item);
@@ -99,7 +108,9 @@ public class BackpackConverter implements Converter {
     public boolean canConvert() {
         PlayerVaults plugin = PlayerVaults.getInstance();
         File expectedFolder = new File(plugin.getDataFolder().getParentFile(), "Backpack");
-        if (!expectedFolder.exists()) return false;
+        if (!expectedFolder.exists()) {
+            return false;
+        }
         File backpackDir = new File(expectedFolder, "backpacks");
         return backpackDir.exists();
     }

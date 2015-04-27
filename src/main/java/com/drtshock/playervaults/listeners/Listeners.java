@@ -105,14 +105,7 @@ public class Listeners implements Listener {
             if (PlayerVaults.getInstance().getInVault().containsKey(player.getName())) {
                 Block block = event.getClickedBlock();
                 // Different inventories that we don't want the player to open.
-                if (block.getType() == Material.CHEST
-                        || block.getType() == Material.TRAPPED_CHEST
-                        || block.getType() == Material.ENDER_CHEST
-                        || block.getType() == Material.FURNACE
-                        || block.getType() == Material.BURNING_FURNACE
-                        || block.getType() == Material.BREWING_STAND
-                        || block.getType() == Material.ENCHANTMENT_TABLE
-                        || block.getType() == Material.BEACON) {
+                if (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST || block.getType() == Material.ENDER_CHEST || block.getType() == Material.FURNACE || block.getType() == Material.BURNING_FURNACE || block.getType() == Material.BREWING_STAND || block.getType() == Material.ENCHANTMENT_TABLE || block.getType() == Material.BEACON) {
                     event.setCancelled(true);
                 }
             }

@@ -131,11 +131,11 @@ public class Updater {
     /**
      * Initialize the updater
      *
-     * @param plugin The plugin that is checking for an update.
-     * @param id The dev.bukkit.org id of the project
-     * @param file The file that the plugin is running from, get this by doing this.getFile() from within your main
-     * class.
-     * @param type Specify the type of update this will be. See {@link UpdateType}
+     * @param plugin   The plugin that is checking for an update.
+     * @param id       The dev.bukkit.org id of the project
+     * @param file     The file that the plugin is running from, get this by doing this.getFile() from within your main
+     *                 class.
+     * @param type     Specify the type of update this will be. See {@link UpdateType}
      * @param announce True if the program should announce the progress of new updates in console
      */
     public Updater(Plugin plugin, int id, File file, Updater.UpdateType type, boolean announce) {
@@ -263,7 +263,9 @@ public class Updater {
 
             byte[] data = new byte[BYTE_SIZE];
             int count;
-            if (announce) plugin.getLogger().log(Level.INFO, "About to download a new update: {0}", versionName);
+            if (announce) {
+                plugin.getLogger().log(Level.INFO, "About to download a new update: {0}", versionName);
+            }
             long downloaded = 0;
             while ((count = in.read(data, 0, BYTE_SIZE)) != -1) {
                 downloaded += count;
@@ -285,7 +287,9 @@ public class Updater {
                 // Unzip
                 unzip(dFile.getCanonicalPath());
             }
-            if (announce) plugin.getLogger().info("Finished updating.");
+            if (announce) {
+                plugin.getLogger().info("Finished updating.");
+            }
         } catch (Exception ex) {
             plugin.getLogger().warning("The auto-updater tried to download a new update, but was unsuccessful.");
             result = Updater.UpdateResult.FAIL_DOWNLOAD;

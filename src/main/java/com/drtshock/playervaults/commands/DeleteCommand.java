@@ -12,8 +12,8 @@ import org.bukkit.entity.Player;
 public class DeleteCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(VaultOperations.isLocked()){
-            sender.sendMessage(Lang.TITLE+Lang.LOCKED.toString());
+        if (VaultOperations.isLocked()) {
+            sender.sendMessage(Lang.TITLE + Lang.LOCKED.toString());
             return true;
         }
 

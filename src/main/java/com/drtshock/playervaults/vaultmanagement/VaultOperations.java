@@ -42,8 +42,8 @@ public class VaultOperations {
     }
 
     /**
-     * Sets whether or not player vaults are locked. If set to true, this
-     * will kick anyone who is currently using their vaults out.
+     * Sets whether or not player vaults are locked. If set to true, this will kick anyone who is currently using their
+     * vaults out.
      *
      * @param locked true for locked, false otherwise
      */
@@ -111,7 +111,9 @@ public class VaultOperations {
      * @return Whether or not the player was allowed to open it.
      */
     public static boolean openOwnVault(Player player, String arg) {
-        if (isLocked()) return false;
+        if (isLocked()) {
+            return false;
+        }
         int number;
         try {
             number = Integer.parseInt(arg);
@@ -149,7 +151,9 @@ public class VaultOperations {
      * @return Whether or not the player was allowed to open it.
      */
     public static boolean openOtherVault(Player player, Player holder, String arg) {
-        if (isLocked()) return false;
+        if (isLocked()) {
+            return false;
+        }
         if (player.hasPermission("playervaults.admin")) {
             int number = 0;
             try {
@@ -181,7 +185,9 @@ public class VaultOperations {
      * @param arg    The vault number to delete.
      */
     public static void deleteOwnVault(Player player, String arg) {
-        if (isLocked()) return;
+        if (isLocked()) {
+            return;
+        }
         if (arg.matches("^[0-9]{1,2}$")) {
             int number = 0;
             try {
@@ -214,7 +220,9 @@ public class VaultOperations {
      * @param arg    The vault number to delete.
      */
     public static void deleteOtherVault(CommandSender sender, Player holder, String arg) {
-        if (isLocked()) return;
+        if (isLocked()) {
+            return;
+        }
         if (sender.hasPermission("playervaults.delete")) {
             if (arg.matches("^[0-9]{1,2}$")) {
                 int number = 0;

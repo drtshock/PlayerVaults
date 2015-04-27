@@ -237,9 +237,9 @@ public class PlayerVaults extends JavaPlugin {
     /**
      * Set an object in the config.yml
      *
-     * @param path The path in the config.
+     * @param path   The path in the config.
      * @param object What to be saved.
-     * @param conf Where to save the object.
+     * @param conf   Where to save the object.
      */
     public <T> void setInConfig(String path, T object, YamlConfiguration conf) {
         conf.set(path, object);

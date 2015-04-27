@@ -33,8 +33,8 @@ public class UUIDVaultManager {
      * Saves the inventory to the specified player and vault number.
      *
      * @param inventory The inventory to be saved.
-     * @param player The player of whose file to save to.
-     * @param number The vault number.
+     * @param player    The player of whose file to save to.
+     * @param number    The vault number.
      *
      * @throws java.io.IOException Uh oh!
      */
@@ -132,8 +132,8 @@ public class UUIDVaultManager {
      * Get an inventory from file. Returns null if the inventory doesn't exist. SHOULD ONLY BE USED INTERNALLY
      *
      * @param playerFile the YamlConfiguration file.
-     * @param size the size of the vault.
-     * @param number the vault number.
+     * @param size       the size of the vault.
+     * @param number     the vault number.
      *
      * @return inventory if exists, otherwise null.
      */
@@ -162,7 +162,9 @@ public class UUIDVaultManager {
         YamlConfiguration playerFile = getPlayerVaultFile(holder);
         List<String> data = playerFile.getStringList("vault" + number);
         OfflinePlayer player = Bukkit.getPlayer(holder);
-        if (player == null) return null;
+        if (player == null) {
+            return null;
+        }
         if (data == null) {
             VaultHolder vaultHolder = new VaultHolder(number);
             Inventory inv = Bukkit.createInventory(vaultHolder, VaultOperations.getMaxVaultSize(player), Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", player.getName()));
@@ -234,7 +236,7 @@ public class UUIDVaultManager {
      * Save the players vault file.
      *
      * @param holder The vault holder of whose file to save.
-     * @param yaml The config to save.
+     * @param yaml   The config to save.
      *
      * @throws IOException Uh oh!
      */
