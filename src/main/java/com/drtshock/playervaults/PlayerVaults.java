@@ -26,6 +26,9 @@ import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -113,6 +116,16 @@ public class PlayerVaults extends JavaPlugin {
             player.closeInventory();
         }
         saveSignsFile();
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String args[]) {
+        if (cmd.getName().equals("pvreload")) {
+            reloadConfig();
+            loadLang();
+            sender.sendMessage(ChatColor.GREEN + "Reloaded Playervaults confguration and lang files.");
+        }
+        return true;
     }
 
     protected void checkUpdate() {

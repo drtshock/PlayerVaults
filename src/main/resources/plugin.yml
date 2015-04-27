@@ -20,6 +20,9 @@ commands:
   pvconvert:
     description: Convert other plugins to PlayerVaults
     aliases: [vaultconvert]
+  pvreload:
+    description: Reload the config and lang files.
+    permission: playervaults.admin
 permissions:
   playervaults.commands.use:
     description: Open own vault with command.
