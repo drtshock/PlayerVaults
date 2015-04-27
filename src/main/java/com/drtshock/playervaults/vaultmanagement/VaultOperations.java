@@ -180,6 +180,7 @@ public class VaultOperations {
             try {
                 number = Integer.parseInt(arg);
                 if (number < 1) {
+                    player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                     return false;
                 }
             } catch (NumberFormatException nfe) {

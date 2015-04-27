@@ -62,13 +62,10 @@ public class VaultCommand implements CommandExecutor {
 
                     if (VaultOperations.openOtherVault(player, searchPlayer, args[1])) {
                         PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(player.getUniqueId(), Integer.parseInt(args[1])));
-                    } else {
-                        sender.sendMessage(Lang.TITLE.toString() + "Failed to open vault.");
                     }
                     break;
                 default:
-                    sender.sendMessage(Lang.TITLE + "/pv <number>");
-                    sender.sendMessage(Lang.TITLE + "/pv <player> <number>");
+                    sender.sendMessage(Lang.TITLE.toString() + Lang.HELP.toString());
             }
         } else {
             sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.PLAYER_ONLY.toString());

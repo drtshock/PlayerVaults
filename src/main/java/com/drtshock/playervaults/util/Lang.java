@@ -49,7 +49,8 @@ public enum Lang {
     CONVERT_PLUGIN_NOT_FOUND("plugin-not-found", "&cNo converter found for that plugin"),
     CONVERT_COMPLETE("conversion-complete", "&aConverted %converted players to PlayerVaults"),
     CONVERT_BACKGROUND("conversion-background", "&fConversion has been forked to the background. See console for updates."),
-    LOCKED("vaults-locked", "&cVaults are currently locked while conversion occurs. Please try again in a moment!");
+    LOCKED("vaults-locked", "&cVaults are currently locked while conversion occurs. Please try again in a moment!"),
+    HELP("help", "/pv <number>");
 
     private String path;
     private String def;
