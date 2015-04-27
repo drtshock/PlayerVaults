@@ -78,7 +78,8 @@ public class UUIDVaultManager {
             if (playerFile.getConfigurationSection("vault" + number) == null) {
                 VaultHolder vaultHolder = new VaultHolder(number);
                 if (EconomyOperations.payToCreate(player)) {
-                    inv = Bukkit.createInventory(vaultHolder, size, Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", player.getName()));
+                    String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", player.getName());
+                    inv = Bukkit.createInventory(vaultHolder, size, title);
                     vaultHolder.setInventory(inv);
                 } else {
                     player.sendMessage(Lang.TITLE.toString() + Lang.INSUFFICIENT_FUNDS.toString());
