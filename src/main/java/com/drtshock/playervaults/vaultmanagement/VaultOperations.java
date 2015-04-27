@@ -167,11 +167,15 @@ public class VaultOperations {
      *
      * @return Whether or not the player was allowed to open it.
      */
-    public static boolean openOtherVault(Player player, Player holder, String arg) {
+    public static boolean openOtherVault(Player player, OfflinePlayer holder, String arg) {
         if (isLocked()) {
             return false;
         }
         if (player.hasPermission("playervaults.admin")) {
+            if(!holder.hasPlayedBefore()) {
+                player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
+                return false;
+            }
             int number = 0;
             try {
                 number = Integer.parseInt(arg);

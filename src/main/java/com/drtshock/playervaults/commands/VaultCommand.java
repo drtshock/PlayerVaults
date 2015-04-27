@@ -54,8 +54,8 @@ public class VaultCommand implements CommandExecutor {
                     }
                     break;
                 case 2:
-                    Player searchPlayer = Bukkit.getPlayer(args[0]);
-                    if (searchPlayer == null) {
+                    OfflinePlayer searchPlayer = Bukkit.getOfflinePlayer(args[0]);
+                    if (searchPlayer == null || !searchPlayer.hasPlayedBefore()) {
                         sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PLAYER_FOUND.toString().replaceAll("%p", args[0]));
                         break;
                     }

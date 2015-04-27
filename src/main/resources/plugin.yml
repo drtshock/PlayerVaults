@@ -20,3 +20,10 @@ commands:
   pvconvert:
     description: Convert other plugins to PlayerVaults
     aliases: [vaultconvert]
+permissions:
+  playervaults.commands.use:
+    description: Open own vault with command.
+    default: true
+  playervaults.admin:
+    description: Admin vault operations.
+    default: op

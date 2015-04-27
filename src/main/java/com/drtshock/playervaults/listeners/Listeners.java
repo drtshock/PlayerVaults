@@ -152,24 +152,31 @@ public class Listeners implements Listener {
                 int y = l.getBlockY();
                 int z = l.getBlockZ();
                 if (plugin.getSigns().getKeys(false).contains(world + ";;" + x + ";;" + y + ";;" + z)) {
-                    int num = PlayerVaults.getInstance().getSigns().getInt(world + ";;" + x + ";;" + y + ";;" + z + ".chest");
-                    if ((player.hasPermission("playervaults.signs.use") && (player.hasPermission("playervaults.signs.bypass") || VaultOperations.checkPerms(player, 99)))) {
+                    int num = PlayerVaults.getInstance().getSigns().getInt(world + ";;" + x + ";;" + y + ";;" + z + ".chest", 1);
+                    if (player.hasPermission("playervaults.signs.use") || player.hasPermission("playervaults.signs.bypass")) {
                         boolean self = PlayerVaults.getInstance().getSigns().getBoolean(world + ";;" + x + ";;" + y + ";;" + z + ".self", false);
-                        String owner = null;
-                        if (!self) {
-                            owner = PlayerVaults.getInstance().getSigns().getString(world + ";;" + x + ";;" + y + ";;" + z + ".owner");
-                        }
+                        String owner = self ? player.getName() : PlayerVaults.getInstance().getSigns().getString(world + ";;" + x + ";;" + y + ";;" + z + ".owner");
                         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(owner != null ? owner : event.getPlayer().getName()); // Not best way but :\
-                        if (offlinePlayer == null) {
+                        if (offlinePlayer == null || !offlinePlayer.hasPlayedBefore()) {
                             player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
                             return;
                         }
                         if (self) {
-                            Inventory inv = UUIDVaultManager.getInstance().loadOwnVault(player, num, VaultOperations.getMaxVaultSize(player));
-                            player.openInventory(inv);
+                            // We already checked that they can use signs, now lets check if they have this many vaults.
+                            if(VaultOperations.checkPerms(player, num)) {
+                                Inventory inv = UUIDVaultManager.getInstance().loadOwnVault(player, num, VaultOperations.getMaxVaultSize(player));
+                                player.openInventory(inv);
+                            } else {
+                                player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS.toString());
+                                return; // Otherwise it would try to add vault view info down there.
+                            }
                         } else {
                             Inventory inv = UUIDVaultManager.getInstance().loadOtherVault(offlinePlayer.getUniqueId(), num, VaultOperations.getMaxVaultSize(offlinePlayer));
-                            player.openInventory(inv);
+                            if(inv == null) {
+                                player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
+                            } else {
+                                player.openInventory(inv);
+                            }
                         }
                         PlayerVaults.getInstance().getInVault().put(player.getName(), new VaultViewInfo((self) ? player.getName() : owner, num));
                         event.setCancelled(true);
