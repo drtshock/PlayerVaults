@@ -44,7 +44,9 @@ public class PlayerVaults extends JavaPlugin {
     private String newVersion = "";
     private String link = "";
     private HashMap<String, SignSetInfo> setSign = new HashMap<>();
+    // Player name - VaultViewInfo
     private HashMap<String, VaultViewInfo> inVault = new HashMap<>();
+    // VaultViewInfo - Inventory
     private HashMap<String, Inventory> openInventories = new HashMap<>();
     private Economy economy = null;
     private boolean dropOnDeath = false;

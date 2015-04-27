@@ -69,7 +69,8 @@ public class UUIDVaultManager {
             size = 54;
         }
 
-        VaultViewInfo info = new VaultViewInfo(player.getUniqueId().toString(), number);
+        String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", player.getName());
+        VaultViewInfo info = new VaultViewInfo(player.getUniqueId(), number);
         Inventory inv;
         if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
             inv = PlayerVaults.getInstance().getOpenInventories().get(info.toString());
@@ -78,7 +79,6 @@ public class UUIDVaultManager {
             if (playerFile.getConfigurationSection("vault" + number) == null) {
                 VaultHolder vaultHolder = new VaultHolder(number);
                 if (EconomyOperations.payToCreate(player)) {
-                    String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", player.getName());
                     inv = Bukkit.createInventory(vaultHolder, size, title);
                     vaultHolder.setInventory(inv);
                 } else {
@@ -86,10 +86,11 @@ public class UUIDVaultManager {
                     return null;
                 }
             } else {
-                if (getInventory(playerFile, size, number) == null) {
+                Inventory i = getInventory(playerFile, size, number, title);
+                if(i == null) {
                     return null;
                 } else {
-                    inv = getInventory(playerFile, size, number);
+                    inv = i;
                 }
             }
             PlayerVaults.getInstance().getOpenInventories().put(info.toString(), inv);
@@ -108,7 +109,8 @@ public class UUIDVaultManager {
         if (size % 9 != 0) {
             size = 54;
         }
-        VaultViewInfo info = new VaultViewInfo(holder.toString(), number);
+        String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", Bukkit.getOfflinePlayer(holder).getName());
+        VaultViewInfo info = new VaultViewInfo(holder, number);
         Inventory inv;
         if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
             inv = PlayerVaults.getInstance().getOpenInventories().get(info.toString());
@@ -117,10 +119,11 @@ public class UUIDVaultManager {
             if (playerFile.getConfigurationSection("vault" + number) == null) {
                 return null;
             } else {
-                if (getInventory(playerFile, size, number) == null) {
+                Inventory i = getInventory(playerFile, size, number, title);
+                if(i == null) {
                     return null;
                 } else {
-                    inv = getInventory(playerFile, size, number);
+                    inv = i;
                 }
             }
             PlayerVaults.getInstance().getOpenInventories().put(info.toString(), inv);
@@ -137,7 +140,7 @@ public class UUIDVaultManager {
      *
      * @return inventory if exists, otherwise null.
      */
-    private Inventory getInventory(YamlConfiguration playerFile, int size, int number) {
+    private Inventory getInventory(YamlConfiguration playerFile, int size, int number, String title) {
         List<String> data = new ArrayList<>();
         for (int x = 0; x < size; x++) {
             String line = playerFile.getString("vault" + number + "." + x);
@@ -147,7 +150,7 @@ public class UUIDVaultManager {
                 data.add("null");
             }
         }
-        return Serialization.toInventory(data, number, size);
+        return Serialization.toInventory(data, number, size, title);
     }
 
     /**
@@ -161,17 +164,18 @@ public class UUIDVaultManager {
     public Inventory getVault(UUID holder, int number) {
         YamlConfiguration playerFile = getPlayerVaultFile(holder);
         List<String> data = playerFile.getStringList("vault" + number);
-        OfflinePlayer player = Bukkit.getPlayer(holder);
-        if (player == null) {
+        OfflinePlayer player = Bukkit.getOfflinePlayer(holder);
+        if (player == null || !player.hasPlayedBefore()) {
             return null;
         }
+        String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", Bukkit.getOfflinePlayer(holder).getName());
         if (data == null) {
             VaultHolder vaultHolder = new VaultHolder(number);
             Inventory inv = Bukkit.createInventory(vaultHolder, VaultOperations.getMaxVaultSize(player), Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", player.getName()));
             vaultHolder.setInventory(inv);
             return inv;
         } else {
-            return Serialization.toInventory(data, number, VaultOperations.getMaxVaultSize(player));
+            return Serialization.toInventory(data, number, VaultOperations.getMaxVaultSize(player), title);
         }
     }
 

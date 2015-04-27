@@ -16,11 +16,16 @@
  */
 package com.drtshock.playervaults.vaultmanagement;
 
+import org.bukkit.Bukkit;
+
+import java.util.UUID;
+
 /**
  * A class that stores information about a vault viewing including the holder of the vault, and the vault number.
  */
 public class VaultViewInfo {
 
+    UUID uuid;
     String holder;
     int number;
 
@@ -30,9 +35,22 @@ public class VaultViewInfo {
      * @param s The holder of the vault.
      * @param i The vault number.
      */
+    @Deprecated
     public VaultViewInfo(String s, int i) {
         this.holder = s;
         this.number = i;
+    }
+
+    /**
+     * Makes a VaultViewInfo object.
+     *
+     * @param uuid uuid of viewer.
+     * @param i    vault number
+     */
+    public VaultViewInfo(UUID uuid, int i) {
+        this.uuid = uuid;
+        this.number = i;
+        this.holder = Bukkit.getOfflinePlayer(uuid).getName();
     }
 
     /**
@@ -40,8 +58,18 @@ public class VaultViewInfo {
      *
      * @return The holder of the vault.
      */
+    @Deprecated
     public String getHolder() {
         return this.holder;
+    }
+
+    /**
+     * Get the vault holder's UUID.
+     *
+     * @return The vault holder's UUID.
+     */
+    public UUID getHolderUUID() {
+        return this.uuid;
     }
 
     /**
@@ -55,6 +83,6 @@ public class VaultViewInfo {
 
     @Override
     public String toString() {
-        return this.holder + " " + this.number;
+        return this.uuid + " " + this.number;
     }
 }

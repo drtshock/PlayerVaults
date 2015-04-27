@@ -50,10 +50,10 @@ public class Listeners implements Listener {
     }
 
     public void saveVault(Player player) {
-        if (PlayerVaults.getInstance().getInVault().containsKey(player.getName())) {
+        if (PlayerVaults.getInstance().getInVault().containsKey(player.getUniqueId().toString())) {
             Inventory inv = player.getOpenInventory().getTopInventory();
             if (inv.getViewers().size() == 1) {
-                VaultViewInfo info = PlayerVaults.getInstance().getInVault().get(player.getName());
+                VaultViewInfo info = PlayerVaults.getInstance().getInVault().get(player.getUniqueId().toString());
                 try {
                     vm.saveVault(inv, player.getUniqueId(), info.getNumber());
                 } catch (IOException e) {
@@ -62,7 +62,8 @@ public class Listeners implements Listener {
 
                 PlayerVaults.getInstance().getOpenInventories().remove(info.toString());
             }
-            PlayerVaults.getInstance().getInVault().remove(player.getName());
+
+            PlayerVaults.getInstance().getInVault().remove(player.getUniqueId().toString());
         }
     }
 
@@ -178,7 +179,7 @@ public class Listeners implements Listener {
                                 player.openInventory(inv);
                             }
                         }
-                        PlayerVaults.getInstance().getInVault().put(player.getName(), new VaultViewInfo((self) ? player.getName() : owner, num));
+                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo((self) ? player.getName() : owner, num));
                         event.setCancelled(true);
                         player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_WITH_SIGN.toString().replace("%v", String.valueOf(num)).replace("%p", (self) ? player.getName() : owner));
                     } else {

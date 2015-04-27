@@ -91,7 +91,7 @@ public class VaultOperations {
      * @return max size as integer. If no max size is set then it will default to 54.
      */
     public static int getMaxVaultSize(OfflinePlayer player) {
-        if (player == null) {
+        if (player == null || !player.hasPlayedBefore()) {
             return 54;
         }
         for (int i = 6; i != 0; i--) {

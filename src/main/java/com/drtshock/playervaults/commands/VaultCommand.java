@@ -32,10 +32,10 @@ public class VaultCommand implements CommandExecutor {
             switch (args.length) {
                 case 1:
                     if (VaultOperations.openOwnVault(player, args[0], true)) {
-                        PlayerVaults.getInstance().getInVault().put(sender.getName(), new VaultViewInfo(sender.getName(), Integer.parseInt(args[0])));
+                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(player.getUniqueId(), Integer.parseInt(args[0])));
                     } else if (sender.hasPermission("playervaults.admin")) {
                         OfflinePlayer searchPlayer = Bukkit.getOfflinePlayer(args[0]);
-                        if (searchPlayer == null) {
+                        if (searchPlayer == null || !searchPlayer.hasPlayedBefore()) {
                             sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PLAYER_FOUND.toString().replaceAll("%p", args[0]));
                             break;
                         }
@@ -61,7 +61,7 @@ public class VaultCommand implements CommandExecutor {
                     }
 
                     if (VaultOperations.openOtherVault(player, searchPlayer, args[1])) {
-                        PlayerVaults.getInstance().getInVault().put(sender.getName(), new VaultViewInfo(args[0], Integer.parseInt(args[1])));
+                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(player.getUniqueId(), Integer.parseInt(args[1])));
                     } else {
                         sender.sendMessage(Lang.TITLE.toString() + "Failed to open vault.");
                     }
@@ -71,7 +71,7 @@ public class VaultCommand implements CommandExecutor {
                     sender.sendMessage(Lang.TITLE + "/pv <player> <number>");
             }
         } else {
-            sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.PLAYER_ONLY);
+            sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.PLAYER_ONLY.toString());
         }
 
         return true;

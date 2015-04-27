@@ -81,9 +81,9 @@ public class Serialization {
         return result;
     }
 
-    public static Inventory toInventory(List<String> stringItems, int number, int size) {
+    public static Inventory toInventory(List<String> stringItems, int number, int size, String title) {
         VaultHolder holder = new VaultHolder(number);
-        Inventory inv = Bukkit.createInventory(holder, size, ChatColor.RED + "Vault #" + number);
+        Inventory inv = Bukkit.createInventory(holder, size, title);
         holder.setInventory(inv);
         List<ItemStack> contents = new ArrayList<>();
         for (String piece : stringItems) {
