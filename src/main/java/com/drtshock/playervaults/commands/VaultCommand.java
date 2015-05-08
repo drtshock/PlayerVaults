@@ -61,7 +61,7 @@ public class VaultCommand implements CommandExecutor {
                     }
 
                     if (VaultOperations.openOtherVault(player, searchPlayer, args[1])) {
-                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(player.getUniqueId(), Integer.parseInt(args[1])));
+                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(searchPlayer.getUniqueId(), Integer.parseInt(args[1])));
                     }
                     break;
                 default:

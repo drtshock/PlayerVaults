@@ -56,7 +56,7 @@ public class Listeners implements Listener {
             if (inv.getViewers().size() == 1) {
                 VaultViewInfo info = PlayerVaults.getInstance().getInVault().get(player.getUniqueId().toString());
                 try {
-                    vm.saveVault(inv, player.getUniqueId(), info.getNumber());
+                    vm.saveVault(inv, info.getHolderUUID(), info.getNumber());
                 } catch (IOException e) {
                     // ignore
                 }
