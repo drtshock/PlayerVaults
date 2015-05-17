@@ -4,6 +4,7 @@ import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -26,8 +27,8 @@ public class DeleteCommand implements CommandExecutor {
                 }
                 break;
             case 2:
-                Player player = Bukkit.getPlayer(args[0]);
-                if (player == null) {
+                OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
+                if (player == null || !player.hasPlayedBefore()) {
                     sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PLAYER_FOUND.toString().replaceAll("%p", args[0]));
                     break;
                 }

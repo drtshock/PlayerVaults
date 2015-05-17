@@ -241,7 +241,7 @@ public class VaultOperations {
      * @param holder The user to whom the deleted vault belongs.
      * @param arg    The vault number to delete.
      */
-    public static void deleteOtherVault(CommandSender sender, Player holder, String arg) {
+    public static void deleteOtherVault(CommandSender sender, OfflinePlayer holder, String arg) {
         if (isLocked()) {
             return;
         }
