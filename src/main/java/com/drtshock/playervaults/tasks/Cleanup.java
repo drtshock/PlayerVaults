@@ -1,11 +1,11 @@
 package com.drtshock.playervaults.tasks;
 
 import com.drtshock.playervaults.PlayerVaults;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 
-public class Cleanup extends BukkitRunnable {
+public class Cleanup implements Runnable {
+
     private long diff;
 
     public Cleanup(int diff) {

@@ -4,7 +4,6 @@ import com.drtshock.playervaults.PlayerVaults;
 import com.google.common.io.Files;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +12,8 @@ import java.util.logging.Logger;
 /**
  * Class to convert vaults by name to vaults by UUID.
  */
-public final class UUIDConversion extends BukkitRunnable {
+public final class UUIDConversion implements Runnable {
+
     @Override
     public void run() {
         Logger logger = PlayerVaults.getInstance().getLogger();
@@ -28,7 +28,7 @@ public final class UUIDConversion extends BukkitRunnable {
 
         File oldVaults = new File(PlayerVaults.getInstance().getDataFolder() + File.separator + "vaults");
         if (oldVaults.exists()) {
-            logger.info("********** Starting conversion to UUIDs **********");
+            logger.info("********** Starting conversion to UUIDs for PlayerVaults **********");
             logger.info("This might take awhile.");
             logger.info(oldVaults.toString() + " will remain as a backup.");
 
