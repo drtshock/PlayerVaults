@@ -30,3 +30,6 @@ permissions:
   playervaults.admin:
     description: Admin vault operations.
     default: op
+  playervaults.bypassblockeditems:
+    description: Bypass blocked items.
+    default: op

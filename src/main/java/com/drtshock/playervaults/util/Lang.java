@@ -50,7 +50,8 @@ public enum Lang {
     CONVERT_COMPLETE("conversion-complete", "&aConverted %converted players to PlayerVaults"),
     CONVERT_BACKGROUND("conversion-background", "&fConversion has been forked to the background. See console for updates."),
     LOCKED("vaults-locked", "&cVaults are currently locked while conversion occurs. Please try again in a moment!"),
-    HELP("help", "/pv <number>");
+    HELP("help", "/pv <number>"),
+    BLOCKED_ITEM("blocked-item", "&6%m &cis blocked from vaults");
 
     private String path;
     private String def;

@@ -35,6 +35,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
@@ -226,5 +227,30 @@ public class Listeners implements Listener {
         if ((type == EntityType.VILLAGER || type == EntityType.MINECART) && PlayerVaults.getInstance().getInVault().containsKey(player.getName())) {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onClick(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player)) {
+            return;
+        }
+
+        Player player = (Player) event.getWhoClicked();
+        if (player.hasPermission("playervaults.bypassblockeditems")) {
+            return;
+        }
+
+        VaultViewInfo info = PlayerVaults.getInstance().getInVault().get(player.getUniqueId().toString());
+        if (info != null) {
+            int num = info.getNumber();
+            String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(num)).replace("%p", info.getHolder());
+            if ((event.getClickedInventory().getTitle().equalsIgnoreCase(title) || event.isShiftClick()) && event.getCurrentItem() != null) {
+                if (PlayerVaults.getInstance().isBlockedMaterial(event.getCurrentItem().getType())) {
+                    event.setCancelled(true);
+                    player.sendMessage(Lang.TITLE.toString() + Lang.BLOCKED_ITEM.toString().replace("%m", event.getCurrentItem().getType().name()));
+                }
+            }
+        }
+
     }
 }

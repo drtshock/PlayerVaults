@@ -18,6 +18,21 @@ economy:
   cost-to-open: 10
   refund-on-delete: 50
 
+# Blocked Items
+# Here you can block items in vaults.
+# You can give player's playervaults.bypassblockeditems permission to bypass this list.
+# Ops also have an automatic bypass.
+# Use material names. This does not work with ids.
+
+# Should we even use this? If left to false, the list won't do anything.
+blockitems: false
+
+# Only effective if the above option is true.
+blocked-items:
+  - PUMPKIN
+  - DIAMOND_BLOCK
+
+
 # Cleanup
 # Should we cleanup vaults that haven't been used in awhile?
 # Only checks on restarts. Runs on another thread so it won't

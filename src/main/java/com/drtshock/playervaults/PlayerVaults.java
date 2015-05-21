@@ -27,6 +27,7 @@ import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -38,6 +39,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 
 public class PlayerVaults extends JavaPlugin {
@@ -55,21 +58,20 @@ public class PlayerVaults extends JavaPlugin {
     private YamlConfiguration signs;
     private File signsFile;
     private boolean saveQueued;
-    private File configFile;
     private boolean backupsEnabled;
     private File backupsFolder = null;
     private File vaultData;
+    private Set<Material> blockedMats = new HashSet<>();
 
     @Override
     public void onEnable() {
         instance = this;
-        configFile = new File(getDataFolder(), "config.yml");
+        loadConfig();
         vaultData = new File(this.getDataFolder(), "uuidvaults");
         getServer().getScheduler().runTask(this, new UUIDConversion()); // Convert to UUIDs first. Class checks if necessary.
         loadLang();
         new UUIDVaultManager();
         getServer().getPluginManager().registerEvents(new Listeners(this), this);
-        loadConfig();
         this.backupsEnabled = this.getConfig().getBoolean("backups.enabled", true);
         loadSigns();
         checkUpdate();
@@ -122,8 +124,9 @@ public class PlayerVaults extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String args[]) {
         if (cmd.getName().equals("pvreload")) {
             reloadConfig();
+            loadConfig(); // To update blocked materials.
             loadLang();
-            sender.sendMessage(ChatColor.GREEN + "Reloaded Playervaults confguration and lang files.");
+            sender.sendMessage(ChatColor.GREEN + "Reloaded PlayerVaults' configuration and lang files.");
         }
         return true;
     }
@@ -164,10 +167,18 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     private void loadConfig() {
-        if (!configFile.exists()) {
-            saveDefaultConfig();
-        } else {
-            updateConfig();
+        saveDefaultConfig();
+
+        // Clear just in case this is a reload.
+        blockedMats.clear();
+        if (getConfig().getBoolean("blockitems", false) && getConfig().contains("blocked-items")) {
+            for (String s : getConfig().getStringList("blocked-items")) {
+                Material mat = Material.matchMaterial(s);
+                if (mat != null) {
+                    blockedMats.add(mat);
+                    getLogger().log(Level.INFO, "Added {0} to list of blocked materials.", mat.name());
+                }
+            }
         }
     }
 
@@ -209,32 +220,6 @@ public class PlayerVaults extends JavaPlugin {
         } catch (IOException e) {
             getLogger().severe("PlayerVaults has encountered an error trying to save the signs file.");
             getLogger().severe("Please report this error to drtshock.");
-            e.printStackTrace();
-        }
-    }
-
-    public void updateConfig() {
-        boolean checkUpdate = getConfig().getBoolean("check-update", true);
-        boolean ecoEnabled = getConfig().getBoolean("economy.enabled", false);
-        int ecoCreate = getConfig().getInt("economy.cost-to-create", 100);
-        int ecoOpen = getConfig().getInt("economy.cost-to-open", 10);
-        int ecoDelete = getConfig().getInt("economy.refund-on-delete", 50);
-        boolean dropEnabled = getConfig().getBoolean("drop-on-death.enabled", false);
-        int dropInvs = getConfig().getInt("drop-on-death.inventories", 50);
-        boolean backupsEnabled = getConfig().getBoolean("backups.enabled", true);
-        configFile.delete();
-        YamlConfiguration conf = YamlConfiguration.loadConfiguration(getResource("config.yml"));
-        setInConfig("check-update", checkUpdate, conf);
-        setInConfig("economy.enabled", ecoEnabled, conf);
-        setInConfig("economy.cost-to-create", ecoCreate, conf);
-        setInConfig("economy.cost-to-open", ecoOpen, conf);
-        setInConfig("economy.refund-on-delete", ecoDelete, conf);
-        setInConfig("drop-on-death.enabled", dropEnabled, conf);
-        setInConfig("drop-on-death.inventories", dropInvs, conf);
-        setInConfig("backups.enabled", backupsEnabled, conf);
-        try {
-            conf.save(configFile);
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -355,6 +340,10 @@ public class PlayerVaults extends JavaPlugin {
         }
 
         return this.backupsFolder;
+    }
+
+    public boolean isBlockedMaterial(Material mat) {
+        return blockedMats.contains(mat);
     }
 
     public static PlayerVaults getInstance() {
