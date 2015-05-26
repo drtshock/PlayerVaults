@@ -21,7 +21,6 @@ import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
-
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -57,7 +56,7 @@ public class Listeners implements Listener {
             Inventory inv = player.getOpenInventory().getTopInventory();
             if (inv.getViewers().size() == 1) {
                 VaultViewInfo info = PlayerVaults.getInstance().getInVault().get(player.getUniqueId().toString());
-                if(Bukkit.isPrimaryThread() && player.getUniqueId().equals(info.getHolderUUID())){
+                if (Bukkit.isPrimaryThread() && player.getUniqueId().equals(info.getHolderUUID())) {
                     // Running in main thread, and it's the player's own vault. So we can just cache this until logout.
                     UUIDVaultManager.getInstance().getCachedVaults().setCachedVault(info.getHolderUUID(), info.getNumber(), inv);
                 } else {
@@ -77,7 +76,7 @@ public class Listeners implements Listener {
         }
     }
 
-    public void flushVaultCache(Player player){
+    public void flushVaultCache(Player player) {
         UUIDVaultManager.getInstance().getCachedVaults().flushVaultCacheToFile(player.getUniqueId());
     }
 
