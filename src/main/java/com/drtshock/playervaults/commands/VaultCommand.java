@@ -34,7 +34,7 @@ public class VaultCommand implements CommandExecutor {
                     if (VaultOperations.openOwnVault(player, args[0], true)) {
                         PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(player.getUniqueId(), Integer.parseInt(args[0])));
                     } else if (sender.hasPermission("playervaults.admin")) {
-                        OfflinePlayer searchPlayer = Bukkit.getOfflinePlayer(args[0]);
+                        OfflinePlayer searchPlayer = Bukkit.getOfflinePlayerSync(args[0]);
                         if (searchPlayer == null || !searchPlayer.hasPlayedBefore()) {
                             sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PLAYER_FOUND.toString().replaceAll("%p", args[0]));
                             break;
@@ -54,7 +54,7 @@ public class VaultCommand implements CommandExecutor {
                     }
                     break;
                 case 2:
-                    OfflinePlayer searchPlayer = Bukkit.getOfflinePlayer(args[0]);
+                    OfflinePlayer searchPlayer = Bukkit.getOfflinePlayerSync(args[0]);
                     if (searchPlayer == null || !searchPlayer.hasPlayedBefore()) {
                         sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PLAYER_FOUND.toString().replaceAll("%p", args[0]));
                         break;
