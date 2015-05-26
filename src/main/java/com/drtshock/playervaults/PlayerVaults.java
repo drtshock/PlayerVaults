@@ -99,6 +99,9 @@ public class PlayerVaults extends JavaPlugin {
     @Override
     public void onDisable() {
         for (Player player : Bukkit.getOnlinePlayers()) {
+            UUIDVaultManager.getInstance().getCachedVaults().flushVaultCacheToFile(player.getUniqueId());
+            UUIDVaultManager.getInstance().getCachedVaults().deleteVaultCache(player.getUniqueId());
+
             if (this.inVault.containsKey(player.getName())) {
                 Inventory inventory = player.getOpenInventory().getTopInventory();
                 if (inventory.getViewers().size() == 1) {
@@ -117,6 +120,7 @@ public class PlayerVaults extends JavaPlugin {
 
             player.closeInventory();
         }
+        
         saveSignsFile();
     }
 
