@@ -1,7 +1,12 @@
 package com.drtshock.playervaults.vaultmanagement;
 
-import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.util.Lang;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -10,11 +15,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import com.drtshock.playervaults.PlayerVaults;
+import com.drtshock.playervaults.util.Lang;
 
 /**
  * Class to handle vault operations with new UUIDs.
@@ -22,13 +24,24 @@ import java.util.UUID;
 public class UUIDVaultManager {
 
     private static UUIDVaultManager instance;
-
+    
+    // Compilex Start
+    private static CachedVaults cachedVaults;
+    // Compilex End
+    
     public UUIDVaultManager() {
         instance = this;
+        cachedVaults = new CachedVaults();
     }
 
     private final File directory = PlayerVaults.getInstance().getVaultData();
 
+    // Compilex Start
+    public CachedVaults getCachedVaults(){
+        return cachedVaults;
+    }
+    // Compilex End
+    
     /**
      * Saves the inventory to the specified player and vault number.
      *
@@ -65,6 +78,12 @@ public class UUIDVaultManager {
      * @param number The vault number.
      */
     public Inventory loadOwnVault(Player player, int number, int size) {
+        // Compilex Start - Cache vault inventories while player is online.
+        if(cachedVaults.hasVaultCached(player.getUniqueId(), number)){
+            return cachedVaults.getCachedVault(player.getUniqueId(), number);
+        }
+        // Compilex End
+        
         if (size % 9 != 0) {
             size = 54;
         }
@@ -96,6 +115,9 @@ public class UUIDVaultManager {
             PlayerVaults.getInstance().getOpenInventories().put(info.toString(), inv);
         }
 
+        // Compilex Start - cache response
+        cachedVaults.setCachedVault(player.getUniqueId(), number, inv);
+        // Compilex End
         return inv;
     }
 
@@ -106,6 +128,12 @@ public class UUIDVaultManager {
      * @param number The vault number.
      */
     public Inventory loadOtherVault(UUID holder, int number, int size) {
+        // Compilex Start - Cache vault inventories while player is online.
+        if(cachedVaults.hasVaultCached(holder, number)){
+            return cachedVaults.getCachedVault(holder, number);
+        }
+        // Compilex End
+        
         if (size % 9 != 0) {
             size = 54;
         }
@@ -128,6 +156,10 @@ public class UUIDVaultManager {
             }
             PlayerVaults.getInstance().getOpenInventories().put(info.toString(), inv);
         }
+        
+        // Compilex Start - cache response
+        cachedVaults.setCachedVault(holder, number, inv);
+        // Compilex End
         return inv;
     }
 
@@ -193,11 +225,15 @@ public class UUIDVaultManager {
      * @throws IOException Uh oh!
      */
     public void deleteVault(CommandSender sender, UUID holder, int number) throws IOException {
-        File file = new File(directory, holder.toString() + ".yml");
+        File file = new File(directory, holder.toString() + ".yml");        
         if (!file.exists()) {
             return;
         }
-
+        
+        // Compilex Start - Clear cache.
+        cachedVaults.clearVaultCache(holder);
+        // Compilex End
+        
         FileConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
         if (file.exists()) {
             playerFile.set("vault" + number, null);
