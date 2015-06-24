@@ -24,8 +24,7 @@ import java.util.zip.ZipFile;
  * <b>AT ALL</b>. <br> If you fail to include this option in your config, your plugin will be <b>REJECTED</b> when you
  * attempt to submit it to dev.bukkit.org.
  * <p/>
- * An example of a good configuration option would be something similar to 'auto-update: true' - if this value is set
- * to
+ * An example of a good configuration option would be something similar to 'auto-update: true' - if this value is set to
  * false you may NOT run the auto-updater. <br> If you are unsure about these rules, please read the plugin submission
  * guidelines: http://goo.gl/8iU5l
  *

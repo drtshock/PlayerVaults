@@ -120,7 +120,7 @@ public class PlayerVaults extends JavaPlugin {
 
             player.closeInventory();
         }
-
+        
         saveSignsFile();
     }
 
