@@ -18,6 +18,7 @@ package com.drtshock.playervaults;
 
 import com.drtshock.playervaults.commands.*;
 import com.drtshock.playervaults.listeners.Listeners;
+import com.drtshock.playervaults.listeners.VaultPreloadListener;
 import com.drtshock.playervaults.tasks.Cleanup;
 import com.drtshock.playervaults.tasks.UUIDConversion;
 import com.drtshock.playervaults.util.Lang;
@@ -72,6 +73,7 @@ public class PlayerVaults extends JavaPlugin {
         loadLang();
         new UUIDVaultManager();
         getServer().getPluginManager().registerEvents(new Listeners(this), this);
+        getServer().getPluginManager().registerEvents(new VaultPreloadListener(), this);
         this.backupsEnabled = this.getConfig().getBoolean("backups.enabled", true);
         loadSigns();
         checkUpdate();
@@ -103,12 +105,7 @@ public class PlayerVaults extends JavaPlugin {
                 Inventory inventory = player.getOpenInventory().getTopInventory();
                 if (inventory.getViewers().size() == 1) {
                     VaultViewInfo info = this.inVault.get(player.getName());
-                    try {
-                        UUIDVaultManager.getInstance().saveVault(inventory, player.getUniqueId(), info.getNumber());
-                    } catch (IOException e) {
-                        // ignore
-                    }
-
+                    UUIDVaultManager.getInstance().saveVault(inventory, player.getUniqueId(), info.getNumber(), false);
                     this.openInventories.remove(info.toString());
                 }
 
