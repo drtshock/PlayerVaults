@@ -39,6 +39,7 @@ public class UUIDVaultManager {
      * @param inventory The inventory to be saved.
      * @param player    The player of whose file to save to.
      * @param number    The vault number.
+     *
      * @throws java.io.IOException Uh oh!
      */
     public void saveVault(Inventory inventory, UUID player, int number) throws IOException {
@@ -148,6 +149,7 @@ public class UUIDVaultManager {
      * @param playerFile the YamlConfiguration file.
      * @param size       the size of the vault.
      * @param number     the vault number.
+     *
      * @return inventory if exists, otherwise null.
      */
     private Inventory getInventory(YamlConfiguration playerFile, int size, int number, String title) {
@@ -168,6 +170,7 @@ public class UUIDVaultManager {
      *
      * @param holder The holder of the vault.
      * @param number The vault number.
+     *
      * @return The inventory of the specified holder and vault number.
      */
     public Inventory getVault(UUID holder, int number) {
@@ -198,6 +201,7 @@ public class UUIDVaultManager {
      * @param sender The sender of whom to send messages to.
      * @param holder The vault holder.
      * @param number The vault number.
+     *
      * @throws IOException Uh oh!
      */
     public void deleteVault(CommandSender sender, final UUID holder, final int number) throws IOException {
@@ -245,6 +249,7 @@ public class UUIDVaultManager {
      * Get the holder's vault file. Create if doesn't exist.
      *
      * @param holder The vault holder.
+     *
      * @return The holder's vault config file.
      */
     public YamlConfiguration getPlayerVaultFile(UUID holder) {
@@ -274,10 +279,11 @@ public class UUIDVaultManager {
      *
      * @param holder The vault holder of whose file to save.
      * @param yaml   The config to save.
+     *
      * @throws IOException Uh oh!
      */
     public void saveFile(final UUID holder, final YamlConfiguration yaml) {
-        if (Bukkit.getPlayer(holder) != null) {
+        if (cachedVaultFiles.containsKey(holder)) {
             cachedVaultFiles.put(holder, yaml);
         }
         final boolean backups = PlayerVaults.getInstance().isBackupsEnabled();
@@ -298,7 +304,7 @@ public class UUIDVaultManager {
     }
 
     public void saveFileSync(final UUID holder, final YamlConfiguration yaml) {
-        if (Bukkit.getPlayer(holder) != null) {
+        if (cachedVaultFiles.containsKey(holder)) {
             cachedVaultFiles.put(holder, yaml);
         }
         final boolean backups = PlayerVaults.getInstance().isBackupsEnabled();
