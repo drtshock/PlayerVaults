@@ -277,7 +277,7 @@ public class UUIDVaultManager {
      * @throws IOException Uh oh!
      */
     public void saveFile(final UUID holder, final YamlConfiguration yaml) {
-        if (Bukkit.getPlayer(holder) != null) {
+        if (cachedVaultFiles.containsKey(holder)) {
             cachedVaultFiles.put(holder, yaml);
         }
         final boolean backups = PlayerVaults.getInstance().isBackupsEnabled();
@@ -298,7 +298,7 @@ public class UUIDVaultManager {
     }
 
     public void saveFileSync(final UUID holder, final YamlConfiguration yaml) {
-        if (Bukkit.getPlayer(holder) != null) {
+        if (cachedVaultFiles.containsKey(holder)) {
             cachedVaultFiles.put(holder, yaml);
         }
         final boolean backups = PlayerVaults.getInstance().isBackupsEnabled();
