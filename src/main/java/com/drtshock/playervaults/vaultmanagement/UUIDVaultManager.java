@@ -213,9 +213,12 @@ public class UUIDVaultManager {
                     return;
                 }
 
-                FileConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
+                YamlConfiguration playerFile = YamlConfiguration.loadConfiguration(file);
                 if (file.exists()) {
                     playerFile.set("vault" + number, null);
+                    if (cachedVaultFiles.containsKey(holder)) {
+                        cachedVaultFiles.put(holder, playerFile);
+                    }
                     try {
                         playerFile.save(file);
                     } catch (IOException ignored) {
