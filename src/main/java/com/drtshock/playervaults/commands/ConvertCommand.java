@@ -17,8 +17,8 @@ import java.util.*;
 
 public class ConvertCommand implements CommandExecutor {
 
-    private List<Converter> converters = new ArrayList<>();
-    private ServiceProvider uuidProvider;
+    private final List<Converter> converters = new ArrayList<>();
+    private final ServiceProvider uuidProvider;
 
     public ConvertCommand() {
         converters.add(new BackpackConverter());

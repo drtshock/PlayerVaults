@@ -5,7 +5,6 @@ import com.drtshock.playervaults.util.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -228,10 +227,12 @@ public class UUIDVaultManager {
         }.runTaskAsynchronously(PlayerVaults.getInstance());
 
         OfflinePlayer player = Bukkit.getPlayer(holder);
-        if (player != null && sender.getName().equalsIgnoreCase(player.getName())) {
-            sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT.toString().replace("%v", String.valueOf(number)));
-        } else {
-            sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_OTHER_VAULT.toString().replace("%v", String.valueOf(number)).replaceAll("%p", player.getName()));
+        if (player != null) {
+            if (sender.getName().equalsIgnoreCase(player.getName())) {
+                sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT.toString().replace("%v", String.valueOf(number)));
+            } else {
+                sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_OTHER_VAULT.toString().replace("%v", String.valueOf(number)).replaceAll("%p", player.getName()));
+            }
         }
 
         PlayerVaults.getInstance().getOpenInventories().remove(new VaultViewInfo(holder.toString(), number).toString());
@@ -282,8 +283,6 @@ public class UUIDVaultManager {
      *
      * @param holder The vault holder of whose file to save.
      * @param yaml   The config to save.
-     *
-     * @throws IOException Uh oh!
      */
     public void saveFile(final UUID holder, final YamlConfiguration yaml) {
         if (cachedVaultFiles.containsKey(holder)) {

@@ -49,11 +49,11 @@ public class PlayerVaults extends JavaPlugin {
     private static PlayerVaults instance;
     private boolean update = false;
     private String newVersion = "";
-    private HashMap<String, SignSetInfo> setSign = new HashMap<>();
+    private final HashMap<String, SignSetInfo> setSign = new HashMap<>();
     // Player name - VaultViewInfo
-    private HashMap<String, VaultViewInfo> inVault = new HashMap<>();
+    private final HashMap<String, VaultViewInfo> inVault = new HashMap<>();
     // VaultViewInfo - Inventory
-    private HashMap<String, Inventory> openInventories = new HashMap<>();
+    private final HashMap<String, Inventory> openInventories = new HashMap<>();
     private Economy economy = null;
     private boolean useVault = false;
     private YamlConfiguration signs;
@@ -62,7 +62,7 @@ public class PlayerVaults extends JavaPlugin {
     private boolean backupsEnabled;
     private File backupsFolder = null;
     private File vaultData;
-    private Set<Material> blockedMats = new HashSet<>();
+    private final Set<Material> blockedMats = new HashSet<>();
 
     @Override
     public void onEnable() {

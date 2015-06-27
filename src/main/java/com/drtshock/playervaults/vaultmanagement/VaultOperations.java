@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VaultOperations {
 
-    private static AtomicBoolean LOCKED = new AtomicBoolean(false);
+    private static final AtomicBoolean LOCKED = new AtomicBoolean(false);
 
     /**
      * Gets whether or not player vaults are locked

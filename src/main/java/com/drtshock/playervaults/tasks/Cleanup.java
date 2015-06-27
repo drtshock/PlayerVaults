@@ -6,7 +6,7 @@ import java.io.File;
 
 public class Cleanup implements Runnable {
 
-    private long diff;
+    private final long diff;
 
     public Cleanup(int diff) {
         this.diff = diff * 86400;

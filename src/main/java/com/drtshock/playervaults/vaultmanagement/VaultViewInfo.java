@@ -26,8 +26,8 @@ import java.util.UUID;
 public class VaultViewInfo {
 
     UUID uuid;
-    String holder;
-    int number;
+    final String holder;
+    final int number;
 
     /**
      * Make a VaultViewObject

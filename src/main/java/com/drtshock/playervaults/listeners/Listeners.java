@@ -44,8 +44,8 @@ import java.io.IOException;
 
 public class Listeners implements Listener {
 
-    public PlayerVaults plugin;
-    UUIDVaultManager vm = UUIDVaultManager.getInstance();
+    public final PlayerVaults plugin;
+    final UUIDVaultManager vm = UUIDVaultManager.getInstance();
 
     public Listeners(PlayerVaults playerVaults) {
         this.plugin = playerVaults;

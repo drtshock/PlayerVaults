@@ -18,7 +18,7 @@ public interface Converter {
      *
      * @return the number of vaults converted. Returns 0 on none converted or -1 if no vaults were converted.
      */
-    public int run(CommandSender initiator, ServiceProvider uuidProvider);
+    int run(CommandSender initiator, ServiceProvider uuidProvider);
 
     /**
      * Determines if this converter is applicable for converting to PlayerVaults. This may check for the existance of a
@@ -26,13 +26,13 @@ public interface Converter {
      *
      * @return true if this converter can convert, false otherwise
      */
-    public boolean canConvert();
+    boolean canConvert();
 
     /**
      * Gets the name of this converter
      *
      * @return the converter name
      */
-    public String getName();
+    String getName();
 
 }

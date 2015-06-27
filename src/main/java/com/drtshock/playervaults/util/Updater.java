@@ -406,7 +406,7 @@ public class Updater {
             String version = plugin.getDescription().getVersion();
             if (title.split("v").length == 2) {
                 String remoteVersion = title.split("v")[1].split(" ")[0]; // Get the newest file's version number
-                int remVer = -1, curVer = 0;
+                int remVer, curVer = 0;
                 try {
                     remVer = calVer(remoteVersion);
                     curVer = calVer(version);
