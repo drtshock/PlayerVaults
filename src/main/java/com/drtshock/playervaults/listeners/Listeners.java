@@ -240,17 +240,20 @@ public class Listeners implements Listener {
             return;
         }
 
-        VaultViewInfo info = PlayerVaults.getInstance().getInVault().get(player.getUniqueId().toString());
-        if (info != null) {
-            int num = info.getNumber();
-            String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(num)).replace("%p", info.getHolder());
-            if ((event.getClickedInventory().getTitle().equalsIgnoreCase(title) || event.isShiftClick()) && event.getCurrentItem() != null) {
-                if (PlayerVaults.getInstance().isBlockedMaterial(event.getCurrentItem().getType())) {
-                    event.setCancelled(true);
-                    player.sendMessage(Lang.TITLE.toString() + Lang.BLOCKED_ITEM.toString().replace("%m", event.getCurrentItem().getType().name()));
+        Inventory clickedInventory = event.getClickedInventory();
+        if (clickedInventory != null) {
+            VaultViewInfo info = PlayerVaults.getInstance().getInVault().get(player.getUniqueId().toString());
+            if (info != null) {
+                int num = info.getNumber();
+                String inventoryTitle = clickedInventory.getTitle();
+                String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(num)).replace("%p", info.getHolder());
+                if (((inventoryTitle != null && inventoryTitle.equalsIgnoreCase(title)) || event.isShiftClick()) && event.getCurrentItem() != null) {
+                    if (PlayerVaults.getInstance().isBlockedMaterial(event.getCurrentItem().getType())) {
+                        event.setCancelled(true);
+                        player.sendMessage(Lang.TITLE.toString() + Lang.BLOCKED_ITEM.toString().replace("%m", event.getCurrentItem().getType().name()));
+                    }
                 }
             }
         }
-
     }
 }
