@@ -9,6 +9,11 @@
 check-update: true
 download-update: false
 
+# Debug mode
+# This will print lots of spammy stuff to console.
+# Should probably only enabled this if you're working with drtshock to fix something.
+debug: false
+
 # Settings here are for economy integration. playervaults.free bypasses it.
 economy:
   enabled: false

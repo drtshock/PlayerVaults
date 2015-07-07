@@ -47,6 +47,7 @@ import java.util.logging.Level;
 public class PlayerVaults extends JavaPlugin {
 
     private static PlayerVaults instance;
+    public static boolean DEBUG = false;
     private boolean update = false;
     private String newVersion = "";
     private final HashMap<String, SignSetInfo> setSign = new HashMap<>();
@@ -66,26 +67,39 @@ public class PlayerVaults extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        long start = System.currentTimeMillis();
         instance = this;
         loadConfig();
+        DEBUG = getConfig().getBoolean("debug", false);
+        debug("config", System.currentTimeMillis());
         vaultData = new File(this.getDataFolder(), "uuidvaults");
+        debug("vaultdata", System.currentTimeMillis());
         getServer().getScheduler().runTask(this, new UUIDConversion()); // Convert to UUIDs first. Class checks if necessary.
+        debug("uuid conversion", System.currentTimeMillis());
         loadLang();
+        debug("lang", System.currentTimeMillis());
         new UUIDVaultManager();
+        debug("uuidvaultmanager", System.currentTimeMillis());
         getServer().getPluginManager().registerEvents(new Listeners(this), this);
         getServer().getPluginManager().registerEvents(new VaultPreloadListener(), this);
+        debug("registering listeners", System.currentTimeMillis());
         this.backupsEnabled = this.getConfig().getBoolean("backups.enabled", true);
         loadSigns();
+        debug("loaded signs", System.currentTimeMillis());
         checkUpdate();
+        debug("check update", System.currentTimeMillis());
         getCommand("pv").setExecutor(new VaultCommand());
         getCommand("pvdel").setExecutor(new DeleteCommand());
         getCommand("pvsign").setExecutor(new SignCommand());
         getCommand("workbench").setExecutor(new WorkbenchCommand());
         getCommand("pvconvert").setExecutor(new ConvertCommand());
+        debug("registered commands", System.currentTimeMillis());
         useVault = setupEconomy();
+        debug("setup economy", System.currentTimeMillis());
 
         if (getConfig().getBoolean("cleanup.enable", false)) {
             getServer().getScheduler().runTaskAsynchronously(this, new Cleanup(getConfig().getInt("cleanup.lastEdit", 30)));
+            debug("cleanup task", System.currentTimeMillis());
         }
 
         new BukkitRunnable() {
@@ -96,6 +110,8 @@ public class PlayerVaults extends JavaPlugin {
                 }
             }
         }.runTaskTimer(this, 20, 20);
+
+        debug("enable done", System.currentTimeMillis());
     }
 
     @Override
@@ -345,5 +361,11 @@ public class PlayerVaults extends JavaPlugin {
 
     public static PlayerVaults getInstance() {
         return instance;
+    }
+
+    public static void debug(String s, long start) {
+        if (DEBUG) {
+            Bukkit.getLogger().log(Level.INFO, "At {0}. Time since start: {1}ms", new Object[]{s, (System.currentTimeMillis() - start)});
+        }
     }
 }
