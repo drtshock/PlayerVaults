@@ -18,22 +18,10 @@ import java.util.*;
 public class ConvertCommand implements CommandExecutor {
 
     private final List<Converter> converters = new ArrayList<>();
-    private final ServiceProvider uuidProvider;
+    private ServiceProvider uuidProvider;
 
     public ConvertCommand() {
         converters.add(new BackpackConverter());
-
-        CachingServiceProvider cachedUuidProvider = new CachingServiceProvider(new ApiV2Service());
-        Map<UUID, String> seed = new HashMap<>();
-
-        for (OfflinePlayer player : PlayerVaults.getInstance().getServer().getOfflinePlayers()) {
-            if (player.hasPlayedBefore()) {
-                seed.put(player.getUniqueId(), player.getName());
-            }
-        }
-
-        cachedUuidProvider.seedLoad(seed, 6 * 60 * 60); // 6 hour cache time
-        uuidProvider = cachedUuidProvider;
     }
 
     @Override
@@ -64,6 +52,20 @@ public class ConvertCommand implements CommandExecutor {
                     PlayerVaults.getInstance().getServer().getScheduler().runTaskLaterAsynchronously(PlayerVaults.getInstance(), new Runnable() {
                         @Override
                         public void run() {
+                            if (uuidProvider == null) {
+                                CachingServiceProvider cachingUuidProvider = new CachingServiceProvider(new ApiV2Service());
+                                Map<UUID, String> seed = new HashMap<>();
+
+                                for (OfflinePlayer player : PlayerVaults.getInstance().getServer().getOfflinePlayers()) {
+                                    if (player.hasPlayedBefore()) {
+                                        seed.put(player.getUniqueId(), player.getName());
+                                    }
+                                }
+
+                                cachingUuidProvider.seedLoad(seed, 6 * 60 * 60); // 6 hour cache time
+                                uuidProvider = cachingUuidProvider;
+                            }
+
                             int converted = 0;
                             VaultOperations.setLocked(true);
                             for (Converter converter : applicableConverters) {
