@@ -14,6 +14,12 @@ download-update: false
 # Should probably only enabled this if you're working with drtshock to fix something.
 debug: false
 
+# Signs
+# Do you want to enable signs?
+# You can checkout the project page for info on what this is if you don't know.
+# This can save some performance on servers with 250+ players if disabled.
+signs-enabled: false
+
 # Settings here are for economy integration. playervaults.free bypasses it.
 economy:
   enabled: false

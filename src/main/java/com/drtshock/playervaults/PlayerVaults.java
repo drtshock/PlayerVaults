@@ -18,6 +18,7 @@ package com.drtshock.playervaults;
 
 import com.drtshock.playervaults.commands.*;
 import com.drtshock.playervaults.listeners.Listeners;
+import com.drtshock.playervaults.listeners.SignListener;
 import com.drtshock.playervaults.listeners.VaultPreloadListener;
 import com.drtshock.playervaults.tasks.Cleanup;
 import com.drtshock.playervaults.tasks.UUIDConversion;
@@ -90,7 +91,6 @@ public class PlayerVaults extends JavaPlugin {
         debug("check update", System.currentTimeMillis());
         getCommand("pv").setExecutor(new VaultCommand());
         getCommand("pvdel").setExecutor(new DeleteCommand());
-        getCommand("pvsign").setExecutor(new SignCommand());
         getCommand("workbench").setExecutor(new WorkbenchCommand());
         getCommand("pvconvert").setExecutor(new ConvertCommand());
         debug("registered commands", System.currentTimeMillis());
@@ -130,7 +130,10 @@ public class PlayerVaults extends JavaPlugin {
 
             player.closeInventory();
         }
-        saveSignsFile();
+
+        if (getConfig().getBoolean("cleanup.enable", false)) {
+            saveSignsFile();
+        }
     }
 
     @Override
@@ -196,6 +199,12 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     private void loadSigns() {
+        if (!getConfig().getBoolean("signs-enabled", true)) {
+            return;
+        }
+
+        getCommand("pvsign").setExecutor(new SignCommand());
+        getServer().getPluginManager().registerEvents(new SignListener(this), this);
         File signs = new File(getDataFolder(), "signs.yml");
         if (!signs.exists()) {
             try {
@@ -227,6 +236,10 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     private void saveSignsFile() {
+        if (!getConfig().getBoolean("signs-enabled", true)) {
+            return;
+        }
+
         saveQueued = false;
         try {
             signs.save(this.signsFile);
