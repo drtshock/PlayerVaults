@@ -46,11 +46,11 @@ public class EconomyOperations {
             return true;
         }
 
-        if (UUIDVaultManager.getInstance().vaultExists(player.getUniqueId(), number)) {
+        if (!UUIDVaultManager.getInstance().vaultExists(player.getUniqueId(), number)) {
             return payToCreate(player);
         } else {
             double cost = BUKKIT_CONFIG.getDouble("economy.cost-to-open", 10);
-            EconomyResponse resp = PlayerVaults.getInstance().getEconomy().withdrawPlayer(player.getName(), cost);
+            EconomyResponse resp = PlayerVaults.getInstance().getEconomy().withdrawPlayer(player, cost);
             if (resp.transactionSuccess()) {
                 player.sendMessage(Lang.TITLE.toString() + Lang.COST_TO_OPEN.toString().replaceAll("%price", "" + cost));
                 return true;
@@ -73,7 +73,7 @@ public class EconomyOperations {
         }
 
         double cost = BUKKIT_CONFIG.getDouble("economy.cost-to-create", 100);
-        EconomyResponse resp = PlayerVaults.getInstance().getEconomy().withdrawPlayer(player.getName(), cost);
+        EconomyResponse resp = PlayerVaults.getInstance().getEconomy().withdrawPlayer(player, cost);
         if (resp.transactionSuccess()) {
             player.sendMessage(Lang.TITLE.toString() + Lang.COST_TO_CREATE.toString().replaceAll("%price", "" + cost));
             return true;
@@ -108,7 +108,7 @@ public class EconomyOperations {
         }
 
         double cost = BUKKIT_CONFIG.getDouble("economy.refund-on-delete");
-        EconomyResponse resp = PlayerVaults.getInstance().getEconomy().depositPlayer(player.getName(), cost);
+        EconomyResponse resp = PlayerVaults.getInstance().getEconomy().depositPlayer(player, cost);
         if (resp.transactionSuccess()) {
             player.sendMessage(Lang.TITLE.toString() + Lang.REFUND_AMOUNT.toString().replaceAll("%price", String.valueOf(cost)));
             return true;
