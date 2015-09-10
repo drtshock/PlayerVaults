@@ -126,9 +126,9 @@ public class PlayerVaults extends JavaPlugin {
                 }
 
                 this.inVault.remove(player.getName());
+                debug("Closing vault for " + player.getName());
+                player.closeInventory();
             }
-
-            player.closeInventory();
         }
 
         if (getConfig().getBoolean("cleanup.enable", false)) {
@@ -379,6 +379,12 @@ public class PlayerVaults extends JavaPlugin {
     public static void debug(String s, long start) {
         if (DEBUG) {
             Bukkit.getLogger().log(Level.INFO, "At {0}. Time since start: {1}ms", new Object[]{s, (System.currentTimeMillis() - start)});
+        }
+    }
+
+    public static void debug(String s) {
+        if (DEBUG) {
+            Bukkit.getLogger().log(Level.INFO, s);
         }
     }
 }
