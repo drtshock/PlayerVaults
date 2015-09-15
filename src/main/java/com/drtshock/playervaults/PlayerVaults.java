@@ -117,15 +117,15 @@ public class PlayerVaults extends JavaPlugin {
     @Override
     public void onDisable() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (this.inVault.containsKey(player.getName())) {
+            if (this.inVault.containsKey(player.getUniqueId().toString())) {
                 Inventory inventory = player.getOpenInventory().getTopInventory();
                 if (inventory.getViewers().size() == 1) {
-                    VaultViewInfo info = this.inVault.get(player.getName());
+                    VaultViewInfo info = this.inVault.get(player.getUniqueId().toString());
                     UUIDVaultManager.getInstance().saveVault(inventory, player.getUniqueId(), info.getNumber(), false);
                     this.openInventories.remove(info.toString());
                 }
 
-                this.inVault.remove(player.getName());
+                this.inVault.remove(player.getUniqueId().toString());
                 debug("Closing vault for " + player.getName());
                 player.closeInventory();
             }
