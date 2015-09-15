@@ -34,7 +34,7 @@ public class SignListener implements Listener {
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (PlayerVaults.getInstance().getInVault().containsKey(player.getName())) {
+            if (PlayerVaults.getInstance().getInVault().containsKey(player.getUniqueId().toString())) {
                 Block block = event.getClickedBlock();
                 // Different inventories that we don't want the player to open.
                 if (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST || block.getType() == Material.ENDER_CHEST || block.getType() == Material.FURNACE || block.getType() == Material.BURNING_FURNACE || block.getType() == Material.BREWING_STAND || block.getType() == Material.ENCHANTMENT_TABLE || block.getType() == Material.BEACON) {
@@ -107,9 +107,9 @@ public class SignListener implements Listener {
                                 player.openInventory(inv);
                             }
                         }
-                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo((self) ? player.getName() : owner, num));
+                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(self ? player.getUniqueId() : offlinePlayer.getUniqueId(), num));
                         event.setCancelled(true);
-                        player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_WITH_SIGN.toString().replace("%v", String.valueOf(num)).replace("%p", (self) ? player.getName() : owner));
+                        player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_WITH_SIGN.toString().replace("%v", String.valueOf(num)).replace("%p", owner));
                     } else {
                         player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
                     }

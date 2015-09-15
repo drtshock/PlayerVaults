@@ -24,7 +24,7 @@ public class VaultCommand implements CommandExecutor {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (PlayerVaults.getInstance().getInVault().containsKey(player.getName())) {
+            if (PlayerVaults.getInstance().getInVault().containsKey(player.getUniqueId().toString())) {
                 // don't let them open another vault.
                 return true;
             }
