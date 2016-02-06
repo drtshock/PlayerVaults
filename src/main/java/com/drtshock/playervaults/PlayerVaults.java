@@ -16,7 +16,12 @@
  */
 package com.drtshock.playervaults;
 
-import com.drtshock.playervaults.commands.*;
+import com.drtshock.playervaults.commands.ConvertCommand;
+import com.drtshock.playervaults.commands.DeleteCommand;
+import com.drtshock.playervaults.commands.SignCommand;
+import com.drtshock.playervaults.commands.SignSetInfo;
+import com.drtshock.playervaults.commands.VaultCommand;
+import com.drtshock.playervaults.commands.WorkbenchCommand;
 import com.drtshock.playervaults.listeners.Listeners;
 import com.drtshock.playervaults.listeners.SignListener;
 import com.drtshock.playervaults.listeners.VaultPreloadListener;
@@ -39,7 +44,11 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;

@@ -240,7 +240,10 @@ public class UUIDVaultManager {
 
     // Should only be run asynchronously
     public void cachePlayerVaultFile(UUID holder) {
-        cachedVaultFiles.put(holder, loadPlayerVaultFile(holder));
+        YamlConfiguration config = this.loadPlayerVaultFile(holder, false);
+        if (config != null) {
+            this.cachedVaultFiles.put(holder, config);
+        }
     }
 
     public void removeCachedPlayerVaultFile(UUID holder) {
@@ -264,17 +267,25 @@ public class UUIDVaultManager {
     }
 
     public YamlConfiguration loadPlayerVaultFile(UUID holder) {
-        if (!directory.exists()) {
-            directory.mkdir();
+        return this.loadPlayerVaultFile(holder, true);
+    }
+
+    public YamlConfiguration loadPlayerVaultFile(UUID uniqueId, boolean createIfNotFound) {
+        if (!this.directory.exists()) {
+            this.directory.mkdir();
         }
-        File file = new File(directory, holder.toString() + ".yml");
-        if (!file.exists()) {
+
+        File file = new File(this.directory, uniqueId.toString() + ".yml");
+        if (!file.exists() && createIfNotFound) {
             try {
                 file.createNewFile();
             } catch (IOException e) {
                 // Who cares?
             }
+        } else {
+            return null;
         }
+
         return YamlConfiguration.loadConfiguration(file);
     }
 

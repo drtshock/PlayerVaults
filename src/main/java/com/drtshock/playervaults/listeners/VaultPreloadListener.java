@@ -12,6 +12,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.UUID;
 
 public class VaultPreloadListener implements Listener {
+
     final UUIDVaultManager vm = UUIDVaultManager.getInstance();
 
     @EventHandler(priority = EventPriority.MONITOR)

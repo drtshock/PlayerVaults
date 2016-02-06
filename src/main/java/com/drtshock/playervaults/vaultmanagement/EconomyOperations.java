@@ -30,6 +30,7 @@ import java.io.File;
  * A class that handles all economy operations.
  */
 public class EconomyOperations {
+
     private static final PlayerVaults PLUGIN = PlayerVaults.getInstance();
     private static final FileConfiguration BUKKIT_CONFIG = PLUGIN.getConfig();
 
