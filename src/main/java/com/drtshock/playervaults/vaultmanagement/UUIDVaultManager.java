@@ -276,14 +276,16 @@ public class UUIDVaultManager {
         }
 
         File file = new File(this.directory, uniqueId.toString() + ".yml");
-        if (!file.exists() && createIfNotFound) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                // Who cares?
+        if (!file.exists()) {
+            if (createIfNotFound) {
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    // Who cares?
+                }
+            } else {
+                return null;
             }
-        } else {
-            return null;
         }
 
         return YamlConfiguration.loadConfiguration(file);
