@@ -65,11 +65,6 @@ public class Listeners implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onTeleport(PlayerTeleportEvent event) {
-        saveVault(event.getPlayer());
-    }
-
     @EventHandler(priority = EventPriority.HIGH)
     public void onQuit(PlayerQuitEvent event) {
         saveVault(event.getPlayer());
