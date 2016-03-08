@@ -21,14 +21,13 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -41,18 +40,16 @@ import java.util.Map.Entry;
 public class Serialization {
 
     @SuppressWarnings("unchecked")
-    public static Map<String, Object> toMap(JSONObject object) throws JSONException {
+    public static Map<String, Object> toMap(JSONObject object) {
         Map<String, Object> map = new HashMap<>();
-        Iterator<String> keys = object.keys();
-        while (keys.hasNext()) {
-            String key = keys.next();
-            map.put(key, fromJson(object.get(key)));
+        for (Object key : object.keySet()) {
+            map.put(key.toString(), fromJson(object.get(key)));
         }
         return map;
     }
 
-    private static Object fromJson(Object json) throws JSONException {
-        if (json == JSONObject.NULL) {
+    private static Object fromJson(Object json) {
+        if (json == null) {
             return null;
         } else if (json instanceof JSONObject) {
             return toMap((JSONObject) json);
@@ -63,10 +60,10 @@ public class Serialization {
         }
     }
 
-    public static List<Object> toList(JSONArray array) throws JSONException {
+    public static List<Object> toList(JSONArray array) {
         List<Object> list = new ArrayList<>();
-        for (int i = 0; i < array.length(); i++) {
-            list.add(fromJson(array.get(i)));
+        for (Object value : array) {
+            list.add(fromJson(value));
         }
         return list;
     }
@@ -94,12 +91,8 @@ public class Serialization {
             if (piece.equalsIgnoreCase("null")) {
                 contents.add(null);
             } else {
-                try {
-                    ItemStack item = (ItemStack) deserialize(toMap(new JSONObject(piece)));
-                    contents.add(item);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                ItemStack item = (ItemStack) deserialize(toMap((JSONObject) JSONValue.parse(piece)));
+                contents.add(item);
             }
         }
         ItemStack[] items = new ItemStack[contents.size()];
