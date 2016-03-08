@@ -4,7 +4,7 @@
 
     <groupId>com.drtshock</groupId>
     <artifactId>PlayerVaults</artifactId>
-    <version>3.5.7</version>
+    <version>3.5.8-SNAPSHOT</version>
     <name>PlayerVaults</name>
     <url>http://dev.bukkit.org/bukkit-plugins/playervaults/</url>
 
