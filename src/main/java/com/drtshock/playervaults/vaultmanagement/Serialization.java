@@ -139,15 +139,17 @@ public class Serialization {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static ConfigurationSerializable deserialize(Map<String, Object> map) {
+    public static Object deserialize(Map<String, Object> map) {
         for (Entry<String, Object> entry : map.entrySet()) {
-            if (entry.getValue() instanceof Map && ((Map) entry.getValue()).containsKey(ConfigurationSerialization.SERIALIZED_TYPE_KEY)) {
+            if (entry.getValue() instanceof Map) {
                 entry.setValue(deserialize((Map) entry.getValue()));
             } else if (entry.getValue() instanceof Iterable) {
                 entry.setValue(convertIterable((Iterable) entry.getValue()));
+            } else if (entry.getValue() instanceof Number) {
+                entry.setValue(convertNumber((Number) entry.getValue()));
             }
         }
-        return ConfigurationSerialization.deserializeObject(map);
+        return map.containsKey(ConfigurationSerialization.SERIALIZED_TYPE_KEY) ? ConfigurationSerialization.deserializeObject(map) : map;
     }
 
     private static List<?> convertIterable(Iterable<?> iterable) {
@@ -157,9 +159,21 @@ public class Serialization {
                 object = deserialize((Map<String, Object>) object);
             } else if (object instanceof List) {
                 object = convertIterable((Iterable) object);
+            } else if (object instanceof Number) {
+                object = convertNumber((Number) object);
             }
             newList.add(object);
         }
         return newList;
+    }
+
+    private static Number convertNumber(Number number) {
+        if (number instanceof Long) {
+            Long longObj = (Long) number;
+            if (longObj.longValue() == longObj.intValue()) {
+                return new Integer(longObj.intValue());
+            }
+        }
+        return number;
     }
 }
