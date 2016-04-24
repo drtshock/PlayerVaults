@@ -30,11 +30,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
 
@@ -123,6 +125,37 @@ public class Listeners implements Listener {
                     if (PlayerVaults.getInstance().isBlockedMaterial(event.getCurrentItem().getType())) {
                         event.setCancelled(true);
                         player.sendMessage(Lang.TITLE.toString() + Lang.BLOCKED_ITEM.toString().replace("%m", event.getCurrentItem().getType().name()));
+                    }
+                }
+            }
+        }
+    }
+    
+    @EventHandler(ignoreCancelled = true)
+    public void onDrag(InventoryDragEvent event) {
+        if (!(event.getWhoClicked() instanceof Player)) {
+            return;
+        }
+
+        Player player = (Player) event.getWhoClicked();
+        if (player.hasPermission("playervaults.bypassblockeditems")) {
+            return;
+        }
+
+        Inventory clickedInventory = event.getInventory();
+        if (clickedInventory != null) {
+            VaultViewInfo info = PlayerVaults.getInstance().getInVault().get(player.getUniqueId().toString());
+            if (info != null) {
+                int num = info.getNumber();
+                String inventoryTitle = clickedInventory.getTitle();
+                String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(num)).replace("%p", info.getHolder());
+                if ((inventoryTitle != null && inventoryTitle.equalsIgnoreCase(title)) && event.getNewItems() != null) {
+                    for (ItemStack item : event.getNewItems().values()) {
+                        if (PlayerVaults.getInstance().isBlockedMaterial(item.getType())) {
+                            event.setCancelled(true);
+                            player.sendMessage(Lang.TITLE.toString() + Lang.BLOCKED_ITEM.toString().replace("%m", item.getType().name()));
+                            return;
+                        }
                     }
                 }
             }
