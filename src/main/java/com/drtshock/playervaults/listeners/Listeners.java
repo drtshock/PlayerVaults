@@ -132,6 +132,7 @@ public class Listeners implements Listener {
     }
     
     @EventHandler(ignoreCancelled = true)
+    public void onDrag(InventoryDragEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) {
             return;
         }
