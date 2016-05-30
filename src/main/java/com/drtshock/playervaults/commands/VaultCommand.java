@@ -55,14 +55,12 @@ public class VaultCommand implements CommandExecutor {
                     }
                     break;
                 case 2:
-                    OfflinePlayer searchPlayer = Bukkit.getOfflinePlayer(args[0]);
-                    if (searchPlayer == null || !searchPlayer.hasPlayedBefore()) {
-                        sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PLAYER_FOUND.toString().replaceAll("%p", args[0]));
+                    if(!player.hasPermission("playervaults.admin")) {
+                        player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS.toString());
                         break;
                     }
-
-                    if (VaultOperations.openOtherVault(player, searchPlayer, args[1])) {
-                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(searchPlayer.getUniqueId(), Integer.parseInt(args[1])));
+                    if (VaultOperations.openOtherVault(player, args[0], args[1])) {
+                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(args[0], Integer.parseInt(args[1])));
                     }
                     break;
                 default:

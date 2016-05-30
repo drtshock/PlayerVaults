@@ -34,6 +34,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -51,6 +52,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class PlayerVaults extends JavaPlugin {
@@ -128,7 +130,7 @@ public class PlayerVaults extends JavaPlugin {
                 Inventory inventory = player.getOpenInventory().getTopInventory();
                 if (inventory.getViewers().size() == 1) {
                     VaultViewInfo info = this.inVault.get(player.getUniqueId().toString());
-                    UUIDVaultManager.getInstance().saveVault(inventory, player.getUniqueId(), info.getNumber(), false);
+                    UUIDVaultManager.getInstance().saveVault(inventory, player.getUniqueId().toString(), info.getNumber(), false);
                     this.openInventories.remove(info.toString());
                 }
 
@@ -373,6 +375,23 @@ public class PlayerVaults extends JavaPlugin {
         }
 
         return this.backupsFolder;
+    }
+
+    /**
+     * Tries to get a name from a given String that we hope is a UUID.
+     * @param potentialUUID - potential UUID to try to get the name for.
+     * @return the player's name if we can find it, otherwise return what got passed to us.
+     */
+    public String getNameIfPlayer(String potentialUUID) {
+        UUID uuid;
+        try {
+            uuid = UUID.fromString(potentialUUID);
+        } catch (Exception e) {
+            return potentialUUID;
+        }
+
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+        return offlinePlayer != null ? offlinePlayer.getName() : potentialUUID;
     }
 
     public boolean isBlockedMaterial(Material mat) {

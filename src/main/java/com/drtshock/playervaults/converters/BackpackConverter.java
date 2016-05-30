@@ -83,7 +83,7 @@ public class BackpackConverter implements Converter {
                             vault.setItem(Integer.parseInt(key.split(" ")[1]), item);
                         }
                         try {
-                            vaults.saveVault(vault, uuid, intoVaultNum);
+                            vaults.saveVault(vault, uuid.toString(), intoVaultNum);
                             converted++;
                         } catch (IOException e) {
                             plugin.getLogger().severe("Error converting Backpack: " + file.getName());

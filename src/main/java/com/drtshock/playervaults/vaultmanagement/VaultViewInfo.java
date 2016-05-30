@@ -30,7 +30,7 @@ public class VaultViewInfo {
     final int number;
 
     /**
-     * Make a VaultViewObject
+     * Make a VaultViewObject.
      *
      * @param s The holder of the vault.
      * @param i The vault number.

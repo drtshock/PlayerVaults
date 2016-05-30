@@ -21,13 +21,13 @@ public class VaultPreloadListener implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                vm.cachePlayerVaultFile(uuid);
+                vm.cachePlayerVaultFile(uuid.toString());
             }
         }.runTaskAsynchronously(PlayerVaults.getInstance());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        vm.removeCachedPlayerVaultFile(event.getPlayer().getUniqueId());
+        vm.removeCachedPlayerVaultFile(event.getPlayer().getUniqueId().toString());
     }
 }

@@ -18,6 +18,7 @@ package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -26,6 +27,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 
 import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VaultOperations {
@@ -81,6 +83,24 @@ public class VaultOperations {
             }
         }
         return false;
+    }
+
+    /**
+     * Get the max size vault a player is allowed to have.
+     *
+     * @param target that is having his permissions checked.
+     *
+     * @return max size as integer. If no max size is set then it will default to 54.
+     */
+    public static int getMaxVaultSize(String target) {
+        UUID uuid;
+        try {
+            uuid = UUID.fromString(target);
+        } catch (Exception e) {
+            return 54;
+        }
+
+        return getMaxVaultSize(Bukkit.getOfflinePlayer(uuid));
     }
 
     /**
@@ -167,36 +187,38 @@ public class VaultOperations {
      *
      * @return Whether or not the player was allowed to open it.
      */
-    public static boolean openOtherVault(Player player, OfflinePlayer holder, String arg) {
+    public static boolean openOtherVault(Player player, String holder, String arg) {
         if (isLocked()) {
             return false;
         }
-        if (player.hasPermission("playervaults.admin")) {
-            if (!holder.hasPlayedBefore()) {
+        int number = 0;
+        try {
+            number = Integer.parseInt(arg);
+            if (number < 1) {
+                player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+                return false;
+            }
+        } catch (NumberFormatException nfe) {
+            player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+        }
+
+        // TODO: Add back way to check for vault existing for players but not factions.
+        /*
+            if (!UUIDVaultManager.getInstance().vaultExists(holder, number)) {
                 player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
                 return false;
             }
-            int number = 0;
-            try {
-                number = Integer.parseInt(arg);
-                if (number < 1) {
-                    player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
-                    return false;
-                }
-            } catch (NumberFormatException nfe) {
-                player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
-            }
-            Inventory inv = UUIDVaultManager.getInstance().loadOtherVault(holder.getUniqueId(), number, getMaxVaultSize(holder));
-            if (inv == null) {
-                player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
-            } else {
-                player.openInventory(inv);
-                player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", holder.getName()));
-                return true;
-            }
+            */
+
+        Inventory inv = UUIDVaultManager.getInstance().loadOtherVault(holder, number, getMaxVaultSize(holder));
+        if (inv == null) {
+            player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
         } else {
-            player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
+            player.openInventory(inv);
+            player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", holder));
+            return true;
         }
+
         return false;
     }
 
@@ -224,7 +246,7 @@ public class VaultOperations {
 
             try {
                 if (EconomyOperations.refundOnDelete(player, number)) {
-                    UUIDVaultManager.getInstance().deleteVault(player, player.getUniqueId(), number);
+                    UUIDVaultManager.getInstance().deleteVault(player, player.getUniqueId().toString(), number);
                 }
             } catch (IOException e) {
                 player.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
@@ -259,7 +281,7 @@ public class VaultOperations {
                 }
 
                 try {
-                    UUIDVaultManager.getInstance().deleteVault(sender, holder.getUniqueId(), number);
+                    UUIDVaultManager.getInstance().deleteVault(sender, holder.getUniqueId().toString(), number);
                 } catch (IOException e) {
                     sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
                 }

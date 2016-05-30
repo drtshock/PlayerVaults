@@ -100,7 +100,7 @@ public class SignListener implements Listener {
                                 return; // Otherwise it would try to add vault view info down there.
                             }
                         } else {
-                            Inventory inv = UUIDVaultManager.getInstance().loadOtherVault(offlinePlayer.getUniqueId(), num, VaultOperations.getMaxVaultSize(offlinePlayer));
+                            Inventory inv = UUIDVaultManager.getInstance().loadOtherVault(offlinePlayer.getUniqueId().toString(), num, VaultOperations.getMaxVaultSize(offlinePlayer));
                             if (inv == null) {
                                 player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
                             } else {

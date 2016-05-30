@@ -43,7 +43,7 @@ import java.io.IOException;
 public class Listeners implements Listener {
 
     public final PlayerVaults plugin;
-    final UUIDVaultManager vm = UUIDVaultManager.getInstance();
+    private final UUIDVaultManager vaultManager = UUIDVaultManager.getInstance();
 
     public Listeners(PlayerVaults playerVaults) {
         this.plugin = playerVaults;
@@ -55,7 +55,8 @@ public class Listeners implements Listener {
             if (inv.getViewers().size() == 1) {
                 VaultViewInfo info = PlayerVaults.getInstance().getInVault().get(player.getUniqueId().toString());
                 try {
-                    vm.saveVault(inv, info.getHolderUUID(), info.getNumber());
+                    String target = info.getHolderUUID() != null ? info.getHolderUUID().toString() : info.getHolder();
+                    vaultManager.saveVault(inv, target, info.getNumber());
                 } catch (IOException e) {
                     // ignore
                 }

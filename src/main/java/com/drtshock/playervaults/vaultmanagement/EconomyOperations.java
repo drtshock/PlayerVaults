@@ -47,7 +47,7 @@ public class EconomyOperations {
             return true;
         }
 
-        if (!UUIDVaultManager.getInstance().vaultExists(player.getUniqueId(), number)) {
+        if (!UUIDVaultManager.getInstance().vaultExists(player.getUniqueId().toString(), number)) {
             return payToCreate(player);
         } else {
             double cost = BUKKIT_CONFIG.getDouble("economy.cost-to-open", 10);
