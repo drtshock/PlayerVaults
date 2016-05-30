@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 /**
  * Class to handle vault operations with new UUIDs.
@@ -312,7 +313,9 @@ public class UUIDVaultManager {
                 }
                 try {
                     yaml.save(file);
-                } catch (IOException ignored) {
+                } catch (Exception e) {
+                    PlayerVaults.getInstance().getLogger().log(Level.SEVERE, "Failed to save vault file for: " + holder.toString());
+                    e.printStackTrace();
                 }
             }
         }.runTaskAsynchronously(PlayerVaults.getInstance());

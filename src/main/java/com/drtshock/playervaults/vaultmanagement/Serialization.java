@@ -25,11 +25,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 /**
@@ -42,6 +38,12 @@ public class Serialization {
     @SuppressWarnings("unchecked")
     public static Map<String, Object> toMap(JSONObject object) {
         Map<String, Object> map = new HashMap<>();
+
+        // Weird case of bad meta causing null map to be passed here.
+        if (object == null) {
+            return map;
+        }
+
         for (Object key : object.keySet()) {
             map.put(key.toString(), fromJson(object.get(key)));
         }
