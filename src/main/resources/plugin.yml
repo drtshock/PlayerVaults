@@ -7,16 +7,13 @@ softdepend: [Vault]
 commands:
   pv:
     description: Open a vault with /pv <number>
-    aliases: [vault, chest, playervaults]
+    aliases: [vault, chest, playervaults, vc]
   pvdel:
     description: Delete a vault.
     aliases: [vaultdel]
   pvsign:
     description: Do pv signs.
     aliases: [vaultsign]
-  workbench:
-    description: Opens a workbench.
-    aliases: [wb]
   pvconvert:
     description: Convert other plugins to PlayerVaults
     aliases: [vaultconvert]

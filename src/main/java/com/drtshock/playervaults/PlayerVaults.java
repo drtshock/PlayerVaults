@@ -21,7 +21,6 @@ import com.drtshock.playervaults.commands.DeleteCommand;
 import com.drtshock.playervaults.commands.SignCommand;
 import com.drtshock.playervaults.commands.SignSetInfo;
 import com.drtshock.playervaults.commands.VaultCommand;
-import com.drtshock.playervaults.commands.WorkbenchCommand;
 import com.drtshock.playervaults.listeners.Listeners;
 import com.drtshock.playervaults.listeners.SignListener;
 import com.drtshock.playervaults.listeners.VaultPreloadListener;
@@ -100,7 +99,6 @@ public class PlayerVaults extends JavaPlugin {
         debug("check update", System.currentTimeMillis());
         getCommand("pv").setExecutor(new VaultCommand());
         getCommand("pvdel").setExecutor(new DeleteCommand());
-        getCommand("workbench").setExecutor(new WorkbenchCommand());
         getCommand("pvconvert").setExecutor(new ConvertCommand());
         debug("registered commands", System.currentTimeMillis());
         useVault = setupEconomy();
