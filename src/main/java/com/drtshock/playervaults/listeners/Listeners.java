@@ -70,6 +70,9 @@ public class Listeners implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onTeleport(PlayerTeleportEvent event) {
+        if (event.getCause() == PlayerTeleportEvent.TeleportCause.UNKNOWN) {
+            return;
+        }
         saveVault(event.getPlayer());
     }
 
