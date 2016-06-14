@@ -403,8 +403,9 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     public static void debug(String s, long start) {
-        if (DEBUG) {
-            Bukkit.getLogger().log(Level.INFO, "At {0}. Time since start: {1}ms", new Object[]{s, (System.currentTimeMillis() - start)});
+        long elapsed = System.currentTimeMillis() - start;
+        if (DEBUG || elapsed > 4) {
+            Bukkit.getLogger().log(Level.INFO, "At {0}. Time since start: {1}ms", new Object[]{s, (elapsed)});
         }
     }
 

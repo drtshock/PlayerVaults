@@ -191,6 +191,10 @@ public class VaultOperations {
         if (isLocked()) {
             return false;
         }
+
+        long time = System.currentTimeMillis();
+
+        String nicename = holder;
         int number = 0;
         try {
             number = Integer.parseInt(arg);
@@ -202,23 +206,26 @@ public class VaultOperations {
             player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
         }
 
-        // TODO: Add back way to check for vault existing for players but not factions.
-        /*
-            if (!UUIDVaultManager.getInstance().vaultExists(holder, number)) {
-                player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
-                return false;
+        // Try to get the vault of an OfflinePlayer if we don't find one with the name first.
+        if (!UUIDVaultManager.getInstance().vaultExists(holder, number)) {
+            OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(holder);
+            if (targetPlayer.hasPlayedBefore()) {
+                holder = targetPlayer.getUniqueId().toString();
             }
-            */
+        }
+
 
         Inventory inv = UUIDVaultManager.getInstance().loadOtherVault(holder, number, getMaxVaultSize(holder));
         if (inv == null) {
             player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
         } else {
             player.openInventory(inv);
-            player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", holder));
+            player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", nicename));
+            PlayerVaults.debug("opening other vault", time);
             return true;
         }
 
+        PlayerVaults.debug("opening other vault returning false", time);
         return false;
     }
 

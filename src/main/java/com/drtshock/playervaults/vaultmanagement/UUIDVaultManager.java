@@ -187,7 +187,20 @@ public class UUIDVaultManager {
         }
     }
 
+    /**
+     * Checks if a vault exists.
+     *
+     * @param holder holder of the vault.
+     * @param number vault number.
+     *
+     * @return true if the vault file and vault number exist in that file, otherwise false.
+     */
     public boolean vaultExists(String holder, int number) {
+        File file = new File(directory, holder + ".yml");
+        if (!file.exists()) {
+            return false;
+        }
+
         return getPlayerVaultFile(holder).contains("vault" + number);
     }
 
