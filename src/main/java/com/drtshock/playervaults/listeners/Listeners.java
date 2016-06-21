@@ -50,10 +50,10 @@ public class Listeners implements Listener {
     }
 
     public void saveVault(Player player) {
-        if (PlayerVaults.getInstance().getInVault().containsKey(player.getUniqueId().toString())) {
+        if (plugin.getInVault().containsKey(player.getUniqueId().toString())) {
             Inventory inv = player.getOpenInventory().getTopInventory();
             if (inv.getViewers().size() == 1) {
-                VaultViewInfo info = PlayerVaults.getInstance().getInVault().get(player.getUniqueId().toString());
+                VaultViewInfo info = plugin.getInVault().get(player.getUniqueId().toString());
                 try {
                     String target = info.getHolderUUID() != null ? info.getHolderUUID().toString() : info.getHolder();
                     vaultManager.saveVault(inv, target, info.getNumber());
@@ -61,19 +61,24 @@ public class Listeners implements Listener {
                     // ignore
                 }
 
-                PlayerVaults.getInstance().getOpenInventories().remove(info.toString());
+                plugin.getOpenInventories().remove(info.toString());
             }
 
-            PlayerVaults.getInstance().getInVault().remove(player.getUniqueId().toString());
+            plugin.getInVault().remove(player.getUniqueId().toString());
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onTeleport(PlayerTeleportEvent event) {
         if (event.getCause() == PlayerTeleportEvent.TeleportCause.UNKNOWN) {
             return;
         }
-        saveVault(event.getPlayer());
+        Player p = event.getPlayer();
+        // The player will either quit, die, or close the inventory at some point
+        if (plugin.getInVault().containsKey(p.getUniqueId().toString())) {
+            return;
+        }
+        saveVault(p);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
