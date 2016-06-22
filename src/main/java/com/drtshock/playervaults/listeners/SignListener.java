@@ -94,7 +94,9 @@ public class SignListener implements Listener {
                             // We already checked that they can use signs, now lets check if they have this many vaults.
                             if (VaultOperations.checkPerms(player, num)) {
                                 Inventory inv = UUIDVaultManager.getInstance().loadOwnVault(player, num, VaultOperations.getMaxVaultSize(player));
-                                player.openInventory(inv);
+                                if (inv != null) {
+                                    player.openInventory(inv);
+                                }
                             } else {
                                 player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS.toString());
                                 return; // Otherwise it would try to add vault view info down there.
