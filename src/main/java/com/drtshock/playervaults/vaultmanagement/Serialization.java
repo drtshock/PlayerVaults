@@ -16,17 +16,23 @@
  */
 package com.drtshock.playervaults.vaultmanagement;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-
-import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * Fancy JSON serialization mostly by evilmidget38.
@@ -93,8 +99,7 @@ public class Serialization {
             if (piece.equalsIgnoreCase("null")) {
                 contents.add(null);
             } else {
-                ItemStack item = (ItemStack) deserialize(toMap((JSONObject) JSONValue.parse(piece)));
-                contents.add(item);
+                contents.add((ItemStack) deserialize(toMap((JSONObject) JSONValue.parse(piece))));
             }
         }
         ItemStack[] items = new ItemStack[contents.size()];
@@ -140,18 +145,42 @@ public class Serialization {
         return map;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static Object deserialize(Map<String, Object> map) {
+        List<?> itemflags = null;
         for (Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getKey().equals("meta") && entry.getValue() instanceof Map) {
+                itemflags = (List<?>) ((Map) entry.getValue()).get("ItemFlags");
+
+            }
             if (entry.getValue() instanceof Map) {
                 entry.setValue(deserialize((Map) entry.getValue()));
             } else if (entry.getValue() instanceof Iterable) {
-                entry.setValue(convertIterable((Iterable) entry.getValue()));
+                List<?> templ = convertIterable((Iterable) entry.getValue());
+                if (entry.getKey().equalsIgnoreCase("itemflags")) {
+                    map.remove(entry.getKey());
+                } else {
+                    entry.setValue(templ);
+                }
             } else if (entry.getValue() instanceof Number) {
                 entry.setValue(convertNumber((Number) entry.getValue()));
             }
         }
-        return map.containsKey(ConfigurationSerialization.SERIALIZED_TYPE_KEY) ? ConfigurationSerialization.deserializeObject(map) : map;
+        if (map.containsKey(ConfigurationSerialization.SERIALIZED_TYPE_KEY)) {
+            Object obj = ConfigurationSerialization.deserializeObject(map);
+            if (itemflags != null && obj instanceof ItemStack) {
+                ItemStack tempitem = (ItemStack) obj;
+                ItemMeta meta = tempitem.getItemMeta();
+                for (Object flag : itemflags) {
+
+                    meta.addItemFlags(ItemFlag.valueOf(flag.toString()));
+                }
+                tempitem.setItemMeta(meta);
+            }
+            return obj;
+        } else {
+            return map;
+        }
     }
 
     private static List<?> convertIterable(Iterable<?> iterable) {
