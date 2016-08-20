@@ -59,8 +59,17 @@ public class VaultCommand implements CommandExecutor {
                         player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS.toString());
                         break;
                     }
+
+                    int number;
+                    try {
+                        number = Integer.parseInt(args[1]);
+                    } catch (NumberFormatException e) {
+                        player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+                        return true;
+                    }
+
                     if (VaultOperations.openOtherVault(player, args[0], args[1])) {
-                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(args[0], Integer.parseInt(args[1])));
+                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(args[0], number));
                     }
                     break;
                 default:
