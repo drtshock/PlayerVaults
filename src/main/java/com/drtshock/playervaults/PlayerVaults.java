@@ -78,7 +78,6 @@ public class PlayerVaults extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        long start = System.currentTimeMillis();
         instance = this;
         loadConfig();
         DEBUG = getConfig().getBoolean("debug", false);
