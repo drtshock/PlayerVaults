@@ -54,12 +54,8 @@ public class Listeners implements Listener {
             Inventory inv = player.getOpenInventory().getTopInventory();
             if (inv.getViewers().size() == 1) {
                 VaultViewInfo info = plugin.getInVault().get(player.getUniqueId().toString());
-                try {
-                    String target = info.getHolderUUID() != null ? info.getHolderUUID().toString() : info.getHolder();
-                    vaultManager.saveVault(inv, target, info.getNumber());
-                } catch (IOException e) {
-                    // ignore
-                }
+                String target = info.getHolderUUID() != null ? info.getHolderUUID().toString() : info.getHolder();
+                vaultManager.saveVault(inv, target, info.getNumber());
 
                 plugin.getOpenInventories().remove(info.toString());
             }

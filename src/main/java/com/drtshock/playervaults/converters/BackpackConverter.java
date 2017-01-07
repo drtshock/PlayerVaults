@@ -82,13 +82,8 @@ public class BackpackConverter implements Converter {
                             // Overwrite
                             vault.setItem(Integer.parseInt(key.split(" ")[1]), item);
                         }
-                        try {
-                            vaults.saveVault(vault, uuid.toString(), intoVaultNum);
-                            converted++;
-                        } catch (IOException e) {
-                            plugin.getLogger().severe("Error converting Backpack: " + file.getName());
-                            e.printStackTrace();
-                        }
+                        vaults.saveVault(vault, uuid.toString(), intoVaultNum);
+                        converted++;
 
                         if (System.currentTimeMillis() - lastUpdate >= 1500) {
                             plugin.getLogger().info(converted + " backpacks have been converted in " + worldFolder.getAbsolutePath());

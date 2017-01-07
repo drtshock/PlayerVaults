@@ -129,7 +129,7 @@ public class PlayerVaults extends JavaPlugin {
                 Inventory inventory = player.getOpenInventory().getTopInventory();
                 if (inventory.getViewers().size() == 1) {
                     VaultViewInfo info = this.inVault.get(player.getUniqueId().toString());
-                    UUIDVaultManager.getInstance().saveVault(inventory, player.getUniqueId().toString(), info.getNumber(), false);
+                    UUIDVaultManager.getInstance().saveVault(inventory, player.getUniqueId().toString(), info.getNumber());
                     this.openInventories.remove(info.toString());
                 }
 
