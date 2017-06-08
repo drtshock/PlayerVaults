@@ -30,6 +30,7 @@ import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.util.Updater;
 import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
+import com.google.common.base.Charsets;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -48,6 +49,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -285,7 +287,7 @@ public class PlayerVaults extends JavaPlugin {
                     while ((read = defLangStream.read(bytes)) != -1) {
                         out.write(bytes, 0, read);
                     }
-                    YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defLangStream);
+                    YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defLangStream, Charsets.UTF_8));
                     Lang.setFile(defConfig);
                     return;
                 }
