@@ -68,10 +68,12 @@
             <id>vault-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases/</url>
         </repository>
+				<!-- This repo is down.
         <repository>
             <id>turt2live-repo</id>
             <url>http://repo.turt2live.com</url>
         </repository>
+				-->
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
@@ -89,10 +91,19 @@
             <artifactId>VaultAPI</artifactId>
             <version>1.5</version>
         </dependency>
+				<dependency>
+					<groupId>com.turt2live</groupId>
+					<artifactId>UUID-Library</artifactId>
+					<version>1.0</version>
+					<scope>system</scope>
+					<systemPath>${basedir}/lib/UUID-Library.jar</systemPath>
+				</dependency>
+				<!--
         <dependency>
             <groupId>com.turt2live</groupId>
             <artifactId>UUID-Library</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+				-->
     </dependencies>
 </project>
