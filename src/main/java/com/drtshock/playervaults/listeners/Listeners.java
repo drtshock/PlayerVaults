@@ -20,6 +20,8 @@ import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
@@ -40,6 +42,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
 
+@SuppressWarnings("unused")
 public class Listeners implements Listener {
 
     public final PlayerVaults plugin;
@@ -49,9 +52,12 @@ public class Listeners implements Listener {
         this.plugin = playerVaults;
     }
 
-    public void saveVault(Player player) {
+    public void saveVault(Player player, Inventory inventory) {
         if (plugin.getInVault().containsKey(player.getUniqueId().toString())) {
-            Inventory inv = player.getOpenInventory().getTopInventory();
+            
+        	Inventory inv = Bukkit.createInventory(null, 6 * 9);
+        	inv.setContents(inventory.getContents().clone());
+        	
             if (inv.getViewers().size() == 1) {
                 VaultViewInfo info = plugin.getInVault().get(player.getUniqueId().toString());
                 String target = info.getHolderUUID() != null ? info.getHolderUUID().toString() : info.getHolder();
@@ -74,12 +80,12 @@ public class Listeners implements Listener {
         if (plugin.getInVault().containsKey(p.getUniqueId().toString())) {
             return;
         }
-        saveVault(p);
+        saveVault(p, p.getOpenInventory().getTopInventory());
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onQuit(PlayerQuitEvent event) {
-        saveVault(event.getPlayer());
+        saveVault(event.getPlayer(), event.getPlayer().getOpenInventory().getTopInventory());
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -93,14 +99,14 @@ public class Listeners implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onDeath(PlayerDeathEvent event) {
-        saveVault(event.getEntity());
+        saveVault(event.getEntity(), event.getEntity().getOpenInventory().getTopInventory());
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onClose(InventoryCloseEvent event) {
         HumanEntity he = event.getPlayer();
         if (he instanceof Player) {
-            saveVault((Player) he);
+            saveVault((Player) he, event.getInventory());
         }
     }
 
