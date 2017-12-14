@@ -58,14 +58,11 @@ public class Listeners implements Listener {
         	Inventory inv = Bukkit.createInventory(null, 6 * 9);
         	inv.setContents(inventory.getContents().clone());
         	
-            if (inv.getViewers().size() == 1) {
-                VaultViewInfo info = plugin.getInVault().get(player.getUniqueId().toString());
-                String target = info.getHolderUUID() != null ? info.getHolderUUID().toString() : info.getHolder();
-                vaultManager.saveVault(inv, target, info.getNumber());
+            VaultViewInfo info = plugin.getInVault().get(player.getUniqueId().toString());
+            String target = info.getHolderUUID() != null ? info.getHolderUUID().toString() : info.getHolder();
+            vaultManager.saveVault(inv, target, info.getNumber());
 
-                plugin.getOpenInventories().remove(info.toString());
-            }
-
+            plugin.getOpenInventories().remove(info.toString());
             plugin.getInVault().remove(player.getUniqueId().toString());
         }
     }
