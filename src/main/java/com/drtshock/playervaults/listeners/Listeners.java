@@ -20,7 +20,6 @@ import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
@@ -40,8 +39,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.IOException;
-
 @SuppressWarnings("unused")
 public class Listeners implements Listener {
 
@@ -54,18 +51,21 @@ public class Listeners implements Listener {
 
     public void saveVault(Player player, Inventory inventory) {
         if (plugin.getInVault().containsKey(player.getUniqueId().toString())) {
-            
-        	Inventory inv = Bukkit.createInventory(null, 6 * 9);
-        	inv.setContents(inventory.getContents().clone());
-        	
-        	if (inventory.getViewers().size() == 1) {
-        		VaultViewInfo info = plugin.getInVault().get(player.getUniqueId().toString());
-                String target = info.getHolderUUID() != null ? info.getHolderUUID().toString() : info.getHolder();
-                vaultManager.saveVault(inv, target, info.getNumber());
 
-                plugin.getOpenInventories().remove(info.toString());
-        	}
+            VaultViewInfo info = plugin.getInVault().get(player.getUniqueId().toString());
+            Inventory inv = Bukkit.createInventory(null, 6 * 9);
+            inv.setContents(inventory.getContents().clone());
 
+            if (inventory.getViewers().size() == 1 || info.getHolderUUID() == null) {
+                // DON'T save when others are viewing. Caused saving as username.yml
+                // TODO: verify this doesn't break faction / group vaults.
+                return;
+            }
+
+            String target = info.getHolderUUID().toString();
+            vaultManager.saveVault(inv, target, info.getNumber());
+
+            plugin.getOpenInventories().remove(info.toString());
             plugin.getInVault().remove(player.getUniqueId().toString());
         }
     }
@@ -146,7 +146,7 @@ public class Listeners implements Listener {
             }
         }
     }
-    
+
     @EventHandler(ignoreCancelled = true)
     public void onDrag(InventoryDragEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) {
