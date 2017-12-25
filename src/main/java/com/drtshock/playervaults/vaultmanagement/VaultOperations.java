@@ -88,18 +88,11 @@ public class VaultOperations {
     /**
      * Get the max size vault a player is allowed to have.
      *
-     * @param target that is having his permissions checked.
+     * @param uuid that is having his permissions checked.
      *
      * @return max size as integer. If no max size is set then it will default to 54.
      */
-    public static int getMaxVaultSize(String target) {
-        UUID uuid;
-        try {
-            uuid = UUID.fromString(target);
-        } catch (Exception e) {
-            return 54;
-        }
-
+    public static int getMaxVaultSize(UUID uuid) {
         return getMaxVaultSize(Bukkit.getOfflinePlayer(uuid));
     }
 
@@ -147,7 +140,7 @@ public class VaultOperations {
 
         if (checkPerms(player, number)) {
             if (EconomyOperations.payToOpen(player, number)) {
-                Inventory inv = UUIDVaultManager.getInstance().loadOwnVault(player, number, getMaxVaultSize(player));
+                Inventory inv = VaultManager.getInstance().loadOwnVault(player, number, getMaxVaultSize(player));
                 player.openInventory(inv);
                 player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
                 return true;
@@ -187,14 +180,13 @@ public class VaultOperations {
      *
      * @return Whether or not the player was allowed to open it.
      */
-    public static boolean openOtherVault(Player player, String holder, String arg) {
+    public static boolean openOtherVault(Player player, UUID holder, String arg) {
         if (isLocked()) {
             return false;
         }
 
         long time = System.currentTimeMillis();
 
-        String nicename = holder;
         int number = 0;
         try {
             number = Integer.parseInt(arg);
@@ -206,21 +198,15 @@ public class VaultOperations {
             player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
         }
 
-        // Try to get the vault of an OfflinePlayer if we don't find one with the name first.
-        if (!UUIDVaultManager.getInstance().vaultExists(holder, number)) {
-            OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(holder);
-            if (targetPlayer.hasPlayedBefore()) {
-                holder = targetPlayer.getUniqueId().toString();
-            }
-        }
 
-
-        Inventory inv = UUIDVaultManager.getInstance().loadOtherVault(holder, number, getMaxVaultSize(holder));
+        Inventory inv = VaultManager.getInstance().loadOtherVault(holder, number, getMaxVaultSize(holder));
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(holder);
+        String name = offlinePlayer != null ? offlinePlayer.getName() : "";
         if (inv == null) {
             player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
         } else {
             player.openInventory(inv);
-            player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", nicename));
+            player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", name));
             PlayerVaults.debug("opening other vault", time);
             return true;
         }
@@ -253,7 +239,7 @@ public class VaultOperations {
 
             try {
                 if (EconomyOperations.refundOnDelete(player, number)) {
-                    UUIDVaultManager.getInstance().deleteVault(player, player.getUniqueId().toString(), number);
+                    VaultManager.getInstance().deleteVault(player, player.getUniqueId(), number);
                 }
             } catch (IOException e) {
                 player.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
@@ -288,7 +274,7 @@ public class VaultOperations {
                 }
 
                 try {
-                    UUIDVaultManager.getInstance().deleteVault(sender, holder.getUniqueId().toString(), number);
+                    VaultManager.getInstance().deleteVault(sender, holder.getUniqueId(), number);
                 } catch (IOException e) {
                     sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
                 }

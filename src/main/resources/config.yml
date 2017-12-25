@@ -2,13 +2,6 @@
 # http://dev.bukkit.org/bukkit-plugins/playervaults/
 # Made with love :3
 
-# Whether or not you want to check for updates. 
-# Will not download an update by default, that is your job :)
-# We do not break between minecraft versions so auto updating should not be an issue.
-# But it's always a smart idea to read changelogs and such first :)
-check-update: true
-download-update: false
-
 # Debug mode
 # This will print lots of spammy stuff to console.
 # Should probably only enabled this if you're working with drtshock to fix something.

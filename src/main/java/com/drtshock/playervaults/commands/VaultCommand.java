@@ -2,7 +2,7 @@ package com.drtshock.playervaults.commands;
 
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
-import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
+import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import org.bukkit.Bukkit;
@@ -41,7 +41,7 @@ public class VaultCommand implements CommandExecutor {
                             break;
                         }
 
-                        YamlConfiguration file = UUIDVaultManager.getInstance().getPlayerVaultFile(searchPlayer.getUniqueId());
+                        YamlConfiguration file = VaultManager.getInstance().getPlayerVaultFile(searchPlayer.getUniqueId());
                         if (file == null) {
                             sender.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
                         } else {
@@ -55,7 +55,7 @@ public class VaultCommand implements CommandExecutor {
                     }
                     break;
                 case 2:
-                    if(!player.hasPermission("playervaults.admin")) {
+                    if (!player.hasPermission("playervaults.admin")) {
                         player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS.toString());
                         break;
                     }
@@ -68,8 +68,11 @@ public class VaultCommand implements CommandExecutor {
                         return true;
                     }
 
-                    if (VaultOperations.openOtherVault(player, args[0], args[1])) {
-                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(args[0], number));
+                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
+                    if (offlinePlayer != null && VaultOperations.openOtherVault(player, offlinePlayer.getUniqueId(), args[1])) {
+                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(offlinePlayer.getUniqueId(), number));
+                    } else {
+                        sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PLAYER_FOUND.toString().replaceAll("%p", args[0]));
                     }
                     break;
                 default:

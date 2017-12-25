@@ -24,11 +24,12 @@ import com.drtshock.playervaults.commands.VaultCommand;
 import com.drtshock.playervaults.listeners.Listeners;
 import com.drtshock.playervaults.listeners.SignListener;
 import com.drtshock.playervaults.listeners.VaultPreloadListener;
+import com.drtshock.playervaults.tasks.Base64Conversion;
 import com.drtshock.playervaults.tasks.Cleanup;
 import com.drtshock.playervaults.tasks.UUIDConversion;
 import com.drtshock.playervaults.util.Lang;
-import com.drtshock.playervaults.util.Updater;
 import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
+import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import com.google.common.base.Charsets;
 import net.milkbowl.vault.economy.Economy;
@@ -75,6 +76,7 @@ public class PlayerVaults extends JavaPlugin {
     private boolean saveQueued;
     private boolean backupsEnabled;
     private File backupsFolder = null;
+    private File uuidData;
     private File vaultData;
     private final Set<Material> blockedMats = new HashSet<>();
 
@@ -84,10 +86,14 @@ public class PlayerVaults extends JavaPlugin {
         loadConfig();
         DEBUG = getConfig().getBoolean("debug", false);
         debug("config", System.currentTimeMillis());
-        vaultData = new File(this.getDataFolder(), "uuidvaults");
+        uuidData = new File(this.getDataFolder(), "uuidvaults");
+        vaultData = new File(this.getDataFolder(), "base64vaults");
         debug("vaultdata", System.currentTimeMillis());
         getServer().getScheduler().runTask(this, new UUIDConversion()); // Convert to UUIDs first. Class checks if necessary.
         debug("uuid conversion", System.currentTimeMillis());
+        new VaultManager();
+        getServer().getScheduler().runTask(this, new Base64Conversion());
+        debug("base64 conversion", System.currentTimeMillis());
         loadLang();
         debug("lang", System.currentTimeMillis());
         new UUIDVaultManager();
@@ -98,7 +104,6 @@ public class PlayerVaults extends JavaPlugin {
         this.backupsEnabled = this.getConfig().getBoolean("backups.enabled", true);
         loadSigns();
         debug("loaded signs", System.currentTimeMillis());
-        checkUpdate();
         debug("check update", System.currentTimeMillis());
         getCommand("pv").setExecutor(new VaultCommand());
         getCommand("pvdel").setExecutor(new DeleteCommand());
@@ -148,34 +153,13 @@ public class PlayerVaults extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String args[]) {
-        if (cmd.getName().equals("pvreload")) {
+        if (cmd.getName().equalsIgnoreCase("pvreload")) {
             reloadConfig();
             loadConfig(); // To update blocked materials.
             loadLang();
-            sender.sendMessage(ChatColor.GREEN + "Reloaded PlayerVaults' configuration and lang files.");
+            sender.sendMessage(ChatColor.GREEN + "Reloaded PlayerVault's configuration and lang files.");
         }
         return true;
-    }
-
-    protected void checkUpdate() {
-        if (getConfig().getBoolean("check-update", true)) {
-            final PlayerVaults plugin = this;
-            final File file = this.getFile();
-            final Updater.UpdateType updateType = getConfig().getBoolean("download-update", true) ? Updater.UpdateType.DEFAULT : Updater.UpdateType.NO_DOWNLOAD;
-            final Updater updater = new Updater(plugin, 50123, file, updateType, false);
-            getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
-                @Override
-                public void run() {
-                    update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-                    newVersion = updater.getLatestName();
-                    if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
-                        getLogger().log(Level.INFO, "Successfully updated PlayerVaults to version {0} for next restart!", updater.getLatestName());
-                    } else if (updater.getResult() == Updater.UpdateResult.NO_UPDATE) {
-                        getLogger().log(Level.INFO, "We didn't find an update!");
-                    }
-                }
-            });
-        }
     }
 
     private boolean setupEconomy() {
@@ -362,6 +346,16 @@ public class PlayerVaults extends JavaPlugin {
 
     public File getVaultData() {
         return this.vaultData;
+    }
+
+    /**
+     * Get the legacy UUID vault data folder.
+     * Deprecated in favor of base64 data.
+     * @return
+     */
+    @Deprecated
+    public File getUuidData() {
+        return this.uuidData;
     }
 
     public boolean isBackupsEnabled() {

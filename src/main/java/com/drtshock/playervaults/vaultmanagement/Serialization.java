@@ -39,9 +39,10 @@ import org.json.simple.JSONValue;
  *
  * @author evilmidget38, gomeow
  */
+@SuppressWarnings("unchecked")
 public class Serialization {
 
-    @SuppressWarnings("unchecked")
+    @Deprecated
     public static Map<String, Object> toMap(JSONObject object) {
         Map<String, Object> map = new HashMap<>();
 
@@ -56,6 +57,7 @@ public class Serialization {
         return map;
     }
 
+    @Deprecated
     private static Object fromJson(Object json) {
         if (json == null) {
             return null;
@@ -68,6 +70,7 @@ public class Serialization {
         }
     }
 
+    @Deprecated
     public static List<Object> toList(JSONArray array) {
         List<Object> list = new ArrayList<>();
         for (Object value : array) {
@@ -76,6 +79,7 @@ public class Serialization {
         return list;
     }
 
+    @Deprecated
     public static List<String> toString(Inventory inv) {
         List<String> result = new ArrayList<>();
         List<ConfigurationSerializable> items = new ArrayList<>();
@@ -90,6 +94,7 @@ public class Serialization {
         return result;
     }
 
+    @Deprecated
     public static Inventory toInventory(List<String> stringItems, int number, int size, String title) {
         VaultHolder holder = new VaultHolder(number);
         Inventory inv = Bukkit.createInventory(holder, size, title);
@@ -110,13 +115,14 @@ public class Serialization {
         return inv;
     }
 
+    @Deprecated
     public static Map<String, Object> serialize(ConfigurationSerializable cs) {
         Map<String, Object> returnVal = handleSerialization(cs.serialize());
         returnVal.put(ConfigurationSerialization.SERIALIZED_TYPE_KEY, ConfigurationSerialization.getAlias(cs.getClass()));
         return returnVal;
     }
 
-    @SuppressWarnings("unchecked")
+    @Deprecated
     private static Map<String, Object> handleSerialization(Map<String, Object> map) {
         Map<String, Object> serialized = recreateMap(map);
         for (Entry<String, Object> entry : serialized.entrySet()) {
@@ -139,13 +145,14 @@ public class Serialization {
         return serialized;
     }
 
+    @Deprecated
     public static Map<String, Object> recreateMap(Map<String, Object> original) {
         Map<String, Object> map = new HashMap<>();
         map.putAll(original);
         return map;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Deprecated
     public static Object deserialize(Map<String, Object> map) {
         List<?> itemflags = null;
         for (Entry<String, Object> entry : map.entrySet()) {
@@ -183,6 +190,7 @@ public class Serialization {
         }
     }
 
+    @Deprecated
     private static List<?> convertIterable(Iterable<?> iterable) {
         List<Object> newList = new ArrayList<>();
         for (Object object : iterable) {
@@ -198,6 +206,7 @@ public class Serialization {
         return newList;
     }
 
+    @Deprecated
     private static Number convertNumber(Number number) {
         if (number instanceof Long) {
             Long longObj = (Long) number;

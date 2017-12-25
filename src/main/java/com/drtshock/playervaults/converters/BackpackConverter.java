@@ -1,7 +1,7 @@
 package com.drtshock.playervaults.converters;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
+import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.turt2live.uuid.PlayerRecord;
 import com.turt2live.uuid.ServiceProvider;
 import org.bukkit.command.CommandSender;
@@ -12,7 +12,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -50,7 +49,7 @@ public class BackpackConverter implements Converter {
 
     private int convert(File worldFolder, int intoVaultNum, ServiceProvider uuidProvider) {
         PlayerVaults plugin = PlayerVaults.getInstance();
-        UUIDVaultManager vaults = UUIDVaultManager.getInstance();
+        VaultManager vaults = VaultManager.getInstance();
         int converted = 0;
         long lastUpdate = 0;
         File[] files = worldFolder.listFiles();
@@ -82,7 +81,7 @@ public class BackpackConverter implements Converter {
                             // Overwrite
                             vault.setItem(Integer.parseInt(key.split(" ")[1]), item);
                         }
-                        vaults.saveVault(vault, uuid.toString(), intoVaultNum);
+                        vaults.saveVault(vault, uuid, intoVaultNum);
                         converted++;
 
                         if (System.currentTimeMillis() - lastUpdate >= 1500) {

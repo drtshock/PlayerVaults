@@ -24,8 +24,6 @@ public final class UUIDConversion implements Runnable {
             return;
         }
 
-        newDir.mkdirs();
-
         File oldVaults = new File(PlayerVaults.getInstance().getDataFolder() + File.separator + "vaults");
         if (oldVaults.exists()) {
             logger.info("********** Starting conversion to UUIDs for PlayerVaults **********");

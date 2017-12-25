@@ -3,6 +3,7 @@ package com.drtshock.playervaults.listeners;
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
+import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import org.bukkit.Bukkit;
@@ -93,7 +94,7 @@ public class SignListener implements Listener {
                         if (self) {
                             // We already checked that they can use signs, now lets check if they have this many vaults.
                             if (VaultOperations.checkPerms(player, num)) {
-                                Inventory inv = UUIDVaultManager.getInstance().loadOwnVault(player, num, VaultOperations.getMaxVaultSize(player));
+                                Inventory inv = VaultManager.getInstance().loadOwnVault(player, num, VaultOperations.getMaxVaultSize(player));
                                 if (inv != null) {
                                     player.openInventory(inv);
                                 }
@@ -102,7 +103,7 @@ public class SignListener implements Listener {
                                 return; // Otherwise it would try to add vault view info down there.
                             }
                         } else {
-                            Inventory inv = UUIDVaultManager.getInstance().loadOtherVault(offlinePlayer.getUniqueId().toString(), num, VaultOperations.getMaxVaultSize(offlinePlayer));
+                            Inventory inv = VaultManager.getInstance().loadOtherVault(offlinePlayer.getUniqueId(), num, VaultOperations.getMaxVaultSize(offlinePlayer));
                             if (inv == null) {
                                 player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
                             } else {
