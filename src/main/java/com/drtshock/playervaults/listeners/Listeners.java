@@ -86,15 +86,6 @@ public class Listeners implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        if (PlayerVaults.getInstance().needsUpdate() && (player.isOp() || player.hasPermission("playervaults.notify"))) {
-            player.sendMessage(ChatColor.GREEN + "Version " + ChatColor.RED + PlayerVaults.getInstance().getNewVersion() + ChatColor.GREEN + " of PlayerVaults is available for download!");
-            player.sendMessage(ChatColor.GOLD + "http://dev.bukkit.org/pancakes/playervaults" + ChatColor.GREEN + " to view the changelog and download!");
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
     public void onDeath(PlayerDeathEvent event) {
         saveVault(event.getEntity(), event.getEntity().getOpenInventory().getTopInventory());
     }
