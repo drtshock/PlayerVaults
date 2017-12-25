@@ -3,9 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.drtshock</groupId>
-    <artifactId>PlayerVaults</artifactId>
-    <version>4.0.0-SNAPSHOT</version>
-    <name>PlayerVaults</name>
+    <artifactId>PlayerVaultsX</artifactId>
+    <version>4.0.0</version>
+    <name>PlayerVaultsX</name>
     <url>http://dev.bukkit.org/pancakes/playervaults/</url>
 
     <properties>
@@ -15,7 +15,7 @@
 
     <build>
         <defaultGoal>clean install</defaultGoal>
-        <finalName>PlayerVaults</finalName>
+        <finalName>PlayerVaultsX</finalName>
         <resources>
             <resource>
                 <filtering>true</filtering>
@@ -68,12 +68,6 @@
             <id>vault-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases/</url>
         </repository>
-				<!-- This repo is down.
-        <repository>
-            <id>turt2live-repo</id>
-            <url>http://repo.turt2live.com</url>
-        </repository>
-				-->
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
@@ -84,26 +78,19 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.12-R0.1-SNAPSHOT</version>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
-            <version>1.5</version>
+            <version>1.6</version>
         </dependency>
-				<dependency>
-					<groupId>com.turt2live</groupId>
-					<artifactId>UUID-Library</artifactId>
-					<version>1.0</version>
-					<scope>system</scope>
-					<systemPath>${basedir}/lib/UUID-Library.jar</systemPath>
-				</dependency>
-				<!--
         <dependency>
             <groupId>com.turt2live</groupId>
             <artifactId>UUID-Library</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/UUID-Library.jar</systemPath>
         </dependency>
-				-->
     </dependencies>
 </project>
