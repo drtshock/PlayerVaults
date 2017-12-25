@@ -20,9 +20,7 @@ import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
-
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -34,7 +32,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
@@ -53,15 +51,15 @@ public class Listeners implements Listener {
 
     public void saveVault(Player player, Inventory inventory) {
         if (plugin.getInVault().containsKey(player.getUniqueId().toString())) {
-            
-        	Inventory inv = Bukkit.createInventory(null, 6 * 9);
-        	inv.setContents(inventory.getContents().clone());
-        	
-        	if (inventory.getViewers().size() == 1) {
-        		VaultViewInfo info = plugin.getInVault().get(player.getUniqueId().toString());
+
+            Inventory inv = Bukkit.createInventory(null, 6 * 9);
+            inv.setContents(inventory.getContents().clone());
+
+            if (inventory.getViewers().size() == 1) {
+                VaultViewInfo info = plugin.getInVault().get(player.getUniqueId().toString());
                 vaultManager.saveVault(inv, info.getHolderUUID(), info.getNumber());
                 plugin.getOpenInventories().remove(info.toString());
-        	}
+            }
 
             plugin.getInVault().remove(player.getUniqueId().toString());
         }
@@ -134,7 +132,7 @@ public class Listeners implements Listener {
             }
         }
     }
-    
+
     @EventHandler(ignoreCancelled = true)
     public void onDrag(InventoryDragEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) {
