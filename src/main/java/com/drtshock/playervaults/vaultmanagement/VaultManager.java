@@ -8,10 +8,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -129,7 +131,18 @@ public class VaultManager {
      */
     private Inventory getInventory(YamlConfiguration playerFile, int size, int number, String title) {
         String data = playerFile.getString(String.format(VAULTKEY, number));
-        return Base64Serialization.fromBase64(data);
+        if (Base64Serialization.fromBase64(data) == null) {
+            return null;
+        }
+        Inventory inventory = Bukkit.createInventory(null, size, title);
+
+        for (ItemStack itemStack : Base64Serialization.fromBase64(data).getContents()) {
+            if (itemStack != null) {
+                //inventory.addItem(itemStack).values().forEach(i -> player.getWorld().dropItemNaturally(player.getLocation(), i)); //Will drop any items that can't fit. Requires java 8 and a player/location argument.
+                inventory.addItem(itemStack); //Will delete any items that can't fit.
+            }
+        }
+        return inventory;
     }
 
     /**
