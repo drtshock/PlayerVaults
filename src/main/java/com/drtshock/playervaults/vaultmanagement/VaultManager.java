@@ -142,7 +142,9 @@ public class VaultManager {
         // In this case, players will lose items.
         if (deserialized.getContents().length > size) {
             for (ItemStack stack : deserialized.getContents()) {
-                inventory.addItem(stack);
+                if (stack != null) {
+                    inventory.addItem(stack);
+                }
             }
         } else {
             inventory.setContents(deserialized.getContents());

@@ -29,7 +29,7 @@ economy:
 # Use material names. This does not work with ids.
 
 # Should we even use this? If left to false, the list won't do anything.
-blockitems: false
+blockitems: true
 
 # Only effective if the above option is true.
 blocked-items:
