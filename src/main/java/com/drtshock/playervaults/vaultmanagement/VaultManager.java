@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -128,8 +129,26 @@ public class VaultManager {
      * @return inventory if exists, otherwise null.
      */
     private Inventory getInventory(YamlConfiguration playerFile, int size, int number, String title) {
+        Inventory inventory = Bukkit.createInventory(null, size, title);
+
         String data = playerFile.getString(String.format(VAULTKEY, number));
-        return Base64Serialization.fromBase64(data);
+        Inventory deserialized = Base64Serialization.fromBase64(data);
+        if (deserialized == null) {
+            return inventory;
+        }
+
+        // Check if deserialized has more used slots than the limit here.
+        // Happens on change of permission or if people used the broken version.
+        // In this case, players will lose items.
+        if (deserialized.getContents().length > size) {
+            for (ItemStack stack : deserialized.getContents()) {
+                inventory.addItem(stack);
+            }
+        } else {
+            inventory.setContents(deserialized.getContents());
+        }
+
+        return inventory;
     }
 
     /**
