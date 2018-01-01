@@ -5,24 +5,16 @@ import com.drtshock.playervaults.converters.BackpackConverter;
 import com.drtshock.playervaults.converters.Converter;
 import com.drtshock.playervaults.util.Lang;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
-import com.turt2live.uuid.CachingServiceProvider;
-import com.turt2live.uuid.ServiceProvider;
-import com.turt2live.uuid.turt2live.v2.ApiV2Service;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class ConvertCommand implements CommandExecutor {
 
     private final List<Converter> converters = new ArrayList<>();
-    private ServiceProvider uuidProvider;
 
     public ConvertCommand() {
         converters.add(new BackpackConverter());
@@ -56,27 +48,15 @@ public class ConvertCommand implements CommandExecutor {
                     PlayerVaults.getInstance().getServer().getScheduler().runTaskLaterAsynchronously(PlayerVaults.getInstance(), new Runnable() {
                         @Override
                         public void run() {
-                            if (uuidProvider == null) {
-                                CachingServiceProvider cachingUuidProvider = new CachingServiceProvider(new ApiV2Service());
-                                Map<UUID, String> seed = new HashMap<>();
-
-                                for (OfflinePlayer player : PlayerVaults.getInstance().getServer().getOfflinePlayers()) {
-                                    if (player.hasPlayedBefore()) {
-                                        seed.put(player.getUniqueId(), player.getName());
-                                    }
-                                }
-
-                                cachingUuidProvider.seedLoad(seed, 6 * 60 * 60); // 6 hour cache time
-                                uuidProvider = cachingUuidProvider;
-                            }
-
                             int converted = 0;
                             VaultOperations.setLocked(true);
+
                             for (Converter converter : applicableConverters) {
                                 if (converter.canConvert()) {
-                                    converted += converter.run(sender, uuidProvider);
+                                    converted += converter.run(sender);
                                 }
                             }
+
                             VaultOperations.setLocked(false);
                             sender.sendMessage(Lang.TITLE + Lang.CONVERT_COMPLETE.toString().replace("%converted", converted + ""));
                         }

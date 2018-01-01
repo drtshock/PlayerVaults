@@ -1,6 +1,5 @@
 package com.drtshock.playervaults.converters;
 
-import com.turt2live.uuid.ServiceProvider;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -14,11 +13,10 @@ public interface Converter {
      * Converts the other plugin's data.
      *
      * @param initiator    the initiator of the conversion. May be null
-     * @param uuidProvider the UUID provider to use, cannot be null
      *
      * @return the number of vaults converted. Returns 0 on none converted or -1 if no vaults were converted.
      */
-    int run(CommandSender initiator, ServiceProvider uuidProvider);
+    int run(CommandSender initiator);
 
     /**
      * Determines if this converter is applicable for converting to PlayerVaults. This may check for the existance of a
