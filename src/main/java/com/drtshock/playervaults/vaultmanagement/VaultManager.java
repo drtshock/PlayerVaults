@@ -131,12 +131,13 @@ public class VaultManager {
      */
     private Inventory getInventory(YamlConfiguration playerFile, int size, int number, String title) {
         String data = playerFile.getString(String.format(VAULTKEY, number));
-        if (Base64Serialization.fromBase64(data) == null) {
+        Inventory deserializedData = Base64Serialization.fromBase64(data);
+        if (deserializedData == null) {
             return null;
         }
         Inventory inventory = Bukkit.createInventory(null, size, title);
 
-        for (ItemStack itemStack : Base64Serialization.fromBase64(data).getContents()) {
+        for (ItemStack itemStack : deserializedData.getContents()) {
             if (itemStack != null) {
                 //inventory.addItem(itemStack).values().forEach(i -> player.getWorld().dropItemNaturally(player.getLocation(), i)); //Will drop any items that can't fit. Requires java 8 and a player/location argument.
                 inventory.addItem(itemStack); //Will delete any items that can't fit.
