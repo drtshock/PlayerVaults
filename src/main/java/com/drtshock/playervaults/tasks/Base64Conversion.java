@@ -25,7 +25,6 @@ public final class Base64Conversion implements Runnable {
 
         File newDir = PlayerVaults.getInstance().getVaultData();
         if (newDir.exists()) {
-            logger.info("** Vaults have already been converted to Base64. If this is incorrect, shutdown your server and rename the " + newDir.toString() + " directory.");
             return;
         }
 

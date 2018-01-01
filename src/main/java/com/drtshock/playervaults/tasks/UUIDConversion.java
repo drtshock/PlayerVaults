@@ -20,7 +20,6 @@ public final class UUIDConversion implements Runnable {
 
         File newDir = PlayerVaults.getInstance().getVaultData();
         if (newDir.exists()) {
-            logger.info("** Vaults have already been converted to UUIDs. If this is incorrect, shutdown your server and rename the " + newDir.toString() + " directory.");
             return;
         }
 
