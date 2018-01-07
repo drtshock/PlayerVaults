@@ -1,6 +1,6 @@
 package com.drtshock.playervaults.commands;
 
-import com.drtshock.playervaults.util.Lang;
+import com.drtshock.playervaults.translations.Lang;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

@@ -16,22 +16,18 @@
  */
 package com.drtshock.playervaults;
 
-import com.drtshock.playervaults.commands.ConvertCommand;
-import com.drtshock.playervaults.commands.DeleteCommand;
-import com.drtshock.playervaults.commands.SignCommand;
-import com.drtshock.playervaults.commands.SignSetInfo;
-import com.drtshock.playervaults.commands.VaultCommand;
+import com.drtshock.playervaults.commands.*;
 import com.drtshock.playervaults.listeners.Listeners;
 import com.drtshock.playervaults.listeners.SignListener;
 import com.drtshock.playervaults.listeners.VaultPreloadListener;
 import com.drtshock.playervaults.tasks.Base64Conversion;
 import com.drtshock.playervaults.tasks.Cleanup;
 import com.drtshock.playervaults.tasks.UUIDConversion;
-import com.drtshock.playervaults.util.Lang;
+import com.drtshock.playervaults.translations.Lang;
+import com.drtshock.playervaults.translations.Language;
 import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
-import com.google.common.base.Charsets;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -47,11 +43,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -62,8 +54,6 @@ public class PlayerVaults extends JavaPlugin {
 
     private static PlayerVaults instance;
     public static boolean DEBUG = false;
-    private boolean update = false;
-    private String newVersion = "";
     private final HashMap<String, SignSetInfo> setSign = new HashMap<>();
     // Player name - VaultViewInfo
     private final HashMap<String, VaultViewInfo> inVault = new HashMap<>();
@@ -255,65 +245,48 @@ public class PlayerVaults extends JavaPlugin {
         conf.set(path, object);
     }
 
-    private void loadLang() {
-        File lang = new File(getDataFolder(), "lang.yml");
-        OutputStream out = null;
-        InputStream defLangStream = this.getResource("lang.yml");
-        if (!lang.exists()) {
-            try {
-                getDataFolder().mkdir();
-                lang.createNewFile();
-                if (defLangStream != null) {
-                    out = new FileOutputStream(lang);
-                    int read;
-                    byte[] bytes = new byte[1024];
+    public void loadLang() {
+        File folder = new File(getDataFolder(), "lang");
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
 
-                    while ((read = defLangStream.read(bytes)) != -1) {
-                        out.write(bytes, 0, read);
-                    }
-                    YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defLangStream, Charsets.UTF_8));
-                    Lang.setFile(defConfig);
-                    return;
-                }
-            } catch (IOException e) {
-                e.printStackTrace(); // So they notice
-                getLogger().severe("[PlayerVaults] Couldn't create language file.");
-                getLogger().severe("[PlayerVaults] This is a fatal error. Now disabling");
-                this.setEnabled(false); // Without it loaded, we can't send them messages
-            } finally {
-                if (defLangStream != null) {
-                    try {
-                        defLangStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (out != null) {
-                    try {
-                        out.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        String definedLanguage = getConfig().getString("language", "english");
 
-                }
+        // Save as default just incase.
+        File english = null;
+        File definedFile = null;
+
+        for (Language lang : Language.values()) {
+            String fileName = lang.getFriendlyName() + ".yml";
+            File file = new File(folder, fileName);
+            if (lang == Language.ENGLISH) {
+                english = file;
+            }
+
+            if (!definedLanguage.equalsIgnoreCase(lang.getFriendlyName())) {
+                definedFile = file;
+            }
+
+            // Have Bukkit save the file.
+            if (!file.exists()) {
+                saveResource("lang/" + fileName, false);
             }
         }
 
-        YamlConfiguration conf = YamlConfiguration.loadConfiguration(lang);
-        for (Lang item : Lang.values()) {
-            if (conf.getString(item.getPath()) == null) {
-                conf.set(item.getPath(), item.getDefault());
-            }
+        if (definedFile != null && !definedFile.exists()) {
+            getLogger().severe("Failed to load language for " + definedLanguage + ". Defaulting to English.");
+            definedFile = english;
         }
 
-        Lang.setFile(conf);
-        try {
-            conf.save(lang);
-        } catch (IOException e) {
-            getLogger().log(Level.WARNING, "PlayerVaults: Failed to save lang.yml.");
-            getLogger().log(Level.WARNING, "PlayerVaults: Report this stack trace to drtshock and gomeow.");
-            e.printStackTrace();
+        if (definedFile == null) {
+            getLogger().severe("Failed to load custom language settings. Loading plugin defaults. This should never happen, go ask for help.");
+            return;
         }
+
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(definedFile);
+        Lang.setFile(config);
+        getLogger().info("Loaded lang for " + definedLanguage);
     }
 
     public HashMap<String, SignSetInfo> getSetSign() {
@@ -326,14 +299,6 @@ public class PlayerVaults extends JavaPlugin {
 
     public HashMap<String, Inventory> getOpenInventories() {
         return this.openInventories;
-    }
-
-    public boolean needsUpdate() {
-        return this.update;
-    }
-
-    public String getNewVersion() {
-        return this.newVersion;
     }
 
     public Economy getEconomy() {
@@ -351,6 +316,7 @@ public class PlayerVaults extends JavaPlugin {
     /**
      * Get the legacy UUID vault data folder.
      * Deprecated in favor of base64 data.
+     *
      * @return
      */
     @Deprecated
@@ -374,6 +340,7 @@ public class PlayerVaults extends JavaPlugin {
 
     /**
      * Tries to get a name from a given String that we hope is a UUID.
+     *
      * @param potentialUUID - potential UUID to try to get the name for.
      * @return the player's name if we can find it, otherwise return what got passed to us.
      */

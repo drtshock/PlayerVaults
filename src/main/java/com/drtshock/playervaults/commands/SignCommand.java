@@ -1,7 +1,7 @@
 package com.drtshock.playervaults.commands;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.util.Lang;
+import com.drtshock.playervaults.translations.Lang;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

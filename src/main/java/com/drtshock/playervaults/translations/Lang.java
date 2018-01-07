@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.drtshock.playervaults.util;
+package com.drtshock.playervaults.translations;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -26,7 +26,6 @@ public enum Lang {
     TITLE("title-name", "&4[&fPlayerVaults&4]:"),
     OPEN_VAULT("open-vault", "&fOpening vault &a%v"),
     OPEN_OTHER_VAULT("open-other-vault", "&fOpening vault &a%v &fof &a%p"),
-    OPEN_WORKBENCH("open-workbench", "&fOpening workbench"),
     INVALID_ARGS("invalid-args", "&cInvalid args!"),
     DELETE_VAULT("delete-vault", "&fDeleted vault &a%v"),
     DELETE_OTHER_VAULT("delete-other-vault", "&fDeleted vault &a%v &fof &a%p"),

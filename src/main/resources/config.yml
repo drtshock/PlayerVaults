@@ -7,6 +7,11 @@
 # Should probably only enabled this if you're working with drtshock to fix something.
 debug: false
 
+# Lang files can be found in plugins/PlayerVaults/lang/
+# Set the below value to be one of the files in there without .yml
+# Currently can use: english, bulgarian, dutch
+language: english
+
 # Signs
 # Do you want to enable signs?
 # You can checkout the project page for info on what this is if you don't know.

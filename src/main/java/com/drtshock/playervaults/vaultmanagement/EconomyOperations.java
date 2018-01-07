@@ -17,7 +17,7 @@
 package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.util.Lang;
+import com.drtshock.playervaults.translations.Lang;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;

@@ -17,7 +17,7 @@
 package com.drtshock.playervaults.listeners;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.util.Lang;
+import com.drtshock.playervaults.translations.Lang;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import org.bukkit.Bukkit;
@@ -32,7 +32,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;

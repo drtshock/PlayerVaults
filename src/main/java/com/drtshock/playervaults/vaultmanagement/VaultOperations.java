@@ -17,7 +17,7 @@
 package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.util.Lang;
+import com.drtshock.playervaults.translations.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
