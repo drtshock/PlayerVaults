@@ -47,6 +47,7 @@ public final class Base64Conversion implements Runnable {
 
         int players = 0;
         int vaults = 0;
+        int failed = 0;
         for (File file : oldVaults.listFiles()) {
             if (file.isDirectory()) {
                 continue; // backups folder.
@@ -76,14 +77,19 @@ public final class Base64Conversion implements Runnable {
 
                 int vaultNumber = Integer.valueOf(key.replace("vault", ""));
 
-                Inventory inventory = oldManager.getVault(holderUUID, vaultNumber);
-                manager.saveVault(inventory, holderUUID, vaultNumber);
-                vaults++;
+                try {
+                    Inventory inventory = oldManager.getVault(holderUUID, vaultNumber);
+                    manager.saveVault(inventory, holderUUID, vaultNumber);
+                    vaults++;
+                } catch (Exception e) {
+                    logger.severe("Failed to parse vault " + vaultNumber + " for " + holderUUID);
+                    failed++;
+                }
             }
 
             players++;
         }
 
-        logger.info(String.format("Converted %d vaults for %d players to base64.", vaults, players));
+        logger.info(String.format("Converted %d vaults for %d players to base64. %d failed to convert", vaults, players, failed));
     }
 }
