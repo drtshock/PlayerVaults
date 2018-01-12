@@ -1,8 +1,8 @@
-name: PlayerVaults
+name: PlayerVaultsX
 main: com.drtshock.playervaults.PlayerVaults
 authors: [drtshock, kashike]
 version: ${project.version}
-website: http://dev.bukkit.org/server-mods/PlayerVaults
+website: https://www.spigotmc.org/resources/playervaultsx.51204/
 softdepend: [Vault]
 commands:
   pv:
