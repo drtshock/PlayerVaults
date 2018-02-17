@@ -225,7 +225,7 @@ public class VaultOperations {
         if (isLocked()) {
             return;
         }
-        if (arg.matches("^[0-9]{1,2}$")) {
+        if (isNumber(arg)) {
             int number = 0;
             try {
                 number = Integer.parseInt(arg);
@@ -261,7 +261,7 @@ public class VaultOperations {
             return;
         }
         if (sender.hasPermission("playervaults.delete")) {
-            if (arg.matches("^[0-9]{1,2}$")) {
+            if (isNumber(arg)) {
                 int number = 0;
                 try {
                     number = Integer.parseInt(arg);
@@ -283,6 +283,15 @@ public class VaultOperations {
             }
         } else {
             sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
+        }
+    }
+
+    private static boolean isNumber(String check) {
+        try {
+            Integer.parseInt(check);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 }
