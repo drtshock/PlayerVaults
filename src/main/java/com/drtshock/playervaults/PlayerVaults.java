@@ -264,7 +264,7 @@ public class PlayerVaults extends JavaPlugin {
                 english = file;
             }
 
-            if (!definedLanguage.equalsIgnoreCase(lang.getFriendlyName())) {
+            if (definedLanguage.equalsIgnoreCase(lang.getFriendlyName())) {
                 definedFile = file;
             }
 
