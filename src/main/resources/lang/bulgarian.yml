@@ -5,10 +5,10 @@
 # %number се замества с номера на текущия сейф
 # %converted е броя конвертирани сейфове (където е приложимо)
 # Направено с любов :)
+
 title-name: "&4[&fPlayerVaults&4]:"
 open-vault: "&fОтваряме сейф &a%v"
 open-other-vault: "&fОтваряме сейф &a%v &fна &a%p"
-open-workbench: "&fОтваряме работната маса"
 delete-vault: "&fИзтрихме сейф &a%v"
 delete-other-vault: "&fИзтрихме сейф &a%v &fна &a%p"
 player-only: "&cСъжаляваме, но тази команда може да се използва само от играчи!"
