@@ -5,10 +5,10 @@
 # %number is the vault number
 # %converted is the number of vaults converted (where applicable)
 # Made with love :)
+
 title-name: "&4[&fPlayerVaultsX&4]:"
 open-vault: "&fOpening vault &a%v"
 open-other-vault: "&fOpening vault &a%v &fof &a%p"
-open-workbench: "&fOpening workbench"
 delete-vault: "&fDeleted vault &a%v"
 delete-other-vault: "&fDeleted vault &a%v &fof &a%p"
 player-only: "&cSorry but that can only be run by a player!"
