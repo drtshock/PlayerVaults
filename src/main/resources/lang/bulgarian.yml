@@ -20,7 +20,7 @@ insufficient-funds: "&cНямате достатъчно пари за тази 
 refund-amount: "&fВърнахме ви &a%price &fза изтриването на този сейф."
 cost-to-create: "&fБяхте таксувани &c%price &fза създаването на този сейф."
 cost-to-open: "&fБяхте таксувани &c%price &fза отварянето на този сейф."
-vault-number: "&4Сейф #%number"
+vault-title: "&4Сейф #%number"
 existing-vaults: "&f%p има &a%v &fсейфа"
 no-player-found: "&cНе успяхме да намерим &a%p"
 plugin-not-found: "&cНямаме конвертор за този плъгин."
