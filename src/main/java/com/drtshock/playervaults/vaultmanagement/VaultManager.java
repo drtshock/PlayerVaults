@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -63,8 +64,8 @@ public class VaultManager {
 
         Inventory inv;
         YamlConfiguration playerFile = getPlayerVaultFile(player.getUniqueId());
+        VaultHolder vaultHolder = new VaultHolder(number);
         if (playerFile.getString(String.format(VAULTKEY, number)) == null) {
-            VaultHolder vaultHolder = new VaultHolder(number);
             if (EconomyOperations.payToCreate(player)) {
                 inv = Bukkit.createInventory(vaultHolder, size, title);
                 vaultHolder.setInventory(inv);
@@ -73,7 +74,7 @@ public class VaultManager {
                 return null;
             }
         } else {
-            Inventory i = getInventory(playerFile, size, number, title);
+            Inventory i = getInventory(vaultHolder, playerFile, size, number, title);
             if (i == null) {
                 return null;
             } else {
@@ -105,11 +106,12 @@ public class VaultManager {
         String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", name);
         VaultViewInfo info = new VaultViewInfo(holder, number);
         Inventory inv;
+        VaultHolder vaultHolder = new VaultHolder(number);
         if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
             inv = PlayerVaults.getInstance().getOpenInventories().get(info.toString());
         } else {
             YamlConfiguration playerFile = getPlayerVaultFile(holder);
-            Inventory i = getInventory(playerFile, size, number, title);
+            Inventory i = getInventory(vaultHolder, playerFile, size, number, title);
             if (i == null) {
                 return null;
             } else {
@@ -128,8 +130,8 @@ public class VaultManager {
      * @param number     the vault number.
      * @return inventory if exists, otherwise null.
      */
-    private Inventory getInventory(YamlConfiguration playerFile, int size, int number, String title) {
-        Inventory inventory = Bukkit.createInventory(null, size, title);
+    private Inventory getInventory(InventoryHolder owner, YamlConfiguration playerFile, int size, int number, String title) {
+        Inventory inventory = Bukkit.createInventory(owner, size, title);
 
         String data = playerFile.getString(String.format(VAULTKEY, number));
         Inventory deserialized = Base64Serialization.fromBase64(data);
