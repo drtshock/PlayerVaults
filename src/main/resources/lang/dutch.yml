@@ -29,3 +29,4 @@ conversion-background: "&fHet converteren is naar de achtergrond geplaatst. Chec
 vaults-locked: "&cVaults zijn op dit moment op slot terwijl het wordt geconverteerd. Probeer het later opnieuw!"
 help: "/pv <number>"
 blocked-item: "&6%m &cis geblokkeer van vaults."
+vault-does-not-exist: "&cThat vault does not exist!"
