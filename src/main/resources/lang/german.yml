@@ -1,0 +1,31 @@
+# Nutze & für Farbcodes.
+# Bei %p wird der Spielername eingefügt.
+# Bei %v wird die Tresornummer eingefügt.
+# %price ist der Preis.
+# %number ist die Tresornummer.
+# %converted ist die Nummer and Tresoren, die konvertiert wurden (sofern möglich)
+# Made with love :)
+
+title-name: "&4[&fPlayerVaultsX&4]:"
+open-vault: "&fÖffne Tresor &a%v"
+open-other-vault: "&fÖffne Tresor &a%v &fvon &a%p"
+delete-vault: "&fLösche Tresor &a%v"
+delete-other-vault: "&fLösche Tresor &a%v &fvon &a%p"
+player-only: "&cSorry, dies kann nur durch Spieler durchgeführt werden!"
+must-be-number: "&cDu musst eine Nummer zwischen 1-99 eingeben"
+invalid-args: "&cUnzulässige Argumente!"
+delete-vault-error: "&cFehler beim Löschen des Tresors:("
+no-permissions: "&cDu hast keine Berechtigung dafür!"
+insufficient-funds: "&cDu hast nicht genug Geld dafür!"
+refund-amount: "&fDir wurden &a%price &ffür das Löschen des Tresors zurückgegeben."
+cost-to-create: "&fDir wurden &c%price &ffür das Erstellen des Tresors berechnet."
+cost-to-open: "&fDir wurden von &c%price &ffür das Öffnen des Tresors berechnet."
+vault-title: "&4Tresor #%number"
+existing-vaults: "&f%p hat folgende Tresore: &a%v"
+no-player-found: "&cKann Spieler &a%p nicht finden"
+plugin-not-found: "&cKeinen Converter für das Plugin gefunden"
+conversion-complete: "&%converted Spieler zu PlayerVaults konvertiert"
+conversion-background: "&fKonvertierung wurde im Hintergrund genauer gezeigt. Schaue in die Konsole für mehr Details."
+vaults-locked: "&cTresore sind gerade wegen einer Konvertierung verschlossen. Versuche es in einem Moment nocheinmal!"
+help: "/pv <number>"
+blocked-item: "&6%m &cist von Tresoren geblockt."
