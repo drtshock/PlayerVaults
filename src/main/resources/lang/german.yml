@@ -3,7 +3,7 @@
 # Bei %v wird die Tresornummer eingefügt.
 # %price ist der Preis.
 # %number ist die Tresornummer.
-# %converted ist die Nummer and Tresoren, die konvertiert wurden (sofern möglich)
+# %converted ist die Nummer an Tresoren, die konvertiert wurden (sofern möglich)
 # Made with love :)
 
 title-name: "&4[&fPlayerVaultsX&4]:"
