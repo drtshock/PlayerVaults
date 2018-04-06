@@ -66,13 +66,8 @@ public class VaultManager {
         YamlConfiguration playerFile = getPlayerVaultFile(player.getUniqueId());
         VaultHolder vaultHolder = new VaultHolder(number);
         if (playerFile.getString(String.format(VAULTKEY, number)) == null) {
-            if (EconomyOperations.payToCreate(player)) {
-                inv = Bukkit.createInventory(vaultHolder, size, title);
-                vaultHolder.setInventory(inv);
-            } else {
-                player.sendMessage(Lang.TITLE.toString() + Lang.INSUFFICIENT_FUNDS.toString());
-                return null;
-            }
+            inv = Bukkit.createInventory(vaultHolder, size, title);
+            vaultHolder.setInventory(inv);
         } else {
             Inventory i = getInventory(vaultHolder, playerFile, size, number, title);
             if (i == null) {
