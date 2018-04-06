@@ -141,6 +141,10 @@ public class VaultOperations {
         if (checkPerms(player, number)) {
             if (EconomyOperations.payToOpen(player, number)) {
                 Inventory inv = VaultManager.getInstance().loadOwnVault(player, number, getMaxVaultSize(player));
+                if (inv == null) {
+                    PlayerVaults.debug(String.format("Failed to open null vault %d for %s. This is weird.", number, player.getName()));
+                    return false;
+                }
                 player.openInventory(inv);
                 player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
                 return true;
