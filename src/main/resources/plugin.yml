@@ -2,8 +2,9 @@ name: PlayerVaults
 main: com.drtshock.playervaults.PlayerVaults
 authors: [drtshock, kashike]
 version: ${project.version}
-website: https://www.spigotmc.org/resources/playervaultsx.51204/
+website: https://www.spigotmc.org/resources/51204/
 softdepend: [Vault]
+
 commands:
   pv:
     description: Open a vault with /pv <number>
@@ -20,6 +21,7 @@ commands:
   pvreload:
     description: Reload the config and lang files.
     permission: playervaults.admin
+
 permissions:
   playervaults.commands.use:
     description: Open own vault with command.
