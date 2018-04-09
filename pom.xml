@@ -4,9 +4,9 @@
 
     <groupId>com.drtshock</groupId>
     <artifactId>PlayerVaultsX</artifactId>
-    <version>4.0.4</version>
+    <version>4.0.6-SNAPSHOT</version>
     <name>PlayerVaultsX</name>
-    <url>http://dev.bukkit.org/pancakes/playervaults/</url>
+    <url>https://www.spigotmc.org/resources/51204/</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
