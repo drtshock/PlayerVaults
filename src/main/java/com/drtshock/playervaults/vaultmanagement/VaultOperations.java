@@ -290,6 +290,29 @@ public class VaultOperations {
         }
     }
 
+    /**
+     * Delete all of a player's vaults (Currently goes to vault #100)
+     * @param sender The sender executing the deletion.
+     * @param holder The user to whom the deleted vault belongs.
+     */
+    public static void deleteOtherAllVaults(CommandSender sender, OfflinePlayer holder)
+    {
+        if(isLocked())
+            return;
+
+        if (sender.hasPermission("playervaults.delete.all")) {
+            for(int i = 1; i <= 100; i++) {
+                try {
+                    VaultManager.getInstance().deleteVault(sender, holder.getUniqueId(), i);
+                } catch (IOException e) {
+                    sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
+                }
+            }
+        } else {
+            sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
+        }
+    }
+
     private static boolean isNumber(String check) {
         try {
             Integer.parseInt(check);
