@@ -34,11 +34,19 @@ public class DeleteCommand implements CommandExecutor {
                     break;
                 }
 
+                // TODO: fix the stupid message inconsistencies where sometimes this class sends, sometimes vaultops does.
+                if (args[1].equalsIgnoreCase("all")) {
+                    VaultOperations.deleteOtherAllVaults(sender, player.getUniqueId());
+                    sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_OTHER_VAULT_ALL.toString().replaceAll("%p", player.getName()));
+                    break;
+                }
+
                 VaultOperations.deleteOtherVault(sender, player, args[1]);
                 break;
             default:
                 sender.sendMessage(Lang.TITLE + "/pvdel <number>");
                 sender.sendMessage(Lang.TITLE + "/pvdel <player> <number>");
+                sender.sendMessage(Lang.TITLE + "/pvdel <player> all");
         }
 
         return true;

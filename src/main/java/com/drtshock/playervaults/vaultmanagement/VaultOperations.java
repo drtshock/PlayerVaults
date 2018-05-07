@@ -26,7 +26,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 
-import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -70,7 +69,6 @@ public class VaultOperations {
      *
      * @param sender The person to check.
      * @param number The vault number.
-     *
      * @return Whether or not they have permission.
      */
     public static boolean checkPerms(CommandSender sender, int number) {
@@ -89,7 +87,6 @@ public class VaultOperations {
      * Get the max size vault a player is allowed to have.
      *
      * @param uuid that is having his permissions checked.
-     *
      * @return max size as integer. If no max size is set then it will default to 54.
      */
     public static int getMaxVaultSize(UUID uuid) {
@@ -100,7 +97,6 @@ public class VaultOperations {
      * Get the max size vault a player is allowed to have.
      *
      * @param player that is having his permissions checked.
-     *
      * @return max size as integer. If no max size is set then it will default to 54.
      */
     public static int getMaxVaultSize(OfflinePlayer player) {
@@ -120,7 +116,6 @@ public class VaultOperations {
      *
      * @param player The player to open to.
      * @param arg    The vault number to open.
-     *
      * @return Whether or not the player was allowed to open it.
      */
     public static boolean openOwnVault(Player player, String arg) {
@@ -164,7 +159,6 @@ public class VaultOperations {
      * @param player    The player to open to.
      * @param arg       The vault number to open.
      * @param isCommand - if player is opening via a command or not.
-     *
      * @return Whether or not the player was allowed to open it.
      */
     public static boolean openOwnVault(Player player, String arg, boolean isCommand) {
@@ -181,7 +175,6 @@ public class VaultOperations {
      * @param player The player to open to.
      * @param holder The user to whom the requested vault belongs.
      * @param arg    The vault number to open.
-     *
      * @return Whether or not the player was allowed to open it.
      */
     public static boolean openOtherVault(Player player, UUID holder, String arg) {
@@ -241,13 +234,10 @@ public class VaultOperations {
                 player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
             }
 
-            try {
-                if (EconomyOperations.refundOnDelete(player, number)) {
-                    VaultManager.getInstance().deleteVault(player, player.getUniqueId(), number);
-                }
-            } catch (IOException e) {
-                player.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
+            if (EconomyOperations.refundOnDelete(player, number)) {
+                VaultManager.getInstance().deleteVault(player, player.getUniqueId(), number);
             }
+
         } else {
             player.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
         }
@@ -277,14 +267,29 @@ public class VaultOperations {
                     sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
 
-                try {
-                    VaultManager.getInstance().deleteVault(sender, holder.getUniqueId(), number);
-                } catch (IOException e) {
-                    sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT_ERROR);
-                }
+                VaultManager.getInstance().deleteVault(sender, holder.getUniqueId(), number);
             } else {
                 sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
             }
+        } else {
+            sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
+        }
+    }
+
+    /**
+     * Delete all of a player's vaults (Currently goes to vault #100)
+     *
+     * @param sender The sender executing the deletion.
+     * @param holder The user to whom the deleted vault belongs.
+     */
+    public static void deleteOtherAllVaults(CommandSender sender, UUID holder) {
+        if (isLocked() || holder == null) {
+            return;
+        }
+
+        if (sender.hasPermission("playervaults.delete.all")) {
+            VaultManager.getInstance().deleteAllVaults(holder);
+            PlayerVaults.getInstance().getLogger().warning(String.format("%s deleted ALL vaults belonging to %s", sender.getName(), holder.toString()));
         } else {
             sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
         }

@@ -14,7 +14,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -180,6 +182,38 @@ public class VaultManager {
     }
 
     /**
+     * Gets the numbers belonging to all their vaults.
+     *
+     * @param holder
+     * @return a set of Integers, which are player's vaults' numbers (fuck grammar).
+     */
+    public Set<Integer> getVaultNumbers(UUID holder) {
+        Set<Integer> vaults = new HashSet<>();
+        YamlConfiguration file = getPlayerVaultFile(holder);
+        if (file == null) {
+            return vaults;
+        }
+
+        for (String s : file.getKeys(false)) {
+            try {
+                // vault%
+                int number = Integer.valueOf(s.substring(4));
+                vaults.add(number);
+            } catch (NumberFormatException e) {
+                // silent
+            }
+        }
+
+
+        return vaults;
+    }
+
+    public void deleteAllVaults(UUID holder) {
+        removeCachedPlayerVaultFile(holder);
+        deletePlayerVaultFile(holder);
+    }
+
+    /**
      * Deletes a players vault.
      *
      * @param sender The sender of whom to send messages to.
@@ -187,7 +221,7 @@ public class VaultManager {
      * @param number The vault number.
      * @throws IOException Uh oh!
      */
-    public void deleteVault(CommandSender sender, final UUID holder, final int number) throws IOException {
+    public void deleteVault(CommandSender sender, final UUID holder, final int number) {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -232,9 +266,7 @@ public class VaultManager {
     }
 
     public void removeCachedPlayerVaultFile(UUID holder) {
-        if (cachedVaultFiles.containsKey(holder)) {
-            cachedVaultFiles.remove(holder);
-        }
+        cachedVaultFiles.remove(holder);
     }
 
     /**
@@ -252,6 +284,19 @@ public class VaultManager {
 
     public YamlConfiguration loadPlayerVaultFile(UUID holder) {
         return this.loadPlayerVaultFile(holder, true);
+    }
+
+    /**
+     * Attempt to delete a vault file.
+     *
+     * @param holder UUID of the holder.
+     * @return true if successful, otherwise false.
+     */
+    public void deletePlayerVaultFile(UUID holder) {
+        File file = new File(this.directory, holder.toString() + ".yml");
+        if (file.exists()) {
+            file.delete();
+        }
     }
 
     public YamlConfiguration loadPlayerVaultFile(UUID uniqueId, boolean createIfNotFound) {
