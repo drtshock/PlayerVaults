@@ -34,6 +34,10 @@ public class DeleteCommand implements CommandExecutor {
                     break;
                 }
 
+                if(args[1].equalsIgnoreCase("all")) {
+                    VaultOperations.deleteOtherAllVaults(sender, player);
+                    break;
+                }
                 VaultOperations.deleteOtherVault(sender, player, args[1]);
                 break;
             default:
