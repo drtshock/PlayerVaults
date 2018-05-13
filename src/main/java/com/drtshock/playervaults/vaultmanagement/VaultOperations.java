@@ -289,7 +289,7 @@ public class VaultOperations {
 
         if (sender.hasPermission("playervaults.delete.all")) {
             VaultManager.getInstance().deleteAllVaults(holder);
-            PlayerVaults.getInstance().getLogger().warning(String.format("%s deleted ALL vaults belonging to %s", sender.getName(), holder.toString()));
+            PlayerVaults.getInstance().getLogger().info(String.format("%s deleted ALL vaults belonging to %s", sender.getName(), holder.toString()));
         } else {
             sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
         }
