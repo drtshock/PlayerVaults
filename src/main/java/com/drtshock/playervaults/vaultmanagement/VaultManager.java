@@ -78,7 +78,6 @@ public class VaultManager {
                 inv = i;
             }
         }
-        PlayerVaults.getInstance().getOpenInventories().put(info.toString(), inv);
 
         return inv;
     }

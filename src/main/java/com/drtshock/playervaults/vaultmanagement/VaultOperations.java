@@ -140,7 +140,18 @@ public class VaultOperations {
                     PlayerVaults.debug(String.format("Failed to open null vault %d for %s. This is weird.", number, player.getName()));
                     return false;
                 }
+
                 player.openInventory(inv);
+
+                // Check if the inventory was actually opened
+                if (player.getOpenInventory().getTopInventory() == null) {
+                    PlayerVaults.debug(String.format("Cancelled opening vault %s for %s from an outside source.", arg, player.getName()));
+                    return false; // inventory open event was cancelled.
+                }
+
+                VaultViewInfo info = new VaultViewInfo(player.getUniqueId(), number);
+                PlayerVaults.getInstance().getOpenInventories().put(info.toString(), inv);
+
                 player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
                 return true;
             } else {
