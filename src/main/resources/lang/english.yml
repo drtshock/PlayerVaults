@@ -4,6 +4,7 @@
 # %price is the price.
 # %number is the vault number
 # %converted is the number of vaults converted (where applicable)
+# %m will be replaced by the blacklisted material (where applicable)
 # Made with love :)
 
 title-name: "&4[&fPlayerVaultsX&4]:"
