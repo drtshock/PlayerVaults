@@ -4,6 +4,7 @@
 # %price ist der Preis.
 # %number ist die Tresornummer.
 # %converted ist die Nummer an Tresoren, die konvertiert wurden (sofern möglich)
+# %m wird durch das Blacklist-Material ersetzt (sofern möglich)
 # Made with love :)
 
 title-name: "&4[&fPlayerVaultsX&4]:"
