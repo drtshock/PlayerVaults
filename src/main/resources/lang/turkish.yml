@@ -4,6 +4,7 @@
 # %price fiyatıdır.
 # %number kasa numarasıdır.
 # %converted dönüştürülen depo sayısı (uygulanabilir olduğunda)
+# %m kara listeye alınmış malzeme ile değiştirilecek (uygulanabilir olduğunda)
 # Aşkla yapıldı :)
 # Çeviri, @Fix3d tarafından yapılmıştır.
 
@@ -12,6 +13,7 @@ open-vault: "&a%v. &fdepo açılıyor."
 open-other-vault: "&a%p &foyuncusunun &a%v. &fdeposu açılıyor."
 delete-vault: "&a%v. &fdepo silindi."
 delete-other-vault: "&a%p &foyuncusunun &a%v. &fdeposu silindi."
+delete-other-vault-all: "&4Deleted all vaults belonging to &a%p"
 player-only: "&cÜzgünüz ama bu sadece bir oyuncu tarafından çalıştırılabilir!"
 must-be-number: "&c1-99 arasında bir sayı belirtmeniz gerekiyor"
 invalid-args: "&cGeçersiz argüman!"
