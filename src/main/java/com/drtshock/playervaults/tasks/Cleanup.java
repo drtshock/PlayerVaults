@@ -22,6 +22,9 @@ public class Cleanup implements Runnable {
 
         long time = System.currentTimeMillis();
         for (File file : directory.listFiles()) {
+            if (file.isDirectory()) {
+                continue;
+            }
             if (time - file.lastModified() > diff) {
                 PlayerVaults.getInstance().getLogger().info("Deleting vault file (cleanup): " + file.getName());
                 file.delete();
