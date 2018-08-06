@@ -4,6 +4,7 @@ authors: [drtshock, kashike]
 version: ${project.version}
 website: https://www.spigotmc.org/resources/51204/
 softdepend: [Vault]
+api-version: 1.13
 
 commands:
   pv:

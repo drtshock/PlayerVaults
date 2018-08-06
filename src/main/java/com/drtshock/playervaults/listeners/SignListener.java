@@ -37,7 +37,7 @@ public class SignListener implements Listener {
             if (PlayerVaults.getInstance().getInVault().containsKey(player.getUniqueId().toString())) {
                 Block block = event.getClickedBlock();
                 // Different inventories that we don't want the player to open.
-                if (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST || block.getType() == Material.ENDER_CHEST || block.getType() == Material.FURNACE || block.getType() == Material.BURNING_FURNACE || block.getType() == Material.BREWING_STAND || block.getType() == Material.ENCHANTMENT_TABLE || block.getType() == Material.BEACON) {
+                if (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST || block.getType() == Material.ENDER_CHEST || block.getType() == Material.FURNACE || block.getType() == Material.BREWING_STAND || block.getType() == Material.ENCHANTING_TABLE || block.getType() == Material.BEACON) {
                     event.setCancelled(true);
                 }
             }
@@ -49,7 +49,7 @@ public class SignListener implements Listener {
             PlayerVaults.getInstance().getSetSign().remove(player.getName());
             event.setCancelled(true);
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                if (event.getClickedBlock().getType() == Material.WALL_SIGN || event.getClickedBlock().getType() == Material.SIGN_POST) {
+                if (event.getClickedBlock().getType() == Material.WALL_SIGN || event.getClickedBlock().getType() == Material.SIGN) {
                     Sign s = (Sign) event.getClickedBlock().getState();
                     Location l = s.getLocation();
                     String world = l.getWorld().getName();
@@ -74,7 +74,7 @@ public class SignListener implements Listener {
         }
         Block b = event.getClickedBlock();
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN_POST) {
+            if (b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN) {
                 Location l = b.getLocation();
                 String world = l.getWorld().getName();
                 int x = l.getBlockX();
