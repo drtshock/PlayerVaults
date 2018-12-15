@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2013 drtshock
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,8 +22,8 @@ package com.drtshock.playervaults.commands;
  */
 public class SignSetInfo {
 
-    private String owner;
     private final int number;
+    private String owner;
     private boolean self = false;
 
     /**

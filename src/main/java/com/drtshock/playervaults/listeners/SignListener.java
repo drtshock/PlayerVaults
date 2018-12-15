@@ -33,11 +33,11 @@ public class SignListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+        Block block = event.getClickedBlock();
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (PlayerVaults.getInstance().getInVault().containsKey(player.getUniqueId().toString())) {
-                Block block = event.getClickedBlock();
                 // Different inventories that we don't want the player to open.
-                if (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST || block.getType() == Material.ENDER_CHEST || block.getType() == Material.FURNACE || block.getType() == Material.BREWING_STAND || block.getType() == Material.ENCHANTING_TABLE || block.getType() == Material.BEACON) {
+                if (isInvalidBlock(block.getType())) {
                     event.setCancelled(true);
                 }
             }
@@ -49,8 +49,8 @@ public class SignListener implements Listener {
             PlayerVaults.getInstance().getSetSign().remove(player.getName());
             event.setCancelled(true);
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                if (event.getClickedBlock().getType() == Material.WALL_SIGN || event.getClickedBlock().getType() == Material.SIGN) {
-                    Sign s = (Sign) event.getClickedBlock().getState();
+                if (isValidSign(block.getType())) {
+                    Sign s = (Sign) block.getState();
                     Location l = s.getLocation();
                     String world = l.getWorld().getName();
                     int x = l.getBlockX();
@@ -72,10 +72,9 @@ public class SignListener implements Listener {
             }
             return;
         }
-        Block b = event.getClickedBlock();
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN) {
-                Location l = b.getLocation();
+            if (isValidSign(block.getType())) {
+                Location l = block.getLocation();
                 String world = l.getWorld().getName();
                 int x = l.getBlockX();
                 int y = l.getBlockY();
@@ -144,7 +143,6 @@ public class SignListener implements Listener {
         if (plugin.getSigns().getKeys(false).isEmpty()) {
             return; // Save us a check.
         }
-
         String world = location.getWorld().getName();
         int x = location.getBlockX();
         int y = location.getBlockY();
@@ -153,5 +151,29 @@ public class SignListener implements Listener {
             plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z, null);
             plugin.saveSigns();
         }
+    }
+
+    private boolean isValidSign(Material material) {
+        if (PlayerVaults.getInstance().getVersion().contains("v1_13")) {
+            PlayerVaults.debug("[SignListener] Sign material checked for >= 1.13");
+            return material == Material.SIGN || material == Material.WALL_SIGN;
+        }
+        PlayerVaults.debug("[SignListener] Sign material checked for < 1.13");
+        return material == Material.valueOf("SIGN_POST") || material == Material.WALL_SIGN;
+    }
+
+    private boolean isInvalidBlock(Material material) {
+        if (PlayerVaults.getInstance().getVersion().contains("v1_13")) {
+            PlayerVaults.debug("[SignListener] Block material checked for >= 1.13");
+            return material == Material.CHEST || material == Material.TRAPPED_CHEST
+                    || material == Material.ENDER_CHEST || material == Material.FURNACE
+                    || material == Material.BREWING_STAND || material == Material.ENCHANTING_TABLE
+                    || material == Material.BEACON;
+        }
+        PlayerVaults.debug("[SignListener] Block material checked for < 1.13");
+        return material == Material.CHEST || material == Material.TRAPPED_CHEST
+                || material == Material.ENDER_CHEST || material == Material.FURNACE
+                || material == Material.valueOf("BURNING_FURNACE") || material == Material.BREWING_STAND
+                || material == Material.valueOf("ENCHANTMENT_TABLE") || material == Material.BEACON;
     }
 }

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2013 drtshock
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,6 +45,11 @@ public class VaultHolder implements InventoryHolder {
         return vaultNumber;
     }
 
+    @Override
+    public Inventory getInventory() {
+        return inventory;
+    }
+
     /**
      * Sets the inventory this vault holder holds
      *
@@ -52,10 +57,5 @@ public class VaultHolder implements InventoryHolder {
      */
     public void setInventory(Inventory inventory) {
         this.inventory = inventory;
-    }
-
-    @Override
-    public Inventory getInventory() {
-        return inventory;
     }
 }

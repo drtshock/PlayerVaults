@@ -21,8 +21,8 @@ signs-enabled: false
 # Settings here are for economy integration. playervaults.free bypasses it.
 economy:
   enabled: false
-  
-# Cost to create a vault. You can give players playervaults.free to bypass this.
+
+  # Cost to create a vault. You can give players playervaults.free to bypass this.
   cost-to-create: 100
   cost-to-open: 10
   refund-on-delete: 50
@@ -40,7 +40,6 @@ blockitems: true
 blocked-items:
   - PUMPKIN
   - DIAMOND_BLOCK
-
 
 # Cleanup
 # Should we cleanup vaults that haven't been used in awhile?

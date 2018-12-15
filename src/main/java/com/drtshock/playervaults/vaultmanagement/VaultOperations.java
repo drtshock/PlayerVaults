@@ -72,11 +72,11 @@ public class VaultOperations {
      * @return Whether or not they have permission.
      */
     public static boolean checkPerms(CommandSender sender, int number) {
-        if (sender.hasPermission("playervaults.amount." + String.valueOf(number))) {
+        if (sender.hasPermission("playervaults.amount." + number)) {
             return true;
         }
         for (int x = number; x <= 99; x++) {
-            if (sender.hasPermission("playervaults.amount." + String.valueOf(x))) {
+            if (sender.hasPermission("playervaults.amount." + x)) {
                 return true;
             }
         }

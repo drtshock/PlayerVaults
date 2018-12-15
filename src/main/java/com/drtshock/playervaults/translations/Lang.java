@@ -52,9 +52,9 @@ public enum Lang {
     HELP("help", "/pv <number>"),
     BLOCKED_ITEM("blocked-item", "&6%m &cis blocked from vaults");
 
+    private static YamlConfiguration LANG;
     private final String path;
     private final String def;
-    private static YamlConfiguration LANG;
 
     /**
      * Lang enum constructor.

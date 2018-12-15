@@ -55,7 +55,8 @@ public class Base64Serialization {
             }
             dataInput.close();
             return inventory;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
+            // ignored
         }
         return null;
     }

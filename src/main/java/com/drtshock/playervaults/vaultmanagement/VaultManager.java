@@ -23,15 +23,23 @@ import java.util.logging.Level;
 
 public class VaultManager {
 
-    private static VaultManager instance;
     private static final String VAULTKEY = "vault%d";
+    private static VaultManager instance;
+    private final File directory = PlayerVaults.getInstance().getVaultData();
+    private final Map<UUID, YamlConfiguration> cachedVaultFiles = new ConcurrentHashMap<>();
 
     public VaultManager() {
         instance = this;
     }
 
-    private final File directory = PlayerVaults.getInstance().getVaultData();
-    private final Map<UUID, YamlConfiguration> cachedVaultFiles = new ConcurrentHashMap<>();
+    /**
+     * Get the instance of this class.
+     *
+     * @return - instance of this class.
+     */
+    public static VaultManager getInstance() {
+        return instance;
+    }
 
     /**
      * Saves the inventory to the specified player and vault number.
@@ -335,14 +343,5 @@ public class VaultManager {
         } catch (IOException e) {
             PlayerVaults.getInstance().getLogger().log(Level.SEVERE, "Failed to save vault file for: " + holder.toString(), e);
         }
-    }
-
-    /**
-     * Get the instance of this class.
-     *
-     * @return - instance of this class.
-     */
-    public static VaultManager getInstance() {
-        return instance;
     }
 }

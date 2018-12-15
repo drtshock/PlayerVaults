@@ -12,8 +12,7 @@ public interface Converter {
     /**
      * Converts the other plugin's data.
      *
-     * @param initiator    the initiator of the conversion. May be null
-     *
+     * @param initiator the initiator of the conversion. May be null
      * @return the number of vaults converted. Returns 0 on none converted or -1 if no vaults were converted.
      */
     int run(CommandSender initiator);
