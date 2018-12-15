@@ -1,6 +1,7 @@
 # PlayerVaults
 # Created by: https://github.com/drtshock/PlayerVaults/graphs/contributors/
 # Resource page: https://www.spigotmc.org/resources/51204/
+# Discord server: https://discord.gg/JZcWDEt/
 # Made with love <3
 
 # Debug Mode
@@ -33,7 +34,7 @@ economy:
 #   Bypass permission is: playervaults.bypassblockeditems
 blockitems: true
 
-#  Material list for blocked items, only effective if the feature is enabled.
+#  Material list for blocked items (does not support ID's), only effective if the feature is enabled.
 #   If you don't know material names: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
 blocked-items:
   - PUMPKIN
