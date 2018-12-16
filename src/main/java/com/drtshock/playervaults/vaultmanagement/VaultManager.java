@@ -42,7 +42,8 @@ public class VaultManager {
      */
     public void saveVault(Inventory inventory, UUID target, int number) {
         YamlConfiguration yaml = getPlayerVaultFile(target);
-        String serialized = Base64Serialization.toBase64(inventory);
+        int size = VaultOperations.getMaxVaultSize(target);
+        String serialized = Base64Serialization.toBase64(inventory, size);
         yaml.set(String.format(VAULTKEY, number), serialized);
         saveFileSync(target, yaml);
     }

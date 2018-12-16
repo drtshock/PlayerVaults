@@ -16,13 +16,13 @@ import java.io.ByteArrayOutputStream;
  */
 public class Base64Serialization {
 
-    public static String toBase64(Inventory inventory) {
+    public static String toBase64(Inventory inventory, int size) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
 
             // Write the size of the inventory
-            dataOutput.writeInt(inventory.getSize());
+            dataOutput.writeInt(size);
 
             // Save every element in the list
             for (int i = 0; i < inventory.getSize(); i++) {
@@ -40,7 +40,7 @@ public class Base64Serialization {
     public static String toBase64(ItemStack[] is, int size) {
         Inventory inventory = Bukkit.createInventory(null, size);
         inventory.setContents(is);
-        return toBase64(inventory);
+        return toBase64(inventory, size);
     }
 
     public static Inventory fromBase64(String data) {
@@ -48,7 +48,6 @@ public class Base64Serialization {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
             Inventory inventory = Bukkit.getServer().createInventory(null, dataInput.readInt());
-
             // Read the serialized inventory
             for (int i = 0; i < inventory.getSize(); i++) {
                 inventory.setItem(i, (ItemStack) dataInput.readObject());
