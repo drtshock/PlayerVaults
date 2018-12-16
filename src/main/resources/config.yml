@@ -1,7 +1,7 @@
 # PlayerVaults
 # Created by: https://github.com/drtshock/PlayerVaults/graphs/contributors/
 # Resource page: https://www.spigotmc.org/resources/51204/
-# Discord server: https://discord.gg/JZcWDEt/
+# Discord server: https://discordapp.com/invite/JZcWDEt/
 # Made with love <3
 
 # Debug Mode
@@ -42,9 +42,9 @@ blocked-items:
 
 # Cleanup
 #  Enabling this will purge vaults that haven't been touched in the specified time frame.
-#  This is only checked during startup. (This will not lag your server.)
-#  This will not touch the backup folder.
-#  The time format is in days.
+#   Reminder: This is only checked during startup.
+#             This will not lag your server or touch the backups folder.
+#             The time format is in days.
 cleanup:
   enable: false
   lastEdit: 30
