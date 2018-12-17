@@ -1,18 +1,16 @@
-PlayerVaultsX version (run `/version playervaults`): 
+---
+name: Issue
+about: Having a problem? Use this template!
 
-Server software (run `/version`): 
-
-Server (`logs/latest.log`):
-
-Details:
-
-<!--
+---
+<!-- PlayerVaultsX Issue Template
 Don't put anything inside this block, as it won't be included in the issue.
 
 If you have a question about PlayerVaultsX, it may be more useful to join our
-Discord server: https://discord.gg/F7gexAQ
+Discord server: https://discord.gg/F7gexAQ. Check the wiki, https://github.com/drtshock/PlayerVaults/Wiki,
+as well to make sure this has a fix. Also check to see if this issue has
+already been reported.
 
-You can ignore the template if suggesting a feature; otherwise, read on:
 1.  Fill out the template, running the commands either in the console or 
     as a player. Don't simply put "latest" or we will ignore it.
 2.  When linking files, do not attach them to the post! Paste them on 
@@ -25,3 +23,17 @@ You can ignore the template if suggesting a feature; otherwise, read on:
 5.  Include a description and any other details that may be helpful under
     "Details:".
 -->
+### PlayerVaultsX Version
+*Run `/version playervaults` and give us your output.* 
+
+
+### Server Version
+*Run `/version` and give us your output.*
+
+
+### Logs
+*Give use your logs by going to `logs/latest.log`.*
+
+
+### Details
+*Please explain the problem.*
