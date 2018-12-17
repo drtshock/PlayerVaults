@@ -28,20 +28,20 @@ public class DeleteCommand implements CommandExecutor {
                 }
                 break;
             case 2:
-                OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
-                if (player == null || !player.hasPlayedBefore()) {
-                    sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PLAYER_FOUND.toString().replaceAll("%p", args[0]));
-                    break;
+                OfflinePlayer searchPlayer = Bukkit.getOfflinePlayer(args[0]);
+                String target = args[0];
+                if (searchPlayer != null && searchPlayer.hasPlayedBefore()) {
+                    target = searchPlayer.getUniqueId().toString();
                 }
 
                 // TODO: fix the stupid message inconsistencies where sometimes this class sends, sometimes vaultops does.
                 if (args[1].equalsIgnoreCase("all")) {
-                    VaultOperations.deleteOtherAllVaults(sender, player.getUniqueId());
-                    sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_OTHER_VAULT_ALL.toString().replaceAll("%p", player.getName()));
+                    VaultOperations.deleteOtherAllVaults(sender, target);
+                    sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_OTHER_VAULT_ALL.toString().replaceAll("%p", target));
                     break;
                 }
 
-                VaultOperations.deleteOtherVault(sender, player, args[1]);
+                VaultOperations.deleteOtherVault(sender, target, args[1]);
                 break;
             default:
                 sender.sendMessage(Lang.TITLE + "/pvdel <number>");

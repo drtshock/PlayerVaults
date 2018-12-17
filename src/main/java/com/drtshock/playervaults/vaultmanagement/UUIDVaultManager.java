@@ -74,7 +74,7 @@ public class UUIDVaultManager {
         }
 
         String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", player.getName());
-        VaultViewInfo info = new VaultViewInfo(player.getUniqueId(), number);
+        VaultViewInfo info = new VaultViewInfo(player.getUniqueId().toString(), number);
         Inventory inv;
         if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
             inv = PlayerVaults.getInstance().getOpenInventories().get(info.toString());
@@ -162,7 +162,7 @@ public class UUIDVaultManager {
     public Inventory getVault(UUID holder, int number) {
         YamlConfiguration playerFile = getPlayerVaultFile(holder);
         ConfigurationSection section = playerFile.getConfigurationSection("vault" + number);
-        int maxSize = VaultOperations.getMaxVaultSize(holder);
+        int maxSize = VaultOperations.getMaxVaultSize(holder.toString());
 
         String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number));
 
@@ -238,6 +238,7 @@ public class UUIDVaultManager {
             }
         }
 
+        String uuid = sender instanceof Player ? ((Player)sender).getUniqueId().toString() : holder;
         PlayerVaults.getInstance().getOpenInventories().remove(new VaultViewInfo(holder, number).toString());
     }
 

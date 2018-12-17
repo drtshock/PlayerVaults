@@ -44,7 +44,7 @@ public enum Lang {
     EXISTING_VAULTS("existing-vaults", "&f%p has vaults: &a%v"),
     VAULT_TITLE("vault-title", "&4Vault #%number"),
     OPEN_WITH_SIGN("open-with-sign", "&fOpening vault &a%v &fof &a%p"),
-    NO_PLAYER_FOUND("no-player-found", "&cCannot find player &a%p"),
+    NO_OWNER_FOUND("no-owner-found", "&cCannot find vault owner: &a%p"),
     CONVERT_PLUGIN_NOT_FOUND("plugin-not-found", "&cNo converter found for that plugin"),
     CONVERT_COMPLETE("conversion-complete", "&aConverted %converted players to PlayerVaults"),
     CONVERT_BACKGROUND("conversion-background", "&fConversion has been forked to the background. See console for updates."),

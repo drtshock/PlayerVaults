@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2013 drtshock
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,7 +39,6 @@ public class EconomyOperations {
      *
      * @param player The player to pay.
      * @param number The vault number to open.
-     *
      * @return The transaction success.
      */
     public static boolean payToOpen(Player player, int number) {
@@ -47,7 +46,7 @@ public class EconomyOperations {
             return true;
         }
 
-        if (!VaultManager.getInstance().vaultExists(player.getUniqueId(), number)) {
+        if (!VaultManager.getInstance().vaultExists(player.getUniqueId().toString(), number)) {
             return payToCreate(player);
         } else {
             double cost = BUKKIT_CONFIG.getDouble("economy.cost-to-open", 10);
@@ -65,7 +64,6 @@ public class EconomyOperations {
      * Have a player pay to create a vault.
      *
      * @param player The player to pay.
-     *
      * @return The transaction success
      */
     public static boolean payToCreate(Player player) {
@@ -88,7 +86,6 @@ public class EconomyOperations {
      *
      * @param player The player to receive the money.
      * @param number The vault number to delete.
-     *
      * @return The transaction success.
      */
     public static boolean refundOnDelete(Player player, int number) {

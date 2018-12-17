@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2013 drtshock
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,41 +16,22 @@
  */
 package com.drtshock.playervaults.vaultmanagement;
 
-import org.bukkit.Bukkit;
-
-import java.util.UUID;
-
 /**
  * A class that stores information about a vault viewing including the holder of the vault, and the vault number.
  */
 public class VaultViewInfo {
 
-    UUID uuid;
-    final String holder;
+    final String vaultName;
     final int number;
 
     /**
-     * Make a VaultViewObject.
+     * Makes a VaultViewInfo object. Used for opening a vault owned by the opener.
      *
-     * @param s The holder of the vault.
-     * @param i The vault number.
+     * @param i    vault number.
      */
-    @Deprecated
-    public VaultViewInfo(String s, int i) {
-        this.holder = s;
+    public VaultViewInfo(String vaultName, int i) {
         this.number = i;
-    }
-
-    /**
-     * Makes a VaultViewInfo object.
-     *
-     * @param uuid uuid of viewer.
-     * @param i    vault number
-     */
-    public VaultViewInfo(UUID uuid, int i) {
-        this.uuid = uuid;
-        this.number = i;
-        this.holder = Bukkit.getOfflinePlayer(uuid).getName();
+        this.vaultName = vaultName;
     }
 
     /**
@@ -58,18 +39,8 @@ public class VaultViewInfo {
      *
      * @return The holder of the vault.
      */
-    @Deprecated
-    public String getHolder() {
-        return this.holder;
-    }
-
-    /**
-     * Get the vault holder's UUID.
-     *
-     * @return The vault holder's UUID.
-     */
-    public UUID getHolderUUID() {
-        return this.uuid;
+    public String getVaultName() {
+        return this.vaultName;
     }
 
     /**
@@ -83,6 +54,6 @@ public class VaultViewInfo {
 
     @Override
     public String toString() {
-        return this.uuid + " " + this.number;
+        return this.vaultName + " " + this.number;
     }
 }

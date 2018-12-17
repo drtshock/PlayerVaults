@@ -102,14 +102,14 @@ public class SignListener implements Listener {
                                 return; // Otherwise it would try to add vault view info down there.
                             }
                         } else {
-                            Inventory inv = VaultManager.getInstance().loadOtherVault(offlinePlayer.getUniqueId(), num, VaultOperations.getMaxVaultSize(offlinePlayer));
+                            Inventory inv = VaultManager.getInstance().loadOtherVault(offlinePlayer.getUniqueId().toString(), num, VaultOperations.getMaxVaultSize(offlinePlayer));
                             if (inv == null) {
                                 player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
                             } else {
                                 player.openInventory(inv);
                             }
                         }
-                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(self ? player.getUniqueId() : offlinePlayer.getUniqueId(), num));
+                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(self ? player.getUniqueId().toString() : offlinePlayer.getUniqueId().toString(), num));
                         event.setCancelled(true);
                         player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_WITH_SIGN.toString().replace("%v", String.valueOf(num)).replace("%p", owner));
                     } else {

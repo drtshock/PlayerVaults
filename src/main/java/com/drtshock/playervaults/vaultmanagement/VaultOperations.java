@@ -86,11 +86,18 @@ public class VaultOperations {
     /**
      * Get the max size vault a player is allowed to have.
      *
-     * @param uuid that is having his permissions checked.
+     * @param name that is having his permissions checked.
      * @return max size as integer. If no max size is set then it will default to 54.
      */
-    public static int getMaxVaultSize(UUID uuid) {
-        return getMaxVaultSize(Bukkit.getOfflinePlayer(uuid));
+    public static int getMaxVaultSize(String name) {
+        try {
+            UUID uuid = UUID.fromString(name);
+            return getMaxVaultSize(Bukkit.getOfflinePlayer(uuid));
+        } catch (Exception e) {
+            // Not a UUID
+        }
+
+        return 54;
     }
 
     /**
@@ -149,7 +156,7 @@ public class VaultOperations {
                     return false; // inventory open event was cancelled.
                 }
 
-                VaultViewInfo info = new VaultViewInfo(player.getUniqueId(), number);
+                VaultViewInfo info = new VaultViewInfo(player.getUniqueId().toString(), number);
                 PlayerVaults.getInstance().getOpenInventories().put(info.toString(), inv);
 
                 player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
@@ -184,11 +191,11 @@ public class VaultOperations {
      * Open another player's vault.
      *
      * @param player The player to open to.
-     * @param holder The user to whom the requested vault belongs.
+     * @param vaultOwner The name of the vault owner.
      * @param arg    The vault number to open.
      * @return Whether or not the player was allowed to open it.
      */
-    public static boolean openOtherVault(Player player, UUID holder, String arg) {
+    public static boolean openOtherVault(Player player, String vaultOwner, String arg) {
         if (isLocked()) {
             return false;
         }
@@ -206,16 +213,26 @@ public class VaultOperations {
             player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
         }
 
+        Inventory inv = VaultManager.getInstance().loadOtherVault(vaultOwner, number, getMaxVaultSize(vaultOwner));
+        String name = vaultOwner;
+        try {
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(vaultOwner));
+            name = offlinePlayer.getName();
+        } catch (Exception e) {
+            // not a player
+        }
 
-        Inventory inv = VaultManager.getInstance().loadOtherVault(holder, number, getMaxVaultSize(holder));
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(holder);
-        String name = offlinePlayer != null ? offlinePlayer.getName() : "";
         if (inv == null) {
             player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
         } else {
             player.openInventory(inv);
             player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", name));
             PlayerVaults.debug("opening other vault", time);
+
+            // Need to set ViewInfo for a third party vault for the opening player.
+            VaultViewInfo info = new VaultViewInfo(vaultOwner, number);
+            PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), info);
+            PlayerVaults.getInstance().getOpenInventories().put(player.getUniqueId().toString(), inv);
             return true;
         }
 
@@ -246,7 +263,8 @@ public class VaultOperations {
             }
 
             if (EconomyOperations.refundOnDelete(player, number)) {
-                VaultManager.getInstance().deleteVault(player, player.getUniqueId(), number);
+                VaultManager.getInstance().deleteVault(player, player.getUniqueId().toString(), number);
+                player.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT.toString().replaceAll("%v", arg));
             }
 
         } else {
@@ -261,7 +279,7 @@ public class VaultOperations {
      * @param holder The user to whom the deleted vault belongs.
      * @param arg    The vault number to delete.
      */
-    public static void deleteOtherVault(CommandSender sender, OfflinePlayer holder, String arg) {
+    public static void deleteOtherVault(CommandSender sender, String holder, String arg) {
         if (isLocked()) {
             return;
         }
@@ -278,7 +296,8 @@ public class VaultOperations {
                     sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
                 }
 
-                VaultManager.getInstance().deleteVault(sender, holder.getUniqueId(), number);
+                VaultManager.getInstance().deleteVault(sender, holder, number);
+                sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_OTHER_VAULT.toString().replaceAll("%v", arg).replaceAll("%p", holder));
             } else {
                 sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
             }
@@ -293,7 +312,7 @@ public class VaultOperations {
      * @param sender The sender executing the deletion.
      * @param holder The user to whom the deleted vault belongs.
      */
-    public static void deleteOtherAllVaults(CommandSender sender, UUID holder) {
+    public static void deleteOtherAllVaults(CommandSender sender, String holder) {
         if (isLocked() || holder == null) {
             return;
         }

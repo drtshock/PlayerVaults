@@ -56,7 +56,7 @@ public class Listeners implements Listener {
 
             if (inventory.getViewers().size() == 1) {
                 VaultViewInfo info = plugin.getInVault().get(player.getUniqueId().toString());
-                vaultManager.saveVault(inv, info.getHolderUUID(), info.getNumber());
+                vaultManager.saveVault(inv, info.getVaultName(), info.getNumber());
                 plugin.getOpenInventories().remove(info.toString());
             }
 
@@ -121,7 +121,7 @@ public class Listeners implements Listener {
             if (info != null) {
                 int num = info.getNumber();
                 String inventoryTitle = clickedInventory.getTitle();
-                String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(num)).replace("%p", info.getHolder());
+                String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(num)).replace("%p", info.getVaultName());
                 if (((inventoryTitle != null && inventoryTitle.equalsIgnoreCase(title)) ||event.getCurrentItem() != null)) {
                     if (PlayerVaults.getInstance().isBlockedMaterial(event.getCurrentItem().getType())) {
                         event.setCancelled(true);
@@ -149,7 +149,7 @@ public class Listeners implements Listener {
             if (info != null) {
                 int num = info.getNumber();
                 String inventoryTitle = clickedInventory.getTitle();
-                String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(num)).replace("%p", info.getHolder());
+                String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(num)).replace("%p", info.getVaultName());
                 if ((inventoryTitle != null && inventoryTitle.equalsIgnoreCase(title)) && event.getNewItems() != null) {
                     for (ItemStack item : event.getNewItems().values()) {
                         if (PlayerVaults.getInstance().isBlockedMaterial(item.getType())) {
