@@ -1,0 +1,33 @@
+# Gebruik & voor kleurcodes.
+# %p is waar de naam van de speler wordt ingevoegd.
+# %v is waar het kluisnummer wordt ingevoegd.
+# %price is de prijs.
+# %number is het kluisnummer
+# %converted is het aantal geconverteerde kluizen (where applicable)
+# %m wordt vervangen door het op de zwarte lijst geplaatste materiaal (where applicable)
+# Gemaakt met liefde :)
+
+title-name: "&4[&fPlayerVaults&4]:"
+open-vault: "&fVault &a%v openen"
+open-other-vault: "&fVault &a%v &van &a%p openen"
+delete-vault: "&fVault &a%v verwijderd"
+delete-other-vault: "&fVault &a%v &fvan &a%p verwijderd"
+delete-other-vault-all: "&4Deleted all vaults belonging to &a%p"
+player-only: "&cDit commando kan alleen door spelers gebruikt worden!"
+must-be-number: "&cJe moet een nummer tussen 1 en 99 aanduiden"
+invalid-args: "&cOngeldige argumenten!"
+delete-vault-error: "&cEr is een fout opgetreden bij het verwijderen van deze vault :("
+no-permissions: "&cJe hebt hier geen toestemming voor!"
+insufficient-funds: "&cJe hebt hier niet genoeg geld voor!"
+refund-amount: "&fje bent &a%price terugbetaald &fvoor het verwijderen van die vault."
+cost-to-create: "&fje bent &c%price aangerekend &fvoor deze vault te creëren."
+cost-to-open: "&fJe bent &c%price aangerekend &fvoor het openen van deze vault."
+vault-title: "&4Vault #%number"
+existing-vaults: "&f%p heeft vault: &a%v"
+no-player-found: "&cKan speler &a%p niet vinden"
+plugin-not-found: "&cGeen converter gevonden voor die plugin."
+conversion-complete: "&aEr zijn %converted spelers naar PlayerVaults geconverteerd"
+conversion-background: "&fHet converteren is naar de achtergrond geplaatst. Check de console voor de status van het converteren"
+vaults-locked: "&cVaults zijn op dit moment op slot terwijl het wordt geconverteerd. Probeer het later opnieuw!"
+help: "/pv <number>"
+blocked-item: "&6%m &cis geblokkeer van vaults."

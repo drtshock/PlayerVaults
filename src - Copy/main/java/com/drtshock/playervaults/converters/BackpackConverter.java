@@ -64,7 +64,7 @@ public class BackpackConverter implements Converter {
                             continue; // No slots
                         }
 
-                        Inventory vault = vaults.getVault(uuid.toString(), intoVaultNum);
+                        Inventory vault = vaults.getVault(uuid, intoVaultNum);
                         if (vault == null) {
                             vault = plugin.getServer().createInventory(null, section.getKeys(false).size());
                         }
@@ -78,7 +78,7 @@ public class BackpackConverter implements Converter {
                             // Overwrite
                             vault.setItem(Integer.parseInt(key.split(" ")[1]), item);
                         }
-                        vaults.saveVault(vault, uuid.toString(), intoVaultNum);
+                        vaults.saveVault(vault, uuid, intoVaultNum);
                         converted++;
 
                         if (System.currentTimeMillis() - lastUpdate >= 1500) {

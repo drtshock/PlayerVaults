@@ -33,15 +33,15 @@ public class VaultCommand implements CommandExecutor {
             switch (args.length) {
                 case 1:
                     if (VaultOperations.openOwnVault(player, args[0])) {
-                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(player.getUniqueId().toString(), Integer.parseInt(args[0])));
+                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(player.getUniqueId(), Integer.parseInt(args[0])));
                     } else if (sender.hasPermission("playervaults.admin")) {
                         OfflinePlayer searchPlayer = Bukkit.getOfflinePlayer(args[0]);
-                        String target = args[0];
-                        if (searchPlayer != null && searchPlayer.hasPlayedBefore()) {
-                            target = searchPlayer.getUniqueId().toString();
+                        if (searchPlayer == null || !searchPlayer.hasPlayedBefore()) {
+                            sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PLAYER_FOUND.toString().replaceAll("%p", args[0]));
+                            break;
                         }
 
-                        YamlConfiguration file = VaultManager.getInstance().getPlayerVaultFile(target, false);
+                        YamlConfiguration file = VaultManager.getInstance().getPlayerVaultFile(searchPlayer.getUniqueId());
                         if (file == null) {
                             sender.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
                         } else {
@@ -68,15 +68,11 @@ public class VaultCommand implements CommandExecutor {
                         return true;
                     }
 
-                    String target = args[0];
                     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                    if (offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
-                        target = offlinePlayer.getUniqueId().toString();
-                    }
-                    if (VaultOperations.openOtherVault(player, target, args[1])) {
-                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(target, number));
+                    if (offlinePlayer != null && VaultOperations.openOtherVault(player, offlinePlayer.getUniqueId(), args[1])) {
+                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(offlinePlayer.getUniqueId(), number));
                     } else {
-                        sender.sendMessage(Lang.TITLE.toString() + Lang.NO_OWNER_FOUND.toString().replaceAll("%p", args[0]));
+                        sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PLAYER_FOUND.toString().replaceAll("%p", args[0]));
                     }
                     break;
                 default:

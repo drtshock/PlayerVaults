@@ -78,7 +78,7 @@ public final class Base64Conversion implements Runnable {
 
                 try {
                     Inventory inventory = oldManager.getVault(holderUUID, vaultNumber);
-                    manager.saveVault(inventory, holderUUID.toString(), vaultNumber);
+                    manager.saveVault(inventory, holderUUID, vaultNumber);
                     vaults++;
                 } catch (Exception e) {
                     logger.severe("Failed to parse vault " + vaultNumber + " for " + holderUUID);

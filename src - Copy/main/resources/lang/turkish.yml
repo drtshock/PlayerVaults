@@ -1,0 +1,34 @@
+# Renk kodları için & kullanın.
+# %p oyuncu isminin ekleneceği yerdir.
+# %v kasa numarasının ekleneceği yerdir.
+# %price fiyatıdır.
+# %number kasa numarasıdır.
+# %converted dönüştürülen depo sayısı (uygulanabilir olduğunda)
+# %m kara listeye alınmış malzeme ile değiştirilecek (uygulanabilir olduğunda)
+# Aşkla yapıldı :)
+# Çeviri, @Fix3d tarafından yapılmıştır.
+
+title-name: "&4[&fPlayerVaultsX&4]:"
+open-vault: "&a%v. &fdepo açılıyor."
+open-other-vault: "&a%p &foyuncusunun &a%v. &fdeposu açılıyor."
+delete-vault: "&a%v. &fdepo silindi."
+delete-other-vault: "&a%p &foyuncusunun &a%v. &fdeposu silindi."
+delete-other-vault-all: "&4Deleted all vaults belonging to &a%p"
+player-only: "&cÜzgünüz ama bu sadece bir oyuncu tarafından çalıştırılabilir!"
+must-be-number: "&c1-99 arasında bir sayı belirtmeniz gerekiyor"
+invalid-args: "&cGeçersiz argüman!"
+delete-vault-error: "&cKasa silinirken hata oluştu :("
+no-permissions: "&cBunun için iznin yok!"
+insufficient-funds: "&cBunun için yeterli paran yok!"
+refund-amount: "&fDepo kapatıldığı için &a%price &fgeri ödeme aldın."
+cost-to-create: "&fBu kasayı oluşturmak için &c%price &födedin."
+cost-to-open: "&fDepo açılış ücreti olarak &c%price &födedin."
+vault-title: "&4Depo #%number"
+existing-vaults: "&f%p oyuncusunun depoları: &a%v"
+no-player-found: "&cOyuncu &a%p &cbulunamıyor!"
+plugin-not-found: "&cBu eklenti için dönüştürücü bulunamadı"
+conversion-complete: "&a%converted depo PlayerVaults'a dönüştürüldü"
+conversion-background: "&fDönüşüm, arka plana aktarıldı. Detaylar için konsola bakın."
+vaults-locked: "&cDönüşüm gerçekleştiğinde kasalar kilitlenir. Lütfen biraz sonra tekrar deneyin!"
+help: "/pv <numara>"
+blocked-item: "&6%m &cdepoda barındırılamaz!"

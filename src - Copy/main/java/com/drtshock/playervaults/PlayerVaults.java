@@ -16,7 +16,6 @@
  */
 package com.drtshock.playervaults;
 
-import com.drtshock.playervaults.commands.*;
 import com.drtshock.playervaults.listeners.Listeners;
 import com.drtshock.playervaults.listeners.SignListener;
 import com.drtshock.playervaults.listeners.VaultPreloadListener;
@@ -144,7 +143,7 @@ public class PlayerVaults extends JavaPlugin {
                 Inventory inventory = player.getOpenInventory().getTopInventory();
                 if (inventory.getViewers().size() == 1) {
                     VaultViewInfo info = this.inVault.get(player.getUniqueId().toString());
-                    VaultManager.getInstance().saveVault(inventory, player.getUniqueId().toString(), info.getNumber());
+                    VaultManager.getInstance().saveVault(inventory, player.getUniqueId(), info.getNumber());
                     this.openInventories.remove(info.toString());
                     // try this to make sure that they can't make further edits if the process hangs.
                     player.closeInventory();

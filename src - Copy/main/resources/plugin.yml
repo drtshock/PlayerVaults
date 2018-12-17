@@ -25,6 +25,9 @@ commands:
     permission: playervaults.admin
 
 permissions:
+  playervaults.commands.use:
+    description: Grants access to manage self vaults.
+    default: true
   playervaults.admin:
     description: Grants access to admin commands for vaults.
     default: op
