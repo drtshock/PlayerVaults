@@ -19,7 +19,7 @@ public class SignCommand implements CommandExecutor {
                         i = Integer.parseInt(args[0]);
                     } catch (NumberFormatException nfe) {
                         sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
-                        sender.sendMessage(Lang.TITLE.toString() + "Usage: /" + label + " <owner> <#>");
+                        sender.sendMessage(Lang.TITLE.toString() + "Usage: /" + label + " [owner] <#>");
                         return true;
                     }
                     PlayerVaults.getInstance().getSetSign().put(sender.getName(), new SignSetInfo(i));
@@ -30,7 +30,7 @@ public class SignCommand implements CommandExecutor {
                         i = Integer.parseInt(args[1]);
                     } catch (NumberFormatException nfe) {
                         sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
-                        sender.sendMessage(Lang.TITLE.toString() + "Usage: /" + label + " <owner> <#>");
+                        sender.sendMessage(Lang.TITLE.toString() + "Usage: /" + label + " [owner] <#>");
                         return true;
                     }
                     PlayerVaults.getInstance().getSetSign().put(sender.getName(), new SignSetInfo(args[0].toLowerCase(), i));

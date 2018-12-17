@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2013 drtshock
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.drtshock.playervaults;
 
 import com.drtshock.playervaults.commands.*;
@@ -51,14 +35,14 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 public class PlayerVaults extends JavaPlugin {
-
-    private static PlayerVaults instance;
     public static boolean DEBUG = false;
+    private static PlayerVaults instance;
     private final HashMap<String, SignSetInfo> setSign = new HashMap<>();
     // Player name - VaultViewInfo
     private final HashMap<String, VaultViewInfo> inVault = new HashMap<>();
     // VaultViewInfo - Inventory
     private final HashMap<String, Inventory> openInventories = new HashMap<>();
+    private final Set<Material> blockedMats = new HashSet<>();
     private Economy economy = null;
     private boolean useVault = false;
     private YamlConfiguration signs;
@@ -68,7 +52,24 @@ public class PlayerVaults extends JavaPlugin {
     private File backupsFolder = null;
     private File uuidData;
     private File vaultData;
-    private final Set<Material> blockedMats = new HashSet<>();
+    private String _versionString;
+
+    public static PlayerVaults getInstance() {
+        return instance;
+    }
+
+    public static void debug(String s, long start) {
+        long elapsed = System.currentTimeMillis() - start;
+        if (DEBUG || elapsed > 4) {
+            Bukkit.getLogger().log(Level.INFO, "At {0}. Time since start: {1}ms", new Object[]{s, (elapsed)});
+        }
+    }
+
+    public static void debug(String s) {
+        if (DEBUG) {
+            Bukkit.getLogger().log(Level.INFO, s);
+        }
+    }
 
     @Override
     public void onEnable() {
@@ -144,7 +145,7 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String args[]) {
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("pvreload")) {
             reloadConfig();
             loadConfig(); // To update blocked materials.
@@ -362,20 +363,19 @@ public class PlayerVaults extends JavaPlugin {
         return blockedMats.contains(mat);
     }
 
-    public static PlayerVaults getInstance() {
-        return instance;
-    }
-
-    public static void debug(String s, long start) {
-        long elapsed = System.currentTimeMillis() - start;
-        if (DEBUG || elapsed > 4) {
-            Bukkit.getLogger().log(Level.INFO, "At {0}. Time since start: {1}ms", new Object[]{s, (elapsed)});
+    /**
+     * Tries to grab the server version as a string.
+     *
+     * @return Version as raw string
+     */
+    public String getVersion() {
+        if (_versionString == null) {
+            if (Bukkit.getServer() == null) {
+                return null;
+            }
+            final String name = Bukkit.getServer().getClass().getPackage().getName();
+            _versionString = name.substring(name.lastIndexOf(46) + 1) + ".";
         }
-    }
-
-    public static void debug(String s) {
-        if (DEBUG) {
-            Bukkit.getLogger().log(Level.INFO, s);
-        }
+        return _versionString;
     }
 }

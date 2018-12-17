@@ -27,13 +27,21 @@ import java.util.logging.Level;
 public class UUIDVaultManager {
 
     private static UUIDVaultManager instance;
+    private final File directory = PlayerVaults.getInstance().getUuidData();
+    private final Map<String, YamlConfiguration> cachedVaultFiles = new ConcurrentHashMap<>();
 
     public UUIDVaultManager() {
         instance = this;
     }
 
-    private final File directory = PlayerVaults.getInstance().getUuidData();
-    private final Map<String, YamlConfiguration> cachedVaultFiles = new ConcurrentHashMap<>();
+    /**
+     * Get the instance of this class.
+     *
+     * @return - instance of this class.
+     */
+    public static UUIDVaultManager getInstance() {
+        return instance;
+    }
 
     /**
      * Saves the inventory to the specified player and vault number.
@@ -251,9 +259,7 @@ public class UUIDVaultManager {
     }
 
     public void removeCachedPlayerVaultFile(String holder) {
-        if (cachedVaultFiles.containsKey(holder)) {
-            cachedVaultFiles.remove(holder);
-        }
+        cachedVaultFiles.remove(holder);
     }
 
     /**
@@ -317,14 +323,5 @@ public class UUIDVaultManager {
         } catch (IOException e) {
             PlayerVaults.getInstance().getLogger().log(Level.SEVERE, "Failed to save vault file for: " + holder, e);
         }
-    }
-
-    /**
-     * Get the instance of this class.
-     *
-     * @return - instance of this class.
-     */
-    public static UUIDVaultManager getInstance() {
-        return instance;
     }
 }

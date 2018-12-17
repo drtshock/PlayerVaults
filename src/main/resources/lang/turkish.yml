@@ -6,7 +6,6 @@
 # %converted dönüştürülen depo sayısı (uygulanabilir olduğunda)
 # %m kara listeye alınmış malzeme ile değiştirilecek (uygulanabilir olduğunda)
 # Aşkla yapıldı :)
-# Çeviri, @Fix3d tarafından yapılmıştır.
 
 title-name: "&4[&fPlayerVaultsX&4]:"
 open-vault: "&a%v. &fdepo açılıyor."
@@ -25,7 +24,7 @@ cost-to-create: "&fBu kasayı oluşturmak için &c%price &födedin."
 cost-to-open: "&fDepo açılış ücreti olarak &c%price &födedin."
 vault-title: "&4Depo #%number"
 existing-vaults: "&f%p oyuncusunun depoları: &a%v"
-no-player-found: "&cOyuncu &a%p &cbulunamıyor!"
+no-owner-found: "&cCannot find vault owner: &a%p"
 plugin-not-found: "&cBu eklenti için dönüştürücü bulunamadı"
 conversion-complete: "&a%converted depo PlayerVaults'a dönüştürüldü"
 conversion-background: "&fDönüşüm, arka plana aktarıldı. Detaylar için konsola bakın."
