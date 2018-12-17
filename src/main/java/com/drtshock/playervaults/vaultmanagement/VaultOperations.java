@@ -190,9 +190,9 @@ public class VaultOperations {
     /**
      * Open another player's vault.
      *
-     * @param player The player to open to.
+     * @param player     The player to open to.
      * @param vaultOwner The name of the vault owner.
-     * @param arg    The vault number to open.
+     * @param arg        The vault number to open.
      * @return Whether or not the player was allowed to open it.
      */
     public static boolean openOtherVault(Player player, String vaultOwner, String arg) {

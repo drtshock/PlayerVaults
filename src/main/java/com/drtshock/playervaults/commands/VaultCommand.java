@@ -70,7 +70,7 @@ public class VaultCommand implements CommandExecutor {
 
                     String target = args[0];
                     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                    if(offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
+                    if (offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                         target = offlinePlayer.getUniqueId().toString();
                     }
                     if (VaultOperations.openOtherVault(player, target, args[1])) {

@@ -238,7 +238,7 @@ public class UUIDVaultManager {
             }
         }
 
-        String uuid = sender instanceof Player ? ((Player)sender).getUniqueId().toString() : holder;
+        String uuid = sender instanceof Player ? ((Player) sender).getUniqueId().toString() : holder;
         PlayerVaults.getInstance().getOpenInventories().remove(new VaultViewInfo(holder, number).toString());
     }
 

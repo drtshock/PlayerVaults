@@ -86,7 +86,7 @@ public class VaultManager {
     /**
      * Load the player's vault and return it.
      *
-     * @param name The holder of the vault.
+     * @param name   The holder of the vault.
      * @param number The vault number.
      */
     public Inventory loadOtherVault(String name, int number, int size) {
@@ -257,7 +257,7 @@ public class VaultManager {
             }
         }
 
-        String vaultName = sender instanceof Player ? ((Player)sender).getUniqueId().toString() : holder;
+        String vaultName = sender instanceof Player ? ((Player) sender).getUniqueId().toString() : holder;
         PlayerVaults.getInstance().getOpenInventories().remove(new VaultViewInfo(vaultName, number).toString());
     }
 
