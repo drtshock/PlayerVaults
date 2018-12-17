@@ -1,9 +1,9 @@
 ---
 name: Questions
-about: Go to our Discord, https://discord.gg/F7gexAQ for questions!
+about: Check the wiki, https://github.com/drtshock/PlayerVaults/Wiki, or go to our Discord, https://discord.gg/F7gexAQ for questions!
 
 ---
-<!-- Questions should be posted on our Discord, https://discord.gg/F7gexAQ, as posting here will make it harder for us to find other bugs and issues.
+<!-- Questions should be posted on our Discord, https://discord.gg/F7gexAQ, as posting here will make it harder for us to find other bugs and issues. Check the wiki, https://github.com/drtshock/PlayerVaults/Wiki, as well just to make sure it hasn't been already asked.
 
 DO NOT POST ANYTHING IN THIS FORM AND INSTEAD HIT CANCEL!
 -->
