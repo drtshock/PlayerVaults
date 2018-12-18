@@ -24,7 +24,7 @@ cost-to-create: "&fDir wurden &c%price &ffür das Erstellen des Tresors berechne
 cost-to-open: "&fDir wurden von &c%price &ffür das Öffnen des Tresors berechnet."
 vault-title: "&4Tresor #%number"
 existing-vaults: "&f%p hat folgende Tresore: &a%v"
-no-player-found: "&cKann Spieler &a%p nicht finden"
+no-owner-found: "&cCannot find vault owner: &a%p"
 plugin-not-found: "&cKeinen Converter für das Plugin gefunden"
 conversion-complete: "&%converted Spieler zu PlayerVaults konvertiert"
 conversion-background: "&fKonvertierung wurde im Hintergrund genauer gezeigt. Schaue in die Konsole für mehr Details."

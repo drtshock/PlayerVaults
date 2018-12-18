@@ -22,8 +22,8 @@ package com.drtshock.playervaults.commands;
  */
 public class SignSetInfo {
 
-    private String owner;
     private final int number;
+    private String owner;
     private boolean self = false;
 
     /**

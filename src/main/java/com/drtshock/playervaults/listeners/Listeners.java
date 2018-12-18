@@ -22,7 +22,6 @@ import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,8 +36,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-
-@SuppressWarnings("unused")
 public class Listeners implements Listener {
 
     public final PlayerVaults plugin;
@@ -89,10 +86,7 @@ public class Listeners implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onClose(InventoryCloseEvent event) {
-        HumanEntity he = event.getPlayer();
-        if (he instanceof Player) {
-            saveVault((Player) he, event.getInventory());
-        }
+        saveVault((Player) event.getPlayer(), event.getInventory());
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

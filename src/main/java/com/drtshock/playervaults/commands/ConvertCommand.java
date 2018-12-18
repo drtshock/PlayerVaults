@@ -26,7 +26,7 @@ public class ConvertCommand implements CommandExecutor {
             sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
         } else {
             if (args.length == 0) {
-                sender.sendMessage(Lang.TITLE + "/pvconvert <all | plugin name>");
+                sender.sendMessage(Lang.TITLE + "/" + label + " <all | plugin name>");
             } else {
                 String name = args[0];
                 final List<Converter> applicableConverters = new ArrayList<>();
@@ -39,7 +39,6 @@ public class ConvertCommand implements CommandExecutor {
                         }
                     }
                 }
-
                 if (applicableConverters.size() <= 0) {
                     sender.sendMessage(Lang.TITLE.toString() + Lang.CONVERT_PLUGIN_NOT_FOUND);
                 } else {
@@ -50,21 +49,18 @@ public class ConvertCommand implements CommandExecutor {
                         public void run() {
                             int converted = 0;
                             VaultOperations.setLocked(true);
-
                             for (Converter converter : applicableConverters) {
                                 if (converter.canConvert()) {
                                     converted += converter.run(sender);
                                 }
                             }
-
                             VaultOperations.setLocked(false);
                             sender.sendMessage(Lang.TITLE + Lang.CONVERT_COMPLETE.toString().replace("%converted", converted + ""));
                         }
-                    }, 5); // This comment is to annoy evilmidget38
+                    }, 5);
                 }
             }
         }
-
         return true;
     }
 }

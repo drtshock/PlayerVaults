@@ -1,60 +1,55 @@
-# PlayerVaults by https://github.com/drtshock/PlayerVaults/graphs/contributors
-# Spigot page: https://www.spigotmc.org/resources/playervaultsx.51204/
-# Made with love :3
+# PlayerVaults
+# Created by: https://github.com/drtshock/PlayerVaults/graphs/contributors/
+# Resource page: https://www.spigotmc.org/resources/51204/
+# Discord server: https://discordapp.com/invite/JZcWDEt/
+# Made with love <3
 
-# Debug mode
-# This will print lots of spammy stuff to console.
-# Should probably only enabled this if you're working with drtshock to fix something.
+# Debug Mode
+#  This will print everything the plugin is doing to console.
+#  You should only enable this if you're working with a contributor to fix something.
 debug: false
 
-# Lang files can be found in plugins/PlayerVaults/lang/
-# Set the below value to be one of the files in there without .yml
-# Currently can use: english, bulgarian, dutch, turkish
+# Language
+#  This determines which language file the plugin will read from.
+#   Valid options are (don't include .yml): bulgarian, dutch, english, german, turkish
 language: english
 
 # Signs
-# Do you want to enable signs?
-# You can checkout the project page for info on what this is if you don't know.
-# This can save some performance on servers with 250+ players if disabled.
+#  This will determine whether vault signs are enabled.
+#  If you don't know what this is or if it's for you, see the resource page.
+#   Reminder: This is only checked during startup.
 signs-enabled: false
 
-# Settings here are for economy integration. playervaults.free bypasses it.
+# Economy
+#  These are all of the settings for the economy integration. (Requires Vault)
+#   Bypass permission is: playervaults.free
 economy:
   enabled: false
-  
-# Cost to create a vault. You can give players playervaults.free to bypass this.
   cost-to-create: 100
   cost-to-open: 10
   refund-on-delete: 50
 
 # Blocked Items
-# Here you can block items in vaults.
-# You can give player's playervaults.bypassblockeditems permission to bypass this list.
-# Ops also have an automatic bypass.
-# Use material names. This does not work with ids.
-
-# Should we even use this? If left to false, the list won't do anything.
+#  This will allow you to block specific materials from vaults.
+#   Bypass permission is: playervaults.bypassblockeditems
 blockitems: true
 
-# Only effective if the above option is true.
+#  Material list for blocked items (does not support ID's), only effective if the feature is enabled.
+#   If you don't know material names: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
 blocked-items:
   - PUMPKIN
   - DIAMOND_BLOCK
 
-
 # Cleanup
-# Should we cleanup vaults that haven't been used in awhile?
-# Only checks on restarts. Runs on another thread so it won't
-#      lag the server.
-#
-# This will not touch the backups folder. You will have to delete those yourself.
+#  Enabling this will purge vaults that haven't been touched in the specified time frame.
+#   Reminder: This is only checked during startup.
+#             This will not lag your server or touch the backups folder.
+#             The time format is in days.
 cleanup:
   enable: false
-
-  # If a file hasn't been edited for this long, we'll clean it up.
-  # Time is in days.
   lastEdit: 30
 
+# Backups
+#  Enabling this will create backups of vaults automagically.
 backups:
-  # If you don't want any backups created change this to false.
   enabled: true
