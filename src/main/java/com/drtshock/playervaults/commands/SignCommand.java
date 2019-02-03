@@ -29,12 +29,12 @@ public class SignCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!PlayerVaults.getInstance().getConfig().getBoolean("signs-enabled", true)) {
-            sender.sendMessage(Lang.TITLE.toString() + Lang.SIGNS_DISABLED);
-            return true;
-        }
         if (sender.hasPermission("playervaults.signs.set")) {
             if (sender instanceof Player) {
+                if (!PlayerVaults.getInstance().getConfig().getBoolean("signs-enabled", true)) {
+                    sender.sendMessage(Lang.TITLE.toString() + Lang.SIGNS_DISABLED);
+                    return true;
+                }
                 if (args.length == 1) {
                     int i;
                     try {
@@ -66,7 +66,6 @@ public class SignCommand implements CommandExecutor {
         } else {
             sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
         }
-
         return true;
     }
 }
