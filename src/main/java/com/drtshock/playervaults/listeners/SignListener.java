@@ -50,6 +50,7 @@ public class SignListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent event) {
+        if (!plugin.getConfig().getBoolean("signs-enabled", true)) return;
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -139,16 +140,19 @@ public class SignListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockPhysics(BlockPhysicsEvent event) {
+        if (!plugin.getConfig().getBoolean("signs-enabled", true)) return;
         blockChangeCheck(event.getBlock().getLocation());
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
+        if (!plugin.getConfig().getBoolean("signs-enabled", true)) return;
         blockChangeCheck(event.getBlock().getLocation());
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
+        if (!plugin.getConfig().getBoolean("signs-enabled", true)) return;
         blockChangeCheck(event.getBlock().getLocation());
     }
 

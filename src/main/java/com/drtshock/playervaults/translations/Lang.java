@@ -33,6 +33,7 @@ public enum Lang {
     DELETE_OTHER_VAULT("delete-other-vault", "&fDeleted vault &a%v &fof &a%p"),
     DELETE_OTHER_VAULT_ALL("delete-other-vault-all", "&4Deleted all vaults belonging to &a%p"),
     PLAYER_ONLY("player-only", "&cSorry but that can only be run by a player!"),
+    SIGNS_DISABLED("signs-disabled", "&cVault signs are not currently enabled."),
     MUST_BE_NUMBER("must-be-number", "&cYou need to specify a valid number."),
     NO_PERMS("no-permissions", "&cYou don''t have permission for that!"),
     INSUFFICIENT_FUNDS("insufficient-funds", "&cYou don''t have enough money for that!"),

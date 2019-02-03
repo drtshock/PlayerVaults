@@ -17,7 +17,6 @@ language: english
 # Signs
 #  This will determine whether vault signs are enabled.
 #  If you don't know what this is or if it's for you, see the resource page.
-#   Reminder: This is only checked during startup.
 signs-enabled: false
 
 # Economy

@@ -72,6 +72,10 @@ public class PlayerVaults extends JavaPlugin {
     private File vaultData;
     private String _versionString;
 
+    /**
+     * TODO: Properly define all permissions in the plugin.yml
+     */
+
     public static PlayerVaults getInstance() {
         return instance;
     }
@@ -109,13 +113,15 @@ public class PlayerVaults extends JavaPlugin {
         debug("uuidvaultmanager", System.currentTimeMillis());
         getServer().getPluginManager().registerEvents(new Listeners(this), this);
         getServer().getPluginManager().registerEvents(new VaultPreloadListener(), this);
-        debug("registering listeners", System.currentTimeMillis());
+        getServer().getPluginManager().registerEvents(new SignListener(this), this);
+        debug("registered listeners", System.currentTimeMillis());
         this.backupsEnabled = this.getConfig().getBoolean("backups.enabled", true);
         loadSigns();
         debug("loaded signs", System.currentTimeMillis());
         debug("check update", System.currentTimeMillis());
         getCommand("pv").setExecutor(new VaultCommand());
         getCommand("pvdel").setExecutor(new DeleteCommand());
+        getCommand("pvsign").setExecutor(new SignCommand());
         getCommand("pvconvert").setExecutor(new ConvertCommand());
         debug("registered commands", System.currentTimeMillis());
         useVault = setupEconomy();
@@ -204,19 +210,13 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     private void loadSigns() {
-        if (!getConfig().getBoolean("signs-enabled", true)) {
-            return;
-        }
-
-        getCommand("pvsign").setExecutor(new SignCommand());
-        getServer().getPluginManager().registerEvents(new SignListener(this), this);
         File signs = new File(getDataFolder(), "signs.yml");
         if (!signs.exists()) {
             try {
                 signs.createNewFile();
             } catch (IOException e) {
                 getLogger().severe("PlayerVaults has encountered a fatal error trying to load the signs file.");
-                getLogger().severe("Please report this error to drtshock.");
+                getLogger().severe("Please report this error on GitHub @ https://github.com/drtshock/PlayerVaults");
                 e.printStackTrace();
             }
         }
@@ -250,7 +250,7 @@ public class PlayerVaults extends JavaPlugin {
             signs.save(this.signsFile);
         } catch (IOException e) {
             getLogger().severe("PlayerVaults has encountered an error trying to save the signs file.");
-            getLogger().severe("Please report this error to drtshock.");
+            getLogger().severe("Please report this error on GitHub @ https://github.com/drtshock/PlayerVaults");
             e.printStackTrace();
         }
     }
