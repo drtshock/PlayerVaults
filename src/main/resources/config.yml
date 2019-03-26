@@ -11,7 +11,7 @@ debug: false
 
 # Language
 #  This determines which language file the plugin will read from.
-#   Valid options are (don't include .yml): bulgarian, dutch, english, german, turkish
+#   Valid options are (don't include .yml): bulgarian, dutch, english, german, turkish, russian
 language: english
 
 # Signs
