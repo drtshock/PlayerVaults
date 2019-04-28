@@ -39,6 +39,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -388,12 +389,13 @@ public class PlayerVaults extends JavaPlugin {
      */
     public String getVersion() {
         if (_versionString == null) {
-            if (Bukkit.getServer() == null) {
-                return null;
-            }
             final String name = Bukkit.getServer().getClass().getPackage().getName();
             _versionString = name.substring(name.lastIndexOf(46) + 1) + ".";
         }
         return _versionString;
+    }
+
+    public boolean isSign(Material mat) {
+        return mat.name().toUpperCase().contains("SIGN");
     }
 }

@@ -67,7 +67,7 @@ public class SignListener implements Listener {
             PlayerVaults.getInstance().getSetSign().remove(player.getName());
             event.setCancelled(true);
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                if (isValidSign(block.getType())) {
+                if (block != null && plugin.isSign(block.getType())) {
                     Sign s = (Sign) block.getState();
                     Location l = s.getLocation();
                     String world = l.getWorld().getName();
@@ -91,7 +91,7 @@ public class SignListener implements Listener {
             return;
         }
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (isValidSign(block.getType())) {
+            if (block != null && plugin.isSign(block.getType())) {
                 Location l = block.getLocation();
                 String world = l.getWorld().getName();
                 int x = l.getBlockX();
@@ -170,15 +170,6 @@ public class SignListener implements Listener {
             plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z, null);
             plugin.saveSigns();
         }
-    }
-
-    private boolean isValidSign(Material material) {
-        if (PlayerVaults.getInstance().getVersion().contains("v1_13")) {
-            PlayerVaults.debug("[PlayerVaults] [Debug/SignListener] Sign material checked for >= 1.13");
-            return material == Material.SIGN || material == Material.WALL_SIGN;
-        }
-        PlayerVaults.debug("[PlayerVaults] [Debug/SignListener] Sign material checked for < 1.13");
-        return material == Material.valueOf("SIGN_POST") || material == Material.WALL_SIGN;
     }
 
     private boolean isInvalidBlock(Material material) {

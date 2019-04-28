@@ -116,7 +116,7 @@ public class Listeners implements Listener {
             VaultViewInfo info = PlayerVaults.getInstance().getInVault().get(player.getUniqueId().toString());
             if (info != null) {
                 int num = info.getNumber();
-                String inventoryTitle = clickedInventory.getTitle();
+                String inventoryTitle = event.getView().getTitle();
                 String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(num)).replace("%p", info.getVaultName());
                 if (((inventoryTitle != null && inventoryTitle.equalsIgnoreCase(title)) || event.getCurrentItem() != null)) {
                     if (PlayerVaults.getInstance().isBlockedMaterial(event.getCurrentItem().getType())) {
@@ -144,7 +144,7 @@ public class Listeners implements Listener {
             VaultViewInfo info = PlayerVaults.getInstance().getInVault().get(player.getUniqueId().toString());
             if (info != null) {
                 int num = info.getNumber();
-                String inventoryTitle = clickedInventory.getTitle();
+                String inventoryTitle = event.getView().getTitle();
                 String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(num)).replace("%p", info.getVaultName());
                 if ((inventoryTitle != null && inventoryTitle.equalsIgnoreCase(title)) && event.getNewItems() != null) {
                     for (ItemStack item : event.getNewItems().values()) {
