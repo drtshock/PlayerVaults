@@ -118,8 +118,8 @@ public class Listeners implements Listener {
                 int num = info.getNumber();
                 String inventoryTitle = event.getView().getTitle();
                 String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(num)).replace("%p", info.getVaultName());
-                if (((inventoryTitle != null && inventoryTitle.equalsIgnoreCase(title)) || event.getCurrentItem() != null)) {
-                    if (PlayerVaults.getInstance().isBlockedMaterial(event.getCurrentItem().getType())) {
+                if (((inventoryTitle.equalsIgnoreCase(title)) || event.getCurrentItem() != null)) {
+                    if (event.getCurrentItem() != null && PlayerVaults.getInstance().isBlockedMaterial(event.getCurrentItem().getType())) {
                         event.setCancelled(true);
                         player.sendMessage(Lang.TITLE.toString() + Lang.BLOCKED_ITEM.toString().replace("%m", event.getCurrentItem().getType().name()));
                     }
