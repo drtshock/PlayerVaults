@@ -110,6 +110,7 @@ public class PlayerVaults extends JavaPlugin {
         debug("uuidvaultmanager", System.currentTimeMillis());
         getServer().getPluginManager().registerEvents(new Listeners(this), this);
         getServer().getPluginManager().registerEvents(new VaultPreloadListener(), this);
+        getServer().getPluginManager().registerEvents(new SignListener(this), this);
         debug("registering listeners", System.currentTimeMillis());
         this.backupsEnabled = this.getConfig().getBoolean("backups.enabled", true);
         loadSigns();
@@ -118,6 +119,7 @@ public class PlayerVaults extends JavaPlugin {
         getCommand("pv").setExecutor(new VaultCommand());
         getCommand("pvdel").setExecutor(new DeleteCommand());
         getCommand("pvconvert").setExecutor(new ConvertCommand());
+        getCommand("pvsign").setExecutor(new SignCommand());
         debug("registered commands", System.currentTimeMillis());
         useVault = setupEconomy();
         debug("setup economy", System.currentTimeMillis());
@@ -205,19 +207,13 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     private void loadSigns() {
-        if (!getConfig().getBoolean("signs-enabled", true)) {
-            return;
-        }
-
-        getCommand("pvsign").setExecutor(new SignCommand());
-        getServer().getPluginManager().registerEvents(new SignListener(this), this);
         File signs = new File(getDataFolder(), "signs.yml");
         if (!signs.exists()) {
             try {
                 signs.createNewFile();
             } catch (IOException e) {
                 getLogger().severe("PlayerVaults has encountered a fatal error trying to load the signs file.");
-                getLogger().severe("Please report this error to drtshock.");
+                getLogger().severe("Please report this error on GitHub @ https://github.com/drtshock/PlayerVaults/");
                 e.printStackTrace();
             }
         }
@@ -251,7 +247,7 @@ public class PlayerVaults extends JavaPlugin {
             signs.save(this.signsFile);
         } catch (IOException e) {
             getLogger().severe("PlayerVaults has encountered an error trying to save the signs file.");
-            getLogger().severe("Please report this error to drtshock.");
+            getLogger().severe("Please report this error on GitHub @ https://github.com/drtshock/PlayerVaults/");
             e.printStackTrace();
         }
     }

@@ -31,3 +31,4 @@ conversion-background: "&fConversion has been forked to the background. See cons
 vaults-locked: "&cVaults are currently locked while conversion occurs. Please try again in a moment!"
 help: "/pv <number>"
 blocked-item: "&6%m &cis blocked from vaults."
+signs-disabled: "&cVault signs are currently disabled."

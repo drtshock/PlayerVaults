@@ -52,7 +52,8 @@ public enum Lang {
     CONVERT_BACKGROUND("conversion-background", "&fConversion has been forked to the background. See console for updates."),
     LOCKED("vaults-locked", "&cVaults are currently locked while conversion occurs. Please try again in a moment!"),
     HELP("help", "/pv <number>"),
-    BLOCKED_ITEM("blocked-item", "&6%m &cis blocked from vaults");
+    BLOCKED_ITEM("blocked-item", "&6%m &cis blocked from vaults"),
+    SIGNS_DISABLED("signs-disabled", "&cVault signs are currently disabled.");
 
     private static YamlConfiguration LANG;
     private final String path;

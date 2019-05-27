@@ -31,3 +31,4 @@ conversion-background: "&fDönüşüm, arka plana aktarıldı. Detaylar için ko
 vaults-locked: "&cDönüşüm gerçekleştiğinde kasalar kilitlenir. Lütfen biraz sonra tekrar deneyin!"
 help: "/pv <numara>"
 blocked-item: "&6%m &cdepoda barındırılamaz!"
+signs-disabled: "&cVault signs are currently disabled."

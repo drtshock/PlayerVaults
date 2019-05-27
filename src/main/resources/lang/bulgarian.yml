@@ -31,3 +31,4 @@ conversion-background: "&fЗапочнахме конвертирането на
 vaults-locked: "&cСейфовете са заключени докато тече конвертиране. Моля, опитайте пак по-късно!"
 help: "/pv <номер>"
 blocked-item: "&6%m &cне може да се слага в сейфове."
+signs-disabled: "&cVault signs are currently disabled."
