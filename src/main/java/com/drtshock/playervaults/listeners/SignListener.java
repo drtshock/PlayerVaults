@@ -41,8 +41,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 
 public class SignListener implements Listener {
-
     private PlayerVaults plugin;
+
+    /**
+     * TODO: Some of these events can be lag inducing (specifically: interactions & block breaking),
+     *         perhaps we should try to optimize these listeners at some point?
+     */
 
     public SignListener(PlayerVaults plugin) {
         this.plugin = plugin;
