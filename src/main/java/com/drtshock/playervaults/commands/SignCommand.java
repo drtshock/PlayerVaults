@@ -30,6 +30,10 @@ public class SignCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender.hasPermission("playervaults.signs.set")) {
+            if (!PlayerVaults.getInstance().getConfig().getBoolean("signs-enabled")) {
+                sender.sendMessage(Lang.TITLE.toString() + Lang.SIGNS_DISABLED.toString());
+                return true;
+            }
             if (sender instanceof Player) {
                 if (args.length == 1) {
                     int i;

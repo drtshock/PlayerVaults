@@ -31,3 +31,4 @@ conversion-background: "&fKonvertierung wurde im Hintergrund genauer gezeigt. Sc
 vaults-locked: "&cTresore sind gerade wegen einer Konvertierung verschlossen. Versuche es in einem Moment nocheinmal!"
 help: "/pv <number>"
 blocked-item: "&6%m &cist von Tresoren geblockt."
+signs-disabled: "&cVault signs are currently disabled."
