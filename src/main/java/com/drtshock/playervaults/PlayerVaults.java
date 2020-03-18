@@ -18,7 +18,11 @@
 
 package com.drtshock.playervaults;
 
-import com.drtshock.playervaults.commands.*;
+import com.drtshock.playervaults.commands.ConvertCommand;
+import com.drtshock.playervaults.commands.DeleteCommand;
+import com.drtshock.playervaults.commands.SignCommand;
+import com.drtshock.playervaults.commands.SignSetInfo;
+import com.drtshock.playervaults.commands.VaultCommand;
 import com.drtshock.playervaults.listeners.Listeners;
 import com.drtshock.playervaults.listeners.SignListener;
 import com.drtshock.playervaults.listeners.VaultPreloadListener;
@@ -40,7 +44,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -73,6 +76,7 @@ public class PlayerVaults extends JavaPlugin {
     private File uuidData;
     private File vaultData;
     private String _versionString;
+    private int maxVaultAmountPermTest;
 
     public static PlayerVaults getInstance() {
         return instance;
@@ -114,6 +118,7 @@ public class PlayerVaults extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SignListener(this), this);
         debug("registering listeners", System.currentTimeMillis());
         this.backupsEnabled = this.getConfig().getBoolean("backups.enabled", true);
+        this.maxVaultAmountPermTest = this.getConfig().getInt("max-vault-amount-perm-to-test", 99);
         loadSigns();
         debug("loaded signs", System.currentTimeMillis());
         debug("check update", System.currentTimeMillis());
@@ -409,5 +414,9 @@ public class PlayerVaults extends JavaPlugin {
 
     public boolean isSign(Material mat) {
         return mat.name().toUpperCase().contains("SIGN");
+    }
+
+    public int getMaxVaultAmountPermTest() {
+        return this.maxVaultAmountPermTest;
     }
 }

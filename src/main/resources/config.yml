@@ -52,3 +52,5 @@ cleanup:
 #  Enabling this will create backups of vaults automagically.
 backups:
   enabled: true
+
+max-vault-amount-perm-to-test: 99

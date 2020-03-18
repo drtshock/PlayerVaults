@@ -1,5 +1,5 @@
 name: PlayerVaults
-authors: [drtshock, kashike]
+authors: [drtshock, kashike, CmdrKittens]
 website: ${project.url}
 
 version: ${project.version}

@@ -77,7 +77,7 @@ public class VaultOperations {
         if (sender.hasPermission("playervaults.amount." + number)) {
             return true;
         }
-        for (int x = number; x <= 99; x++) {
+        for (int x = number; x <= PlayerVaults.getInstance().getMaxVaultAmountPermTest(); x++) {
             if (sender.hasPermission("playervaults.amount." + x)) {
                 return true;
             }
