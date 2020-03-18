@@ -91,22 +91,15 @@ public class VaultManager {
             return PlayerVaults.getInstance().getOpenInventories().get(info.toString());
         }
 
-        Inventory inv;
         YamlConfiguration playerFile = getPlayerVaultFile(player.getUniqueId().toString(), true);
         VaultHolder vaultHolder = new VaultHolder(number);
         if (playerFile.getString(String.format(VAULTKEY, number)) == null) {
-            inv = Bukkit.createInventory(vaultHolder, size, title);
+            Inventory inv = Bukkit.createInventory(vaultHolder, size, title);
             vaultHolder.setInventory(inv);
+            return inv;
         } else {
-            Inventory i = getInventory(vaultHolder, playerFile, size, number, title);
-            if (i == null) {
-                return null;
-            } else {
-                inv = i;
-            }
+            return getInventory(vaultHolder, playerFile, size, number, title);
         }
-
-        return inv;
     }
 
     /**
