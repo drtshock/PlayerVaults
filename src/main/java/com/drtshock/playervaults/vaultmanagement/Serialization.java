@@ -127,7 +127,7 @@ public class Serialization {
                 entry.setValue(serialize((ConfigurationSerializable) entry.getValue()));
             } else if (entry.getValue() instanceof Iterable<?>) {
                 List<Object> newList = new ArrayList<>();
-                for (Object object : ((Iterable) entry.getValue())) {
+                for (Object object : ((Iterable<?>) entry.getValue())) {
                     if (object instanceof ConfigurationSerializable) {
                         object = serialize((ConfigurationSerializable) object);
                     }
@@ -167,7 +167,7 @@ public class Serialization {
             if (object instanceof Map) {
                 object = deserialize((Map<String, Object>) object);
             } else if (object instanceof List) {
-                object = convertIterable((Iterable) object);
+                object = convertIterable((Iterable<?>) object);
             } else if (object instanceof Number) {
                 object = convertNumber((Number) object);
             }

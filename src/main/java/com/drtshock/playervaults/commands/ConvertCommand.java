@@ -62,19 +62,16 @@ public class ConvertCommand implements CommandExecutor {
                 } else {
                     // Fork into background
                     sender.sendMessage(Lang.TITLE + Lang.CONVERT_BACKGROUND.toString());
-                    PlayerVaults.getInstance().getServer().getScheduler().runTaskLaterAsynchronously(PlayerVaults.getInstance(), new Runnable() {
-                        @Override
-                        public void run() {
-                            int converted = 0;
-                            VaultOperations.setLocked(true);
-                            for (Converter converter : applicableConverters) {
-                                if (converter.canConvert()) {
-                                    converted += converter.run(sender);
-                                }
+                    PlayerVaults.getInstance().getServer().getScheduler().runTaskLaterAsynchronously(PlayerVaults.getInstance(), () -> {
+                        int converted = 0;
+                        VaultOperations.setLocked(true);
+                        for (Converter converter : applicableConverters) {
+                            if (converter.canConvert()) {
+                                converted += converter.run(sender);
                             }
-                            VaultOperations.setLocked(false);
-                            sender.sendMessage(Lang.TITLE + Lang.CONVERT_COMPLETE.toString().replace("%converted", converted + ""));
                         }
+                        VaultOperations.setLocked(false);
+                        sender.sendMessage(Lang.TITLE + Lang.CONVERT_COMPLETE.toString().replace("%converted", converted + ""));
                     }, 5);
                 }
             }

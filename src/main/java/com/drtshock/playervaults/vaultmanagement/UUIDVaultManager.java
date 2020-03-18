@@ -79,7 +79,7 @@ public class UUIDVaultManager {
             }
         }
         List<String> list = Serialization.toString(inventory);
-        String[] ser = list.toArray(new String[list.size()]);
+        String[] ser = list.toArray(new String[0]);
         for (int x = 0; x < ser.length; x++) {
             if (!ser[x].equalsIgnoreCase("null")) {
                 yaml.set("vault" + number + "." + x, ser[x]);

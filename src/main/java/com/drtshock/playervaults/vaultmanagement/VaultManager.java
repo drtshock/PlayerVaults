@@ -220,7 +220,7 @@ public class VaultManager {
         for (String s : file.getKeys(false)) {
             try {
                 // vault%
-                int number = Integer.valueOf(s.substring(4));
+                int number = Integer.parseInt(s.substring(4));
                 vaults.add(number);
             } catch (NumberFormatException e) {
                 // silent
@@ -285,7 +285,6 @@ public class VaultManager {
         YamlConfiguration config = this.loadPlayerVaultFile(holder, false);
         if (config != null) {
             this.cachedVaultFiles.put(holder, config);
-        } else {
         }
     }
 
