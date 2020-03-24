@@ -58,7 +58,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 public class PlayerVaults extends JavaPlugin {
-    public static boolean DEBUG = false;
+    public static boolean DEBUG;
     private static PlayerVaults instance;
     private final HashMap<String, SignSetInfo> setSign = new HashMap<>();
     // Player name - VaultViewInfo
@@ -66,13 +66,13 @@ public class PlayerVaults extends JavaPlugin {
     // VaultViewInfo - Inventory
     private final HashMap<String, Inventory> openInventories = new HashMap<>();
     private final Set<Material> blockedMats = new HashSet<>();
-    private Economy economy = null;
-    private boolean useVault = false;
+    private Economy economy;
+    private boolean useVault;
     private YamlConfiguration signs;
     private File signsFile;
     private boolean saveQueued;
     private boolean backupsEnabled;
-    private File backupsFolder = null;
+    private File backupsFolder;
     private File uuidData;
     private File vaultData;
     private String _versionString;
@@ -132,7 +132,6 @@ public class PlayerVaults extends JavaPlugin {
 
         if (getConfig().getBoolean("cleanup.enable", false)) {
             getServer().getScheduler().runTaskAsynchronously(this, new Cleanup(getConfig().getInt("cleanup.lastEdit", 30)));
-            debug("cleanup task", System.currentTimeMillis());
         }
 
         new BukkitRunnable() {
