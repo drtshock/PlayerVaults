@@ -32,3 +32,4 @@ vaults-locked: "&cDönüşüm gerçekleştiğinde kasalar kilitlenir. Lütfen bi
 help: "/pv <numara>"
 blocked-item: "&6%m &cdepoda barındırılamaz!"
 signs-disabled: "&cVault signs are currently disabled."
+blocked-bad-item: "&cThis item is not allowed in a vault."

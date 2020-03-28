@@ -32,3 +32,4 @@ vaults-locked: "&cХранилища сейчас заблокированы, п
 help: "/pv <номер>"
 blocked-item: "&cПредмет «&6%m&c» &cзаблокирован хранилищем."
 signs-disabled: "&cVault signs are currently disabled."
+blocked-bad-item: "&cThis item is not allowed in a vault."

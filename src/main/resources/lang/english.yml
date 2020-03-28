@@ -32,3 +32,4 @@ vaults-locked: "&cVaults are currently locked while conversion occurs. Please tr
 help: "/pv <number>"
 blocked-item: "&6%m &cis blocked from vaults."
 signs-disabled: "&cVault signs are currently disabled."
+blocked-bad-item: "&cThis item is not allowed in a vault."

@@ -107,9 +107,6 @@ public class Listeners implements Listener {
         }
 
         Player player = (Player) event.getWhoClicked();
-        if (player.hasPermission("playervaults.bypassblockeditems")) {
-            return;
-        }
 
         Inventory clickedInventory = event.getClickedInventory();
         if (clickedInventory != null) {
@@ -119,7 +116,13 @@ public class Listeners implements Listener {
                 String inventoryTitle = event.getView().getTitle();
                 String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(num)).replace("%p", info.getVaultName());
                 if (((inventoryTitle.equalsIgnoreCase(title)) || event.getCurrentItem() != null)) {
-                    if (event.getCurrentItem() != null && PlayerVaults.getInstance().isBlockedMaterial(event.getCurrentItem().getType())) {
+                    try {
+                        event.getCurrentItem().toString();
+                    } catch (Exception e) {
+                        player.sendMessage(Lang.TITLE.toString() + Lang.BLOCKED_BAD_ITEM);
+                        event.setCancelled(true);
+                    }
+                    if (!player.hasPermission("playervaults.bypassblockeditems") && event.getCurrentItem() != null && PlayerVaults.getInstance().isBlockedMaterial(event.getCurrentItem().getType())) {
                         event.setCancelled(true);
                         player.sendMessage(Lang.TITLE.toString() + Lang.BLOCKED_ITEM.toString().replace("%m", event.getCurrentItem().getType().name()));
                     }

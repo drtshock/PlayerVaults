@@ -19,6 +19,7 @@
 package com.drtshock.playervaults.vaultmanagement;
 
 
+import com.drtshock.playervaults.PlayerVaults;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -36,20 +37,37 @@ public class Base64Serialization {
 
     public static String toBase64(Inventory inventory, int size) {
         try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
+            ByteArrayOutputStream finalOutputStream = new ByteArrayOutputStream();
+            ByteArrayOutputStream temporaryOutputStream = new ByteArrayOutputStream();
+            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(temporaryOutputStream);
+            int failedItems = 0;
 
             // Write the size of the inventory
             dataOutput.writeInt(size);
 
             // Save every element in the list
             for (int i = 0; i < inventory.getSize(); i++) {
-                dataOutput.writeObject(inventory.getItem(i));
+                try {
+                    dataOutput.writeObject(inventory.getItem(i));
+                } catch (Exception ignored) {
+                    failedItems++;
+                    temporaryOutputStream.reset();
+                } finally {
+                    if (temporaryOutputStream.size() == 0) {
+                        dataOutput.writeObject(null);
+                    }
+                    finalOutputStream.write(temporaryOutputStream.toByteArray());
+                    temporaryOutputStream.reset();
+                }
+            }
+
+            if (failedItems > 0) {
+                PlayerVaults.getInstance().getLogger().severe("Failed to save " + failedItems + " invalid items to vault");
             }
 
             // Serialize that array
             dataOutput.close();
-            return Base64Coder.encodeLines(outputStream.toByteArray());
+            return Base64Coder.encodeLines(finalOutputStream.toByteArray());
         } catch (Exception e) {
             throw new IllegalStateException("Cannot into itemstacksz!", e);
         }

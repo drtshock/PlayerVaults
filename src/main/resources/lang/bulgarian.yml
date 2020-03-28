@@ -32,3 +32,4 @@ vaults-locked: "&cСейфовете са заключени докато теч
 help: "/pv <номер>"
 blocked-item: "&6%m &cне може да се слага в сейфове."
 signs-disabled: "&cVault signs are currently disabled."
+blocked-bad-item: "&cThis item is not allowed in a vault."

@@ -32,3 +32,4 @@ vaults-locked: "&cVaults zijn op dit moment op slot terwijl het wordt geconverte
 help: "/pv <number>"
 blocked-item: "&6%m &cis geblokkeer van vaults."
 signs-disabled: "&cVault signs are currently disabled."
+blocked-bad-item: "&cThis item is not allowed in a vault."
