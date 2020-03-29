@@ -115,14 +115,14 @@ public class Listeners implements Listener {
                 int num = info.getNumber();
                 String inventoryTitle = event.getView().getTitle();
                 String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(num)).replace("%p", info.getVaultName());
-                if (((inventoryTitle.equalsIgnoreCase(title)) || event.getCurrentItem() != null)) {
+                if (((inventoryTitle.equalsIgnoreCase(title)) && event.getCurrentItem() != null)) {
                     try {
                         event.getCurrentItem().toString();
                     } catch (Exception e) {
                         player.sendMessage(Lang.TITLE.toString() + Lang.BLOCKED_BAD_ITEM);
                         event.setCancelled(true);
                     }
-                    if (!player.hasPermission("playervaults.bypassblockeditems") && event.getCurrentItem() != null && PlayerVaults.getInstance().isBlockedMaterial(event.getCurrentItem().getType())) {
+                    if (!player.hasPermission("playervaults.bypassblockeditems") && PlayerVaults.getInstance().isBlockedMaterial(event.getCurrentItem().getType())) {
                         event.setCancelled(true);
                         player.sendMessage(Lang.TITLE.toString() + Lang.BLOCKED_ITEM.toString().replace("%m", event.getCurrentItem().getType().name()));
                     }
@@ -138,9 +138,6 @@ public class Listeners implements Listener {
         }
 
         Player player = (Player) event.getWhoClicked();
-        if (player.hasPermission("playervaults.bypassblockeditems")) {
-            return;
-        }
 
         Inventory clickedInventory = event.getInventory();
         if (clickedInventory != null) {
@@ -151,7 +148,14 @@ public class Listeners implements Listener {
                 String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(num)).replace("%p", info.getVaultName());
                 if ((inventoryTitle != null && inventoryTitle.equalsIgnoreCase(title)) && event.getNewItems() != null) {
                     for (ItemStack item : event.getNewItems().values()) {
-                        if (PlayerVaults.getInstance().isBlockedMaterial(item.getType())) {
+                        try {
+                            item.toString();
+                        } catch (Exception e) {
+                            player.sendMessage(Lang.TITLE.toString() + Lang.BLOCKED_BAD_ITEM);
+                            event.setCancelled(true);
+                            continue;
+                        }
+                        if (!player.hasPermission("playervaults.bypassblockeditems") && PlayerVaults.getInstance().isBlockedMaterial(item.getType())) {
                             event.setCancelled(true);
                             player.sendMessage(Lang.TITLE.toString() + Lang.BLOCKED_ITEM.toString().replace("%m", item.getType().name()));
                             return;
