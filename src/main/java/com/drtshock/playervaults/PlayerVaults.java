@@ -35,6 +35,7 @@ import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -45,6 +46,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -53,8 +55,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 
 public class PlayerVaults extends JavaPlugin {
@@ -77,6 +82,7 @@ public class PlayerVaults extends JavaPlugin {
     private File vaultData;
     private String _versionString;
     private int maxVaultAmountPermTest;
+    private Metrics metrics;
 
     public static PlayerVaults getInstance() {
         return instance;
@@ -143,7 +149,101 @@ public class PlayerVaults extends JavaPlugin {
             }
         }.runTaskTimer(this, 20, 20);
 
+        this.metrics = new Metrics(this, 6905);
+        Plugin vault = getServer().getPluginManager().getPlugin("Vault");
+        this.metricsDrillPie("vault", () -> this.metricsPluginInfo(vault));
+        if (vault != null) {
+            this.metricsDrillPie("vault_econ", () -> {
+                Map<String, Map<String, Integer>> map = new HashMap<>();
+                Map<String, Integer> entry = new HashMap<>();
+                entry.put(economy == null ? "none" : economy.getName(), 1);
+                map.put(isEconomyEnabled() ? "enabled" : "disabled", entry);
+                return map;
+            });
+            if (isEconomyEnabled()) {
+                String name = economy.getName();
+                if (name.equals("Essentials Economy")) {
+                    name = "Essentials";
+                }
+                Plugin plugin = getServer().getPluginManager().getPlugin(name);
+                if (plugin != null) {
+                    this.metricsDrillPie("vault_econ_plugins", () -> {
+                        Map<String, Map<String, Integer>> map = new HashMap<>();
+                        Map<String, Integer> entry = new HashMap<>();
+                        entry.put(plugin.getDescription().getVersion(), 1);
+                        map.put(plugin.getName(), entry);
+                        return map;
+                    });
+                }
+            }
+        }
+
+        if (vault != null) {
+            RegisteredServiceProvider<Permission> provider = getServer().getServicesManager().getRegistration(Permission.class);
+            if (provider != null) {
+                Permission perm = provider.getProvider();
+                String name = perm.getName();
+                Plugin plugin = getServer().getPluginManager().getPlugin(name);
+                final String version;
+                if (plugin == null) {
+                    version = "unknown";
+                } else {
+                    version = plugin.getDescription().getVersion();
+                }
+                this.metricsDrillPie("vault_perms", () -> {
+                    Map<String, Map<String, Integer>> map = new HashMap<>();
+                    Map<String, Integer> entry = new HashMap<>();
+                    entry.put(version, 1);
+                    map.put(name, entry);
+                    return map;
+                });
+            }
+        }
+
+        this.metricsSimplePie("signs", () -> getConfig().getBoolean("signs-enabled") ? "enabled" : "disabled");
+        this.metricsSimplePie("cleanup", () -> getConfig().getBoolean("cleanup.enable") ? "enabled" : "disabled");
+        this.metricsSimplePie("language", () -> getConfig().getString("language", "english"));
+
+        this.metricsDrillPie("block_items", () -> {
+            Map<String, Map<String, Integer>> map = new HashMap<>();
+            Map<String, Integer> entry = new HashMap<>();
+            if (getConfig().getBoolean("blockitems")) {
+                for (Material material : blockedMats) {
+                    entry.put(material.toString(), 1);
+                }
+            }
+            if (entry.isEmpty()) {
+                entry.put("none", 1);
+            }
+            map.put(getConfig().getBoolean("blockitems") ? "enabled" : "disabled", entry);
+            return map;
+        });
+
         debug("enable done", System.currentTimeMillis());
+    }
+
+    private void metricsLine(String name, Callable<Integer> callable) {
+        this.metrics.addCustomChart(new Metrics.SingleLineChart(name, callable));
+    }
+
+    private void metricsDrillPie(String name, Callable<Map<String, Map<String, Integer>>> callable) {
+        this.metrics.addCustomChart(new Metrics.DrilldownPie(name, callable));
+    }
+
+    private void metricsSimplePie(String name, Callable<String> callable) {
+        this.metrics.addCustomChart(new Metrics.SimplePie(name, callable));
+    }
+
+    private Map<String, Map<String, Integer>> metricsPluginInfo(Plugin plugin) {
+        return this.metricsInfo(plugin, () -> plugin.getDescription().getVersion());
+    }
+
+    private Map<String, Map<String, Integer>> metricsInfo(Object plugin, Supplier<String> versionGetter) {
+        Map<String, Map<String, Integer>> map = new HashMap<>();
+        Map<String, Integer> entry = new HashMap<>();
+        entry.put(plugin == null ? "nope" : versionGetter.get(), 1);
+        map.put(plugin == null ? "absent" : "present", entry);
+        return map;
     }
 
     @Override
@@ -275,9 +375,9 @@ public class PlayerVaults extends JavaPlugin {
     /**
      * Set an object in the config.yml
      *
-     * @param path   The path in the config.
+     * @param path The path in the config.
      * @param object What to be saved.
-     * @param conf   Where to save the object.
+     * @param conf Where to save the object.
      */
     public <T> void setInConfig(String path, T object, YamlConfiguration conf) {
         conf.set(path, object);
