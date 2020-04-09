@@ -122,6 +122,10 @@ public class Config {
             " You should only enable this if you're working with a contributor to fix something.")
     private boolean debug = false;
 
+    @Comment("Can be 1 through 6.\n" +
+            "Default: 6")
+    private int defaultVaultRows = 6;
+
     @Comment("Language\n" +
             " This determines which language file the plugin will read from.\n" +
             "  Valid options are (don't include .yml): bulgarian, dutch, english, german, turkish, russian")
@@ -177,6 +181,10 @@ public class Config {
 
     public boolean isDebug() {
         return this.debug;
+    }
+
+    public int getDefaultVaultRows() {
+        return this.defaultVaultRows;
     }
 
     public String getLanguage() {

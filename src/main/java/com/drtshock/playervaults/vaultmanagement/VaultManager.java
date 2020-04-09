@@ -82,7 +82,7 @@ public class VaultManager {
      */
     public Inventory loadOwnVault(Player player, int number, int size) {
         if (size % 9 != 0) {
-            size = 54;
+            size = PlayerVaults.getInstance().getDefaultVaultSize();
         }
 
         String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", player.getName());
@@ -110,7 +110,7 @@ public class VaultManager {
      */
     public Inventory loadOtherVault(String name, int number, int size) {
         if (size % 9 != 0) {
-            size = 54;
+            size = PlayerVaults.getInstance().getDefaultVaultSize();
         }
 
         String holder = name;

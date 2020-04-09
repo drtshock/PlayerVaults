@@ -523,6 +523,15 @@ public class PlayerVaults extends JavaPlugin {
         return _versionString;
     }
 
+    public int getDefaultVaultRows() {
+        int def = this.config.getDefaultVaultRows();
+        return (def >= 1 && def <=6) ? def : 6;
+    }
+
+    public int getDefaultVaultSize() {
+        return this.getDefaultVaultRows() * 9;
+    }
+
     public boolean isSign(Material mat) {
         return mat.name().toUpperCase().contains("SIGN");
     }

@@ -89,7 +89,7 @@ public class VaultOperations {
      * Get the max size vault a player is allowed to have.
      *
      * @param name that is having his permissions checked.
-     * @return max size as integer. If no max size is set then it will default to 54.
+     * @return max size as integer. If no max size is set then it will default to the configured default.
      */
     public static int getMaxVaultSize(String name) {
         try {
@@ -99,25 +99,25 @@ public class VaultOperations {
             // Not a UUID
         }
 
-        return 54;
+        return PlayerVaults.getInstance().getDefaultVaultSize();
     }
 
     /**
      * Get the max size vault a player is allowed to have.
      *
      * @param player that is having his permissions checked.
-     * @return max size as integer. If no max size is set then it will default to 54.
+     * @return max size as integer. If no max size is set then it will default to the configured default.
      */
     public static int getMaxVaultSize(OfflinePlayer player) {
         if (player == null || !player.isOnline()) {
-            return 54;
+            return PlayerVaults.getInstance().getDefaultVaultSize();
         }
         for (int i = 6; i != 0; i--) {
             if (player.getPlayer().hasPermission("playervaults.size." + i)) {
                 return i * 9;
             }
         }
-        return 54;
+        return PlayerVaults.getInstance().getDefaultVaultSize();
     }
 
     /**
