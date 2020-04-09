@@ -29,6 +29,7 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.logging.Level;
 
 /**
  * Created by Lax on 6/6/2017.
@@ -36,6 +37,10 @@ import java.io.ByteArrayOutputStream;
 public class Base64Serialization {
 
     public static String toBase64(Inventory inventory, int size) {
+        return toBase64(inventory, size, null);
+    }
+
+    public static String toBase64(Inventory inventory, int size, String target) {
         try {
             ByteArrayOutputStream finalOutputStream = new ByteArrayOutputStream();
             ByteArrayOutputStream temporaryOutputStream = new ByteArrayOutputStream();
@@ -62,7 +67,7 @@ public class Base64Serialization {
             }
 
             if (failedItems > 0) {
-                PlayerVaults.getInstance().getLogger().severe("Failed to save " + failedItems + " invalid items to vault");
+                PlayerVaults.getInstance().getLogger().severe("Failed to save " + failedItems + " invalid items to vault " + target);
             }
 
             // Serialize that array
@@ -80,6 +85,10 @@ public class Base64Serialization {
     }
 
     public static Inventory fromBase64(String data) {
+        return fromBase64(data, null);
+    }
+
+    public static Inventory fromBase64(String data, String target) {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
@@ -91,6 +100,7 @@ public class Base64Serialization {
             dataInput.close();
             return inventory;
         } catch (Exception e) {
+            PlayerVaults.getInstance().getLogger().log(Level.SEVERE, "Failed to load vault " + target, e);
         }
         return null;
     }

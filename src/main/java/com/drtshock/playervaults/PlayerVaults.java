@@ -93,52 +93,61 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     public static void debug(String s, long start) {
-        long elapsed = System.currentTimeMillis() - start;
-        if (DEBUG || elapsed > 4) {
-            Bukkit.getLogger().log(Level.INFO, "At {0}. Time since start: {1}ms", new Object[]{s, (elapsed)});
+        if (DEBUG) {
+            instance.getLogger().log(Level.INFO, "{0} took {1}ms", new Object[]{s, (System.currentTimeMillis() - start)});
         }
     }
 
     public static void debug(String s) {
         if (DEBUG) {
-            Bukkit.getLogger().log(Level.INFO, s);
+            instance.getLogger().log(Level.INFO, s);
         }
     }
 
     @Override
     public void onEnable() {
         instance = this;
+        long start = System.currentTimeMillis();
+        long time = System.currentTimeMillis();
         loadConfig();
         DEBUG = getConf().isDebug();
-        debug("config", System.currentTimeMillis());
+        debug("config", time);
+        time = System.currentTimeMillis();
         uuidData = new File(this.getDataFolder(), "uuidvaults");
         vaultData = new File(this.getDataFolder(), "base64vaults");
-        debug("vaultdata", System.currentTimeMillis());
+        debug("vaultdata", time);
+        time = System.currentTimeMillis();
         getServer().getScheduler().runTask(this, new UUIDConversion()); // Convert to UUIDs first. Class checks if necessary.
-        debug("uuid conversion", System.currentTimeMillis());
+        debug("uuid conversion", time);
+        time = System.currentTimeMillis();
         new VaultManager();
         getServer().getScheduler().runTask(this, new Base64Conversion());
-        debug("base64 conversion", System.currentTimeMillis());
+        debug("base64 conversion", time);
+        time = System.currentTimeMillis();
         loadLang();
-        debug("lang", System.currentTimeMillis());
+        debug("lang", time);
+        time = System.currentTimeMillis();
         new UUIDVaultManager();
-        debug("uuidvaultmanager", System.currentTimeMillis());
+        debug("uuidvaultmanager", time);
+        time = System.currentTimeMillis();
         getServer().getPluginManager().registerEvents(new Listeners(this), this);
         getServer().getPluginManager().registerEvents(new VaultPreloadListener(), this);
         getServer().getPluginManager().registerEvents(new SignListener(this), this);
-        debug("registering listeners", System.currentTimeMillis());
+        debug("registering listeners", time);
+        time = System.currentTimeMillis();
         this.backupsEnabled = this.getConf().getStorage().getFlatFile().isBackups();
         this.maxVaultAmountPermTest = this.getConf().getMaxVaultAmountPermTest();
         loadSigns();
-        debug("loaded signs", System.currentTimeMillis());
-        debug("check update", System.currentTimeMillis());
+        debug("loaded signs", time);
+        time = System.currentTimeMillis();
         getCommand("pv").setExecutor(new VaultCommand());
         getCommand("pvdel").setExecutor(new DeleteCommand());
         getCommand("pvconvert").setExecutor(new ConvertCommand());
         getCommand("pvsign").setExecutor(new SignCommand());
-        debug("registered commands", System.currentTimeMillis());
+        debug("registered commands", time);
+        time = System.currentTimeMillis();
         useVault = setupEconomy();
-        debug("setup economy", System.currentTimeMillis());
+        debug("setup economy", time);
 
         if (getConf().getPurge().isEnabled()) {
             getServer().getScheduler().runTaskAsynchronously(this, new Cleanup(getConf().getPurge().getDaysSinceLastEdit()));
@@ -223,7 +232,7 @@ public class PlayerVaults extends JavaPlugin {
             return map;
         });
 
-        debug("enable done", System.currentTimeMillis());
+        this.getLogger().info("Loaded! Took " + (System.currentTimeMillis() - start) + "ms");
     }
 
     private void metricsLine(String name, Callable<Integer> callable) {
@@ -525,7 +534,7 @@ public class PlayerVaults extends JavaPlugin {
 
     public int getDefaultVaultRows() {
         int def = this.config.getDefaultVaultRows();
-        return (def >= 1 && def <=6) ? def : 6;
+        return (def >= 1 && def <= 6) ? def : 6;
     }
 
     public int getDefaultVaultSize() {
