@@ -22,7 +22,6 @@ import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.translations.Lang;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -48,6 +47,9 @@ public class EconomyOperations {
         if (!VaultManager.getInstance().vaultExists(player.getUniqueId().toString(), number)) {
             return payToCreate(player);
         } else {
+            if (PlayerVaults.getInstance().getConf().getEconomy().getFeeToOpen() == 0) {
+                return true;
+            }
             double cost = PlayerVaults.getInstance().getConf().getEconomy().getFeeToOpen();
             EconomyResponse resp = PlayerVaults.getInstance().getEconomy().withdrawPlayer(player, cost);
             if (resp.transactionSuccess()) {
@@ -66,7 +68,7 @@ public class EconomyOperations {
      * @return The transaction success
      */
     public static boolean payToCreate(Player player) {
-        if (!PlayerVaults.getInstance().isEconomyEnabled() || player.hasPermission("playervaults.free")) {
+        if (!PlayerVaults.getInstance().isEconomyEnabled() || PlayerVaults.getInstance().getConf().getEconomy().getFeeToCreate() == 0 || player.hasPermission("playervaults.free")) {
             return true;
         }
 
@@ -88,7 +90,7 @@ public class EconomyOperations {
      * @return The transaction success.
      */
     public static boolean refundOnDelete(Player player, int number) {
-        if (!PlayerVaults.getInstance().isEconomyEnabled() || player.hasPermission("playervaults.free")) {
+        if (!PlayerVaults.getInstance().isEconomyEnabled() || PlayerVaults.getInstance().getConf().getEconomy().getRefundOnDelete() == 0 || player.hasPermission("playervaults.free")) {
             return true;
         }
 
