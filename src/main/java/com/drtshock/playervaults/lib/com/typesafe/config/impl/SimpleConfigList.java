@@ -209,7 +209,9 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
             sb.append("[");
             if (options.getFormatted())
                 sb.append('\n');
+            int count = 0;
             for (AbstractConfigValue v : value) {
+                count++;
                 if (options.getOriginComments()) {
                     String[] lines = v.origin().description().split("\n");
                     for (String l : lines) {
@@ -222,6 +224,12 @@ final class SimpleConfigList extends AbstractConfigValue implements ConfigList, 
                     }
                 }
                 if (options.getComments()) {
+                    if (count > 1) {
+                        sb.append('\n');
+                        if (!v.origin().comments().isEmpty()) {
+                            sb.append('\n');
+                        }
+                    }
                     for (String comment : v.origin().comments()) {
                         indent(sb, indent + 1, options);
                         sb.append("# ");

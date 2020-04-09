@@ -481,7 +481,9 @@ final class SimpleConfigObject extends AbstractConfigObject implements Serializa
             int separatorCount = 0;
             String[] keys = keySet().toArray(new String[size()]);
             Arrays.sort(keys, new RenderComparator());
+            int count = 0;
             for (String k : keys) {
+                count++;
                 AbstractConfigValue v;
                 v = value.get(k);
 
@@ -497,6 +499,12 @@ final class SimpleConfigObject extends AbstractConfigObject implements Serializa
                     }
                 }
                 if (options.getComments()) {
+                    if (count > 1) {
+                        sb.append('\n');
+                        if (!v.origin().comments().isEmpty()) {
+                            sb.append('\n');
+                        }
+                    }
                     for (String comment : v.origin().comments()) {
                         indent(sb, innerIndent, options);
                         sb.append("#");
