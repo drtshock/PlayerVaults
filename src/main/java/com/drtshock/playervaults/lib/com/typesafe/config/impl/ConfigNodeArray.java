@@ -1,0 +1,14 @@
+package com.drtshock.playervaults.lib.com.typesafe.config.impl;
+
+import java.util.Collection;
+
+final class ConfigNodeArray extends ConfigNodeComplexValue {
+    ConfigNodeArray(Collection<AbstractConfigNode> children) {
+        super(children);
+    }
+
+    @Override
+    protected ConfigNodeArray newNode(Collection<AbstractConfigNode> nodes) {
+        return new ConfigNodeArray(nodes);
+    }
+}

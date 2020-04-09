@@ -23,6 +23,8 @@ import com.drtshock.playervaults.commands.DeleteCommand;
 import com.drtshock.playervaults.commands.SignCommand;
 import com.drtshock.playervaults.commands.SignSetInfo;
 import com.drtshock.playervaults.commands.VaultCommand;
+import com.drtshock.playervaults.config.Loader;
+import com.drtshock.playervaults.config.file.Config;
 import com.drtshock.playervaults.listeners.Listeners;
 import com.drtshock.playervaults.listeners.SignListener;
 import com.drtshock.playervaults.listeners.VaultPreloadListener;
@@ -53,6 +55,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -83,6 +86,7 @@ public class PlayerVaults extends JavaPlugin {
     private String _versionString;
     private int maxVaultAmountPermTest;
     private Metrics metrics;
+    private Config config = new Config();
 
     public static PlayerVaults getInstance() {
         return instance;
@@ -105,7 +109,7 @@ public class PlayerVaults extends JavaPlugin {
     public void onEnable() {
         instance = this;
         loadConfig();
-        DEBUG = getConfig().getBoolean("debug", false);
+        DEBUG = getConf().isDebug();
         debug("config", System.currentTimeMillis());
         uuidData = new File(this.getDataFolder(), "uuidvaults");
         vaultData = new File(this.getDataFolder(), "base64vaults");
@@ -123,8 +127,8 @@ public class PlayerVaults extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new VaultPreloadListener(), this);
         getServer().getPluginManager().registerEvents(new SignListener(this), this);
         debug("registering listeners", System.currentTimeMillis());
-        this.backupsEnabled = this.getConfig().getBoolean("backups.enabled", true);
-        this.maxVaultAmountPermTest = this.getConfig().getInt("max-vault-amount-perm-to-test", 99);
+        this.backupsEnabled = this.getConf().getStorage().getFlatFile().isBackups();
+        this.maxVaultAmountPermTest = this.getConf().getMaxVaultAmountPermTest();
         loadSigns();
         debug("loaded signs", System.currentTimeMillis());
         debug("check update", System.currentTimeMillis());
@@ -136,8 +140,8 @@ public class PlayerVaults extends JavaPlugin {
         useVault = setupEconomy();
         debug("setup economy", System.currentTimeMillis());
 
-        if (getConfig().getBoolean("cleanup.enable", false)) {
-            getServer().getScheduler().runTaskAsynchronously(this, new Cleanup(getConfig().getInt("cleanup.lastEdit", 30)));
+        if (getConf().getPurge().isEnabled()) {
+            getServer().getScheduler().runTaskAsynchronously(this, new Cleanup(getConf().getPurge().getDaysSinceLastEdit()));
         }
 
         new BukkitRunnable() {
@@ -200,14 +204,14 @@ public class PlayerVaults extends JavaPlugin {
             }
         }
 
-        this.metricsSimplePie("signs", () -> getConfig().getBoolean("signs-enabled") ? "enabled" : "disabled");
-        this.metricsSimplePie("cleanup", () -> getConfig().getBoolean("cleanup.enable") ? "enabled" : "disabled");
-        this.metricsSimplePie("language", () -> getConfig().getString("language", "english"));
+        this.metricsSimplePie("signs", () -> getConf().isSigns() ? "enabled" : "disabled");
+        this.metricsSimplePie("cleanup", () -> getConf().getPurge().isEnabled() ? "enabled" : "disabled");
+        this.metricsSimplePie("language", () -> getConf().getLanguage());
 
         this.metricsDrillPie("block_items", () -> {
             Map<String, Map<String, Integer>> map = new HashMap<>();
             Map<String, Integer> entry = new HashMap<>();
-            if (getConfig().getBoolean("blockitems")) {
+            if (getConf().getItemBlocking().isEnabled()) {
                 for (Material material : blockedMats) {
                     entry.put(material.toString(), 1);
                 }
@@ -215,7 +219,7 @@ public class PlayerVaults extends JavaPlugin {
             if (entry.isEmpty()) {
                 entry.put("none", 1);
             }
-            map.put(getConfig().getBoolean("blockitems") ? "enabled" : "disabled", entry);
+            map.put(getConf().getItemBlocking().isEnabled() ? "enabled" : "disabled", entry);
             return map;
         });
 
@@ -265,7 +269,7 @@ public class PlayerVaults extends JavaPlugin {
             }
         }
 
-        if (getConfig().getBoolean("cleanup.enable", false)) {
+        if (getConf().getPurge().isEnabled()) {
             saveSignsFile();
         }
     }
@@ -297,12 +301,27 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     private void loadConfig() {
-        saveDefaultConfig();
+        File configYaml = new File(this.getDataFolder(), "config.yml");
+        if (configYaml.exists()) {
+            this.config.setFromConfig(this.getConfig());
+            try {
+                Files.move(configYaml.toPath(), this.getDataFolder().toPath().resolve("old_unused_config.yml"));
+            } catch (Exception e) {
+                this.getLogger().log(Level.SEVERE, "Failed to move config for backup", e);
+                configYaml.deleteOnExit();
+            }
+        }
+
+        try {
+            Loader.loadAndSave("config", this.config);
+        } catch (IOException | IllegalAccessException e) {
+            this.getLogger().log(Level.SEVERE, "Could not load config.", e);
+        }
 
         // Clear just in case this is a reload.
         blockedMats.clear();
-        if (getConfig().getBoolean("blockitems", false) && getConfig().contains("blocked-items")) {
-            for (String s : getConfig().getStringList("blocked-items")) {
+        if (getConf().getItemBlocking().isEnabled()) {
+            for (String s : getConf().getItemBlocking().getList()) {
                 Material mat = Material.matchMaterial(s);
                 if (mat != null) {
                     blockedMats.add(mat);
@@ -310,6 +329,10 @@ public class PlayerVaults extends JavaPlugin {
                 }
             }
         }
+    }
+
+    public Config getConf() {
+        return this.config;
     }
 
     private void loadSigns() {
@@ -328,7 +351,7 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     private void reloadSigns() {
-        if (!getConfig().getBoolean("signs-enabled")) {
+        if (!getConf().isSigns()) {
             return;
         }
         if (!signsFile.exists()) loadSigns();
@@ -358,7 +381,7 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     private void saveSignsFile() {
-        if (!getConfig().getBoolean("signs-enabled")) {
+        if (!getConf().isSigns()) {
             return;
         }
 
@@ -372,24 +395,13 @@ public class PlayerVaults extends JavaPlugin {
         }
     }
 
-    /**
-     * Set an object in the config.yml
-     *
-     * @param path The path in the config.
-     * @param object What to be saved.
-     * @param conf Where to save the object.
-     */
-    public <T> void setInConfig(String path, T object, YamlConfiguration conf) {
-        conf.set(path, object);
-    }
-
     public void loadLang() {
         File folder = new File(getDataFolder(), "lang");
         if (!folder.exists()) {
             folder.mkdir();
         }
 
-        String definedLanguage = getConfig().getString("language", "english");
+        String definedLanguage = getConf().getLanguage();
 
         // Save as default just incase.
         File english = null;
@@ -444,7 +456,7 @@ public class PlayerVaults extends JavaPlugin {
     }
 
     public boolean isEconomyEnabled() {
-        return this.getConfig().getBoolean("economy.enabled", false) && this.useVault;
+        return this.getConf().getEconomy().isEnabled() && this.useVault;
     }
 
     public File getVaultData() {

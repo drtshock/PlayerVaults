@@ -1,0 +1,5 @@
+This project overall is licensed under the GNU GENERAL PUBLIC LICENSE version 3
+and can be found at https://github.com/drtshock/PlayerVaults
+
+This project also contains Typesafe Config, which is licensed under the Apache License, Version 2.0
+and can be found at https://github.com/lightbend/config/
