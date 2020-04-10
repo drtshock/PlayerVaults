@@ -26,8 +26,8 @@ public class Cleanup implements Runnable {
 
     private final long diff;
 
-    public Cleanup(int diff) {
-        this.diff = diff * 86400000;
+    public Cleanup(long diff) {
+        this.diff = diff * 86400000L;
     }
 
     @Override
