@@ -24,7 +24,8 @@ public enum Language {
     TURKISH,
     DUTCH,
     GERMAN,
-    RUSSIAN;
+    RUSSIAN,
+    DANISH;
 
     private String friendlyName;
 
