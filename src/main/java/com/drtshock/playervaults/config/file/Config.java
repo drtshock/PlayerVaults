@@ -23,6 +23,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 @SuppressWarnings({"FieldCanBeLocal", "InnerClassMayBeStatic", "unused"})
 public class Config {
@@ -158,25 +159,27 @@ public class Config {
     @Comment("Storage option. Currently only flatfile, but soon more! :)")
     private Storage storage = new Storage();
 
-    public void setFromConfig(FileConfiguration c) {
-        this.debug = c.getBoolean("debug", false);
-        this.language = c.getString("language", "english");
-        this.signs = c.getBoolean("signs-enabled", false);
-        this.economy.enabled = c.getBoolean("economy.enabled", false);
-        this.economy.feeToCreate = c.getDouble("economy.cost-to-create", 100);
-        this.economy.feeToOpen = c.getDouble("economy.cost-to-open", 10);
-        this.economy.refundOnDelete = c.getDouble("economy.refund-on-delete", 50);
-        this.itemBlocking.enabled = c.getBoolean("blockitems", true);
-        this.itemBlocking.list = c.getStringList("blocked-items");
+    public void setFromConfig(Logger l, FileConfiguration c) {
+        l.info("Importing old configuration...");
+        l.info("debug = "+(this.debug = c.getBoolean("debug", false)));
+        l.info("language = "+(this.language = c.getString("language", "english")));
+        l.info("signs = "+(this.signs = c.getBoolean("signs-enabled", false)));
+        l.info("economy enabled = "+(this.economy.enabled = c.getBoolean("economy.enabled", false)));
+        l.info(" creation fee = "+(this.economy.feeToCreate = c.getDouble("economy.cost-to-create", 100)));
+        l.info(" open fee = "+(this.economy.feeToOpen = c.getDouble("economy.cost-to-open", 10)));
+        l.info(" refund = "+(this.economy.refundOnDelete = c.getDouble("economy.refund-on-delete", 50)));
+        l.info("item blocking enabled = "+(this.itemBlocking.enabled = c.getBoolean("blockitems", true)));
+        l.info("blocked items = "+(this.itemBlocking.list = c.getStringList("blocked-items")));
         if (this.itemBlocking.list == null) {
             this.itemBlocking.list = new ArrayList<>();
             this.itemBlocking.list.add("PUMPKIN");
             this.itemBlocking.list.add("DIAMOND_BLOCK");
+            l.info(" set defaults: "+this.itemBlocking.list);
         }
-        this.purge.enabled = c.getBoolean("cleanup.enable", false);
-        this.purge.daysSinceLastEdit = c.getInt("cleanup.lastEdit", 30);
-        this.storage.flatFile.backups = c.getBoolean("backups.enabled", true);
-        this.maxVaultAmountPermTest = c.getInt("max-vault-amount-perm-to-test", 99);
+        l.info("cleanup purge enabled = "+(this.purge.enabled = c.getBoolean("cleanup.enable", false)));
+        l.info(" days since last edit = "+(this.purge.daysSinceLastEdit = c.getInt("cleanup.lastEdit", 30)));
+        l.info("flatfile storage backups = "+(this.storage.flatFile.backups = c.getBoolean("backups.enabled", true)));
+        l.info("max vault amount to test via perms = "+(this.maxVaultAmountPermTest = c.getInt("max-vault-amount-perm-to-test", 99)));
     }
 
     public boolean isDebug() {

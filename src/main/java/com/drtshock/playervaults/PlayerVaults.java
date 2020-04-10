@@ -312,7 +312,7 @@ public class PlayerVaults extends JavaPlugin {
     private void loadConfig() {
         File configYaml = new File(this.getDataFolder(), "config.yml");
         if (configYaml.exists()) {
-            this.config.setFromConfig(this.getConfig());
+            this.config.setFromConfig(this.getLogger(), this.getConfig());
             try {
                 Files.move(configYaml.toPath(), this.getDataFolder().toPath().resolve("old_unused_config.yml"));
             } catch (Exception e) {
