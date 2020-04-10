@@ -18,6 +18,8 @@
 package com.drtshock.playervaults.config;
 
 import com.drtshock.playervaults.PlayerVaults;
+import com.drtshock.playervaults.config.annotation.Comment;
+import com.drtshock.playervaults.config.annotation.ConfigName;
 import com.drtshock.playervaults.config.annotation.WipeOnReload;
 import com.drtshock.playervaults.lib.com.typesafe.config.Config;
 import com.drtshock.playervaults.lib.com.typesafe.config.ConfigFactory;
@@ -27,8 +29,6 @@ import com.drtshock.playervaults.lib.com.typesafe.config.ConfigValueFactory;
 import com.drtshock.playervaults.lib.com.typesafe.config.ConfigValueType;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import com.drtshock.playervaults.config.annotation.Comment;
-import com.drtshock.playervaults.config.annotation.ConfigName;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,7 +91,11 @@ public class Loader {
         Loader.types.add(String.class);
     }
 
-    private static @NonNull ConfigValue loadNode(@NonNull Config current, @NonNull Object object) throws IllegalAccessException {
+    private static @NonNull ConfigValue loadNode(@NonNull Config config, @NonNull Object object) throws IllegalAccessException {
+        return loadNode(config, "", object);
+    }
+
+    private static @NonNull ConfigValue loadNode(@NonNull Config config, String path, @NonNull Object object) throws IllegalAccessException {
         Map<String, ConfigValue> map = new HashMap<>();
         for (Field field : Loader.getFields(object.getClass())) {
             if (field.isSynthetic()) {
@@ -108,7 +112,8 @@ public class Loader {
             ConfigName configName = field.getAnnotation(ConfigName.class);
             Comment comment = field.getAnnotation(Comment.class);
             String confName = configName == null || configName.value().isEmpty() ? field.getName() : configName.value();
-            ConfigValue curValue = Loader.getOrNull(current, confName);
+            String newPath = path.isEmpty() ? confName : (path + '.' + confName);
+            ConfigValue curValue = Loader.getOrNull(config, newPath);
             boolean needsValue = curValue == null;
 
             ConfigValue newValue;
@@ -131,7 +136,7 @@ public class Loader {
                     }
                 }
             } else {
-                newValue = Loader.loadNode(current, defaultValue);
+                newValue = Loader.loadNode(config, newPath, defaultValue);
             }
             if (comment != null) {
                 newValue = newValue.withOrigin(newValue.origin().withComments(Arrays.asList(comment.value().split("\n"))));
