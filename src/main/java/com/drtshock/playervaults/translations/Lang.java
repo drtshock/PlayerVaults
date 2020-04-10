@@ -47,12 +47,12 @@ public enum Lang {
     VAULT_TITLE("vault-title", "&4Vault #%number"),
     OPEN_WITH_SIGN("open-with-sign", "&fOpening vault &a%v &fof &a%p"),
     NO_OWNER_FOUND("no-owner-found", "&cCannot find vault owner: &a%p"),
-    CONVERT_PLUGIN_NOT_FOUND("plugin-not-found", "&cNo converter found for that plugin"),
-    CONVERT_COMPLETE("conversion-complete", "&aConverted %converted players to PlayerVaults"),
+    CONVERT_PLUGIN_NOT_FOUND("plugin-not-found", "&cNo converter found for that plugin."),
+    CONVERT_COMPLETE("conversion-complete", "&aConverted %converted players to PlayerVaults."),
     CONVERT_BACKGROUND("conversion-background", "&fConversion has been forked to the background. See console for updates."),
     LOCKED("vaults-locked", "&cVaults are currently locked while conversion occurs. Please try again in a moment!"),
     HELP("help", "/pv <number>"),
-    BLOCKED_ITEM("blocked-item", "&6%m &cis blocked from vaults"),
+    BLOCKED_ITEM("blocked-item", "&6%m &cis blocked from vaults."),
     SIGNS_DISABLED("signs-disabled", "&cVault signs are currently disabled."),
     BLOCKED_BAD_ITEM("blocked-bad-item", "&cThis item is not allowed in a vault.");
 
