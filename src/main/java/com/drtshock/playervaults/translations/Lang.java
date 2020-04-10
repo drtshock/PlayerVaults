@@ -63,7 +63,7 @@ public enum Lang {
     /**
      * Lang enum constructor.
      *
-     * @param path  The string path.
+     * @param path The string path.
      * @param start The default string.
      */
     Lang(String path, String start) {
@@ -82,10 +82,8 @@ public enum Lang {
 
     @Override
     public String toString() {
-        if (this == TITLE) {
-            return ChatColor.translateAlternateColorCodes('&', LANG.getString(this.path, def)) + " ";
-        }
-        return ChatColor.translateAlternateColorCodes('&', LANG.getString(this.path, def));
+        String extra = (this == TITLE && !LANG.getString(this.path, this.def).isEmpty()) ? " " : "";
+        return ChatColor.translateAlternateColorCodes('&', LANG.getString(this.path, def)) + extra;
     }
 
     /**
