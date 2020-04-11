@@ -73,7 +73,7 @@ public class SignListener implements Listener {
             String owner = self ? null : PlayerVaults.getInstance().getSetSign().get(player.getName()).getOwner();
             PlayerVaults.getInstance().getSetSign().remove(player.getName());
             event.setCancelled(true);
-            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
                 if (block != null && plugin.isSign(block.getType())) {
                     Sign s = (Sign) block.getState();
                     Location l = s.getLocation();
