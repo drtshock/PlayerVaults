@@ -50,7 +50,7 @@ public class VaultCommand implements CommandExecutor {
 
             switch (args.length) {
                 case 1:
-                    if (VaultOperations.openOwnVault(player, args[0])) {
+                    if (VaultOperations.openOwnVault(player, args[0], true)) {
                         PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(player.getUniqueId().toString(), Integer.parseInt(args[0])));
                     } else if (sender.hasPermission("playervaults.admin")) {
                         OfflinePlayer searchPlayer = Bukkit.getOfflinePlayer(args[0]);

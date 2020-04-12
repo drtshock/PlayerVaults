@@ -309,7 +309,7 @@ public class VaultOperations {
     }
 
     /**
-     * Delete all of a player's vaults (Currently goes to vault #100)
+     * Delete all of a player's vaults
      *
      * @param sender The sender executing the deletion.
      * @param holder The user to whom the deleted vault belongs.
