@@ -58,6 +58,9 @@ public class SignListener implements Listener {
             return;
         }
         Player player = event.getPlayer();
+        if (player.isSleeping() || player.isDead() || !player.isOnline()) {
+            return;
+        }
         Block block = event.getClickedBlock();
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (PlayerVaults.getInstance().getInVault().containsKey(player.getUniqueId().toString())) {

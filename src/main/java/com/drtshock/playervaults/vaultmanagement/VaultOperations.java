@@ -131,6 +131,9 @@ public class VaultOperations {
         if (isLocked()) {
             return false;
         }
+        if (player.isSleeping() || player.isDead() || !player.isOnline()) {
+            return false;
+        }
         int number;
         try {
             number = Integer.parseInt(arg);
@@ -199,6 +202,10 @@ public class VaultOperations {
      */
     public static boolean openOtherVault(Player player, String vaultOwner, String arg) {
         if (isLocked()) {
+            return false;
+        }
+
+        if (player.isSleeping() || player.isDead() || !player.isOnline()) {
             return false;
         }
 
