@@ -69,6 +69,7 @@ public class Base64Serialization {
             if (failedItems > 0) {
                 PlayerVaults.getInstance().getLogger().severe("Failed to save " + failedItems + " invalid items to vault " + target);
             }
+            PlayerVaults.debug("Serialized " + inventory.getSize() + " items");
 
             // Serialize that array
             dataOutput.close();
@@ -98,6 +99,7 @@ public class Base64Serialization {
                 inventory.setItem(i, (ItemStack) dataInput.readObject());
             }
             dataInput.close();
+            PlayerVaults.debug("Read " + inventory.getSize() + " items");
             return inventory;
         } catch (Exception e) {
             PlayerVaults.getInstance().getLogger().log(Level.SEVERE, "Failed to load vault " + target, e);
