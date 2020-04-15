@@ -19,7 +19,6 @@
 package com.drtshock.playervaults.commands;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.converters.BackpackConverter;
 import com.drtshock.playervaults.converters.Converter;
 import com.drtshock.playervaults.translations.Lang;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
@@ -35,7 +34,7 @@ public class ConvertCommand implements CommandExecutor {
     private final List<Converter> converters = new ArrayList<>();
 
     public ConvertCommand() {
-        converters.add(new BackpackConverter());
+        // Add converters here
     }
 
     @Override
