@@ -4,7 +4,7 @@ website: ${project.url}
 
 version: ${project.version}
 main: com.drtshock.playervaults.PlayerVaults
-softdepend: [Vault]
+depend: [Vault]
 api-version: 1.13
 
 commands:

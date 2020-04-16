@@ -20,6 +20,7 @@ package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.translations.Lang;
+import com.drtshock.playervaults.v5.Serialization;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -69,7 +70,7 @@ public class VaultManager {
     public void saveVault(Inventory inventory, String target, int number) {
         YamlConfiguration yaml = getPlayerVaultFile(target, true);
         int size = VaultOperations.getMaxVaultSize(target);
-        String serialized = Base64Serialization.toBase64(inventory, size, target);
+        String serialized = Serialization.toBase64(inventory, size, target);
         yaml.set(String.format(VAULTKEY, number), serialized);
         saveFileSync(target, yaml);
     }
@@ -161,7 +162,7 @@ public class VaultManager {
         Inventory inventory = Bukkit.createInventory(owner, size, title);
 
         String data = playerFile.getString(String.format(VAULTKEY, number));
-        Inventory deserialized = Base64Serialization.fromBase64(data, ownerName);
+        Inventory deserialized = Serialization.fromBase64(data, ownerName);
         if (deserialized == null) {
             PlayerVaults.debug("Loaded vault as null");
             return inventory;
@@ -194,7 +195,7 @@ public class VaultManager {
     public Inventory getVault(String holder, int number) {
         YamlConfiguration playerFile = getPlayerVaultFile(holder, true);
         String serialized = playerFile.getString(String.format(VAULTKEY, number));
-        return Base64Serialization.fromBase64(serialized, holder);
+        return Serialization.fromBase64(serialized, holder);
     }
 
     /**

@@ -18,6 +18,9 @@
 
 package com.drtshock.playervaults;
 
+import co.aikar.taskchain.BukkitTaskChainFactory;
+import co.aikar.taskchain.TaskChain;
+import co.aikar.taskchain.TaskChainFactory;
 import com.drtshock.playervaults.commands.ConvertCommand;
 import com.drtshock.playervaults.commands.DeleteCommand;
 import com.drtshock.playervaults.commands.SignCommand;
@@ -32,13 +35,11 @@ import com.drtshock.playervaults.tasks.Cleanup;
 import com.drtshock.playervaults.translations.Lang;
 import com.drtshock.playervaults.translations.Language;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
-import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -49,6 +50,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,7 +60,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -66,13 +68,10 @@ public class PlayerVaults extends JavaPlugin {
     public static boolean DEBUG;
     private static PlayerVaults instance;
     private final HashMap<String, SignSetInfo> setSign = new HashMap<>();
-    // Player name - VaultViewInfo
-    private final HashMap<String, VaultViewInfo> inVault = new HashMap<>();
-    // VaultViewInfo - Inventory
-    private final HashMap<String, Inventory> openInventories = new HashMap<>();
+
     private final Set<Material> blockedMats = new HashSet<>();
     private Economy economy;
-    private boolean useVault;
+    private Permission permission;
     private YamlConfiguration signs;
     private File signsFile;
     private boolean saveQueued;
@@ -83,13 +82,14 @@ public class PlayerVaults extends JavaPlugin {
     private String _versionString;
     private int maxVaultAmountPermTest;
     private Metrics metrics;
-    private Config config = new Config();
+    private final Config config = new Config();
+    private TaskChainFactory taskChainFactory;
 
     public static PlayerVaults getInstance() {
         return instance;
     }
 
-    public static void debug(String s, long start) {
+    public static void debug(@NonNull String s, long start) {
         if (DEBUG) {
             instance.getLogger().log(Level.INFO, "{0} took {1}ms", new Object[]{s, (System.currentTimeMillis() - start)});
         }
@@ -104,6 +104,7 @@ public class PlayerVaults extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        this.taskChainFactory = BukkitTaskChainFactory.create(this);
         long start = System.currentTimeMillis();
         long time = System.currentTimeMillis();
         loadConfig();
@@ -134,8 +135,28 @@ public class PlayerVaults extends JavaPlugin {
         getCommand("pvsign").setExecutor(new SignCommand());
         debug("registered commands", time);
         time = System.currentTimeMillis();
-        useVault = setupEconomy();
-        debug("setup economy", time);
+        Plugin vaultPlugin = getServer().getPluginManager().getPlugin("Vault");
+        if (vaultPlugin == null || this.vaultBad(vaultPlugin.getDescription().getVersion())) { // Argh!
+            this.getLogger().severe("This plugin requires Vault of at least version 1.7!");
+            this.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        RegisteredServiceProvider<Economy> providerE = getServer().getServicesManager().getRegistration(Economy.class);
+        if (providerE != null) {
+            this.economy = providerE.getProvider();
+            this.getLogger().info("Found economy integration " + economy.getName() + " and planning to " + (this.getConf().getEconomy().isEnabled() ? "use" : "not use") + " it.");
+        }
+        RegisteredServiceProvider<Permission> providerP = getServer().getServicesManager().getRegistration(Permission.class);
+        if (providerP == null) { // ... how? It should do superperms by default
+            this.getLogger().severe("This plugin requires Vault to link to a permissions plugin or built-in permissions.");
+            this.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        this.permission = providerP.getProvider();
+        this.getLogger().info("Using permission integration " + permission.getName());
+
+        debug("setup vault", time);
 
         if (getConf().getPurge().isEnabled()) {
             getServer().getScheduler().runTaskAsynchronously(this, new Cleanup(getConf().getPurge().getDaysSinceLastEdit()));
@@ -223,23 +244,32 @@ public class PlayerVaults extends JavaPlugin {
         this.getLogger().info("Loaded! Took " + (System.currentTimeMillis() - start) + "ms");
     }
 
-    private void metricsLine(String name, Callable<Integer> callable) {
+    private boolean vaultBad(@NonNull String version) {
+        String[] split = version.split("\\.");
+        try {
+            return Integer.parseInt(split[1]) < 7;
+        } catch (Exception ignored) {
+            return true;
+        }
+    }
+
+    private void metricsLine(@NonNull String name, @NonNull Callable<Integer> callable) {
         this.metrics.addCustomChart(new Metrics.SingleLineChart(name, callable));
     }
 
-    private void metricsDrillPie(String name, Callable<Map<String, Map<String, Integer>>> callable) {
+    private void metricsDrillPie(@NonNull String name, @NonNull Callable<Map<String, Map<String, Integer>>> callable) {
         this.metrics.addCustomChart(new Metrics.DrilldownPie(name, callable));
     }
 
-    private void metricsSimplePie(String name, Callable<String> callable) {
+    private void metricsSimplePie(@NonNull String name, @NonNull Callable<String> callable) {
         this.metrics.addCustomChart(new Metrics.SimplePie(name, callable));
     }
 
-    private Map<String, Map<String, Integer>> metricsPluginInfo(Plugin plugin) {
+    private @NonNull Map<String, Map<String, Integer>> metricsPluginInfo(@NonNull Plugin plugin) {
         return this.metricsInfo(plugin, () -> plugin.getDescription().getVersion());
     }
 
-    private Map<String, Map<String, Integer>> metricsInfo(Object plugin, Supplier<String> versionGetter) {
+    private @NonNull Map<String, Map<String, Integer>> metricsInfo(@Nullable Object plugin, @NonNull Supplier<String> versionGetter) {
         Map<String, Map<String, Integer>> map = new HashMap<>();
         Map<String, Integer> entry = new HashMap<>();
         entry.put(plugin == null ? "nope" : versionGetter.get(), 1);
@@ -283,20 +313,6 @@ public class PlayerVaults extends JavaPlugin {
         return true;
     }
 
-    private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
-        }
-
-        RegisteredServiceProvider<Economy> provider = getServer().getServicesManager().getRegistration(Economy.class);
-        if (provider == null) {
-            return false;
-        }
-
-        economy = provider.getProvider();
-        return economy != null;
-    }
-
     private void loadConfig() {
         File configYaml = new File(this.getDataFolder(), "config.yml");
         if (!(new File(this.getDataFolder(), "config.conf").exists()) && configYaml.exists()) {
@@ -328,7 +344,7 @@ public class PlayerVaults extends JavaPlugin {
         }
     }
 
-    public Config getConf() {
+    public @NonNull Config getConf() {
         return this.config;
     }
 
@@ -366,7 +382,7 @@ public class PlayerVaults extends JavaPlugin {
      *
      * @return The signs.yml config.
      */
-    public YamlConfiguration getSigns() {
+    public @NonNull YamlConfiguration getSigns() {
         return this.signs;
     }
 
@@ -436,27 +452,19 @@ public class PlayerVaults extends JavaPlugin {
         getLogger().info("Loaded lang for " + definedLanguage);
     }
 
-    public HashMap<String, SignSetInfo> getSetSign() {
+    public @NonNull HashMap<String, SignSetInfo> getSetSign() {
         return this.setSign;
     }
 
-    public HashMap<String, VaultViewInfo> getInVault() {
-        return this.inVault;
-    }
-
-    public HashMap<String, Inventory> getOpenInventories() {
-        return this.openInventories;
-    }
-
-    public Economy getEconomy() {
+    public @Nullable Economy getEconomy() {
         return this.economy;
     }
 
     public boolean isEconomyEnabled() {
-        return this.getConf().getEconomy().isEnabled() && this.useVault;
+        return this.getConf().getEconomy().isEnabled() && this.economy != null;
     }
 
-    public File getVaultData() {
+    public @NonNull File getVaultData() {
         return this.vaultData;
     }
 
@@ -475,7 +483,7 @@ public class PlayerVaults extends JavaPlugin {
         return this.backupsEnabled;
     }
 
-    public File getBackupsFolder() {
+    public @NonNull File getBackupsFolder() {
         // having this in #onEnable() creates the 'uuidvaults' directory, preventing the conversion from running
         if (this.backupsFolder == null) {
             this.backupsFolder = new File(this.getVaultData(), "backups");
@@ -485,25 +493,7 @@ public class PlayerVaults extends JavaPlugin {
         return this.backupsFolder;
     }
 
-    /**
-     * Tries to get a name from a given String that we hope is a UUID.
-     *
-     * @param potentialUUID - potential UUID to try to get the name for.
-     * @return the player's name if we can find it, otherwise return what got passed to us.
-     */
-    public String getNameIfPlayer(String potentialUUID) {
-        UUID uuid;
-        try {
-            uuid = UUID.fromString(potentialUUID);
-        } catch (Exception e) {
-            return potentialUUID;
-        }
-
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-        return offlinePlayer != null ? offlinePlayer.getName() : potentialUUID;
-    }
-
-    public boolean isBlockedMaterial(Material mat) {
+    public boolean isBlockedMaterial(@NonNull Material mat) {
         return blockedMats.contains(mat);
     }
 
@@ -512,7 +502,7 @@ public class PlayerVaults extends JavaPlugin {
      *
      * @return Version as raw string
      */
-    public String getVersion() {
+    public @NonNull String getVersion() {
         if (_versionString == null) {
             final String name = Bukkit.getServer().getClass().getPackage().getName();
             _versionString = name.substring(name.lastIndexOf(46) + 1) + ".";
@@ -535,5 +525,29 @@ public class PlayerVaults extends JavaPlugin {
 
     public int getMaxVaultAmountPermTest() {
         return this.maxVaultAmountPermTest;
+    }
+
+    public <T> @NonNull TaskChain<T> newChain() {
+        return this.taskChainFactory.newChain();
+    }
+
+    public <T> @NonNull TaskChain<T> newSharedChain(@NonNull String name) {
+        return this.taskChainFactory.newSharedChain(name);
+    }
+
+    /**
+     * Checks if a particular name is a shared chain name.
+     *
+     * @return true if a shared chain name
+     */
+    public boolean isSharedChain(@NonNull String name) {
+        Map<String, ?> sharedChains = this.taskChainFactory.getSharedChains();
+        synchronized (sharedChains) {
+            return sharedChains.containsKey(name);
+        }
+    }
+
+    public @NonNull Permission getVaultPermission() {
+        return this.permission;
     }
 }

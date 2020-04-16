@@ -86,41 +86,6 @@ public class VaultOperations {
     }
 
     /**
-     * Get the max size vault a player is allowed to have.
-     *
-     * @param name that is having his permissions checked.
-     * @return max size as integer. If no max size is set then it will default to the configured default.
-     */
-    public static int getMaxVaultSize(String name) {
-        try {
-            UUID uuid = UUID.fromString(name);
-            return getMaxVaultSize(Bukkit.getOfflinePlayer(uuid));
-        } catch (Exception e) {
-            // Not a UUID
-        }
-
-        return PlayerVaults.getInstance().getDefaultVaultSize();
-    }
-
-    /**
-     * Get the max size vault a player is allowed to have.
-     *
-     * @param player that is having his permissions checked.
-     * @return max size as integer. If no max size is set then it will default to the configured default.
-     */
-    public static int getMaxVaultSize(OfflinePlayer player) {
-        if (player == null || !player.isOnline()) {
-            return PlayerVaults.getInstance().getDefaultVaultSize();
-        }
-        for (int i = 6; i != 0; i--) {
-            if (player.getPlayer().hasPermission("playervaults.size." + i)) {
-                return i * 9;
-            }
-        }
-        return PlayerVaults.getInstance().getDefaultVaultSize();
-    }
-
-    /**
      * Open a player's own vault.
      *
      * @param player The player to open to.

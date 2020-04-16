@@ -1,6 +1,6 @@
 /*
  * PlayerVaultsX
- * Copyright (C) 2013 Trent Hensler, Laxwashere
+ * Copyright (C) 2013-2020 Trent Hensler, Laxwashere, CmdrKittens
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.drtshock.playervaults.vaultmanagement;
+package com.drtshock.playervaults.v5;
 
 
 import com.drtshock.playervaults.PlayerVaults;
@@ -25,6 +25,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.ByteArrayInputStream;
@@ -34,13 +36,13 @@ import java.util.logging.Level;
 /**
  * Created by Lax on 6/6/2017.
  */
-public class Base64Serialization {
+public class Serialization {
 
-    public static String toBase64(Inventory inventory, int size) {
-        return toBase64(inventory, size, null);
+    public static @NonNull String toBase64Lines(byte[] input) {
+        return Base64Coder.encodeLines(input);
     }
 
-    public static String toBase64(Inventory inventory, int size, String target) {
+    public static byte[] toBytes(@NonNull Inventory inventory, int size, @NonNull VaultInfo vaultInfo) {
         try {
             ByteArrayOutputStream finalOutputStream = new ByteArrayOutputStream();
             ByteArrayOutputStream temporaryOutputStream = new ByteArrayOutputStream();
@@ -67,31 +69,25 @@ public class Base64Serialization {
             }
 
             if (failedItems > 0) {
-                PlayerVaults.getInstance().getLogger().severe("Failed to save " + failedItems + " invalid items to vault " + target);
+                PlayerVaults.getInstance().getLogger().severe("Failed to save " + failedItems + " invalid items to vault " + vaultInfo);
             }
             PlayerVaults.debug("Serialized " + inventory.getSize() + " items");
 
             // Serialize that array
             dataOutput.close();
-            return Base64Coder.encodeLines(finalOutputStream.toByteArray());
+            return finalOutputStream.toByteArray();
         } catch (Exception e) {
             throw new IllegalStateException("Cannot into itemstacksz!", e);
         }
     }
 
-    public static String toBase64(ItemStack[] is, int size) {
-        Inventory inventory = Bukkit.createInventory(null, size);
-        inventory.setContents(is);
-        return toBase64(inventory, size);
+    public static byte[] fromBase64Lines(@NonNull String data) {
+        return Base64Coder.decodeLines(data);
     }
 
-    public static Inventory fromBase64(String data) {
-        return fromBase64(data, null);
-    }
-
-    public static Inventory fromBase64(String data, String target) {
+    public static @Nullable Inventory fromBytes(byte[] data, VaultInfo vaultInfo) {
         try {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
             Inventory inventory = Bukkit.getServer().createInventory(null, dataInput.readInt());
             // Read the serialized inventory
@@ -102,7 +98,7 @@ public class Base64Serialization {
             PlayerVaults.debug("Read " + inventory.getSize() + " items");
             return inventory;
         } catch (Exception e) {
-            PlayerVaults.getInstance().getLogger().log(Level.SEVERE, "Failed to load vault " + target, e);
+            PlayerVaults.getInstance().getLogger().log(Level.SEVERE, "Failed to load vault " + vaultInfo, e);
         }
         return null;
     }
