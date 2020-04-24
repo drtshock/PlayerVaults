@@ -25,6 +25,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 
@@ -156,7 +157,7 @@ public class VaultOperations {
                 player.openInventory(inv);
 
                 // Check if the inventory was actually opened
-                if (player.getOpenInventory().getTopInventory() == null) {
+                if (player.getOpenInventory().getTopInventory() instanceof CraftingInventory || player.getOpenInventory().getTopInventory() == null) {
                     PlayerVaults.debug(String.format("Cancelled opening vault %s for %s from an outside source.", arg, player.getName()));
                     return false; // inventory open event was cancelled.
                 }
@@ -235,6 +236,12 @@ public class VaultOperations {
             player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
         } else {
             player.openInventory(inv);
+
+            // Check if the inventory was actually opened
+            if (player.getOpenInventory().getTopInventory() instanceof CraftingInventory || player.getOpenInventory().getTopInventory() == null) {
+                PlayerVaults.debug(String.format("Cancelled opening vault %s for %s from an outside source.", arg, player.getName()));
+                return false; // inventory open event was cancelled.
+            }
             player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", name));
             PlayerVaults.debug("opening other vault", time);
 

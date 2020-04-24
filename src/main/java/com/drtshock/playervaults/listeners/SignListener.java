@@ -38,6 +38,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 
 public class SignListener implements Listener {
@@ -123,6 +124,12 @@ public class SignListener implements Listener {
                                 Inventory inv = VaultManager.getInstance().loadOwnVault(player, num, VaultOperations.getMaxVaultSize(player));
                                 if (inv != null) {
                                     player.openInventory(inv);
+
+                                    // Check if the inventory was actually opened
+                                    if (player.getOpenInventory().getTopInventory() instanceof CraftingInventory || player.getOpenInventory().getTopInventory() == null) {
+                                        PlayerVaults.debug(String.format("Cancelled opening sign vault.", player.getName()));
+                                        return; // inventory open event was cancelled.
+                                    }
                                 }
                             } else {
                                 player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS.toString());
@@ -134,6 +141,12 @@ public class SignListener implements Listener {
                                 player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
                             } else {
                                 player.openInventory(inv);
+
+                                // Check if the inventory was actually opened
+                                if (player.getOpenInventory().getTopInventory() instanceof CraftingInventory || player.getOpenInventory().getTopInventory() == null) {
+                                    PlayerVaults.debug(String.format("Cancelled opening non-self sign vault.", player.getName()));
+                                    return; // inventory open event was cancelled.
+                                }
                             }
                         }
                         PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(self ? player.getUniqueId().toString() : offlinePlayer.getUniqueId().toString(), num));
