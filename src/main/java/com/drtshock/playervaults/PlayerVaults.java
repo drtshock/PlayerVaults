@@ -55,6 +55,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,6 +66,7 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 public class PlayerVaults extends JavaPlugin {
     public static boolean DEBUG;
@@ -231,6 +234,22 @@ public class PlayerVaults extends JavaPlugin {
             map.put(getConf().getItemBlocking().isEnabled() ? "enabled" : "disabled", entry);
             return map;
         });
+
+        try {
+            Class<?> clazz = Class.forName(this.getServer().getClass().getPackage().getName() + ".util.CraftNBTTagConfigSerializer");
+            Field field = clazz.getDeclaredField("INTEGER");
+            field.setAccessible(true);
+            Field modifiers = Field.class.getDeclaredField("modifiers");
+            modifiers.setAccessible(true);
+            modifiers.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+            Pattern pattern = (Pattern) field.get(null);
+            if (pattern.pattern().equals("[-+]?(?:0|[1-9][0-9]*)?i")) {
+                field.set(null, Pattern.compile("[-+]?(?:0|[1-9][0-9]*)i", Pattern.CASE_INSENSITIVE));
+            }
+            this.getLogger().info("Patched Spigot item storage bug.");
+        } catch (Exception ignored) {
+            // Don't worry about it.
+        }
 
         this.getLogger().info("Loaded! Took " + (System.currentTimeMillis() - start) + "ms");
     }
