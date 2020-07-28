@@ -161,14 +161,6 @@ public class SignListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onBlockPhysics(BlockPhysicsEvent event) {
-        if (!PlayerVaults.getInstance().getConf().isSigns()) {
-            return;
-        }
-        blockChangeCheck(event.getBlock().getLocation());
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
         if (!PlayerVaults.getInstance().getConf().isSigns()) {
             return;
