@@ -24,6 +24,7 @@ import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,6 +38,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.stream.Collectors;
 
 public class Listeners implements Listener {
 
@@ -53,10 +56,14 @@ public class Listeners implements Listener {
             Inventory inv = Bukkit.createInventory(null, 6 * 9);
             inv.setContents(inventory.getContents().clone());
 
-            if (inventory.getViewers().size() == 1) {
+            PlayerVaults.debug(inventory.getType() + " " + inventory.getClass().getSimpleName());
+            if (inventory.getViewers().size() <= 1) {
+                PlayerVaults.debug("Saving!");
                 VaultViewInfo info = plugin.getInVault().get(player.getUniqueId().toString());
                 vaultManager.saveVault(inv, info.getVaultName(), info.getNumber());
                 plugin.getOpenInventories().remove(info.toString());
+            } else {
+                PlayerVaults.debug("Other viewers found, not saving! " + inventory.getViewers().stream().map(HumanEntity::getName).collect(Collectors.joining(" ")));
             }
 
             plugin.getInVault().remove(player.getUniqueId().toString());
