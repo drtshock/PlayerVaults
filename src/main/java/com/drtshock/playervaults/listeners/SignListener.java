@@ -25,7 +25,6 @@ import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -40,6 +39,7 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
 public class SignListener implements Listener {
     private PlayerVaults plugin;
@@ -66,7 +66,7 @@ public class SignListener implements Listener {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (PlayerVaults.getInstance().getInVault().containsKey(player.getUniqueId().toString())) {
                 // Different inventories that we don't want the player to open.
-                if (isInvalidBlock(block.getType())) {
+                if (isInvalidBlock(block)) {
                     event.setCancelled(true);
                 }
             }
@@ -196,18 +196,8 @@ public class SignListener implements Listener {
         }
     }
 
-    private boolean isInvalidBlock(Material material) {
-        if (PlayerVaults.getInstance().getVersion().contains("v1_13")) {
-            PlayerVaults.debug("[PlayerVaults] [Debug/SignListener] Block material checked for >= 1.13");
-            return material == Material.CHEST || material == Material.TRAPPED_CHEST
-                    || material == Material.ENDER_CHEST || material == Material.FURNACE
-                    || material == Material.BREWING_STAND || material == Material.ENCHANTING_TABLE
-                    || material == Material.BEACON;
-        }
-        PlayerVaults.debug("[PlayerVaults] [Debug/SignListener] Block material checked for < 1.13");
-        return material == Material.CHEST || material == Material.TRAPPED_CHEST
-                || material == Material.ENDER_CHEST || material == Material.FURNACE
-                || material == Material.valueOf("BURNING_FURNACE") || material == Material.BREWING_STAND
-                || material == Material.valueOf("ENCHANTMENT_TABLE") || material == Material.BEACON;
+    private boolean isInvalidBlock(Block block) {
+        String type = block.getType().name();
+        return block.getState() instanceof InventoryHolder || type.contains("ENCHANT") || type.equals("ENDER_CHEST");
     }
 }
