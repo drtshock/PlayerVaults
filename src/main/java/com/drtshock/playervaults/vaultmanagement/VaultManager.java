@@ -19,7 +19,6 @@
 package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.translations.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -45,8 +44,10 @@ public class VaultManager {
     private static VaultManager instance;
     private final File directory = PlayerVaults.getInstance().getVaultData();
     private final Map<String, YamlConfiguration> cachedVaultFiles = new ConcurrentHashMap<>();
+    private final PlayerVaults plugin;
 
-    public VaultManager() {
+    public VaultManager(PlayerVaults plugin) {
+        this.plugin = plugin;
         instance = this;
     }
 
@@ -87,7 +88,7 @@ public class VaultManager {
 
         PlayerVaults.debug("Loading self vault for " + player.getName() + " (" + player.getUniqueId() + ')');
 
-        String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", player.getName());
+        String title = PlayerVaults.getInstance().getVaultTitle(String.valueOf(number));
         VaultViewInfo info = new VaultViewInfo(player.getUniqueId().toString(), number);
         if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
             PlayerVaults.debug("Already open");
@@ -129,7 +130,7 @@ public class VaultManager {
             // Not a player
         }
 
-        String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", holder);
+        String title = PlayerVaults.getInstance().getVaultTitle(String.valueOf(number));
         VaultViewInfo info = new VaultViewInfo(name, number);
         Inventory inv;
         VaultHolder vaultHolder = new VaultHolder(number);
@@ -279,9 +280,9 @@ public class VaultManager {
         OfflinePlayer player = Bukkit.getPlayer(holder);
         if (player != null) {
             if (sender.getName().equalsIgnoreCase(player.getName())) {
-                sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT.toString().replace("%v", String.valueOf(number)));
+                this.plugin.getTL().deleteVault().title().with("vault", String.valueOf(number)).send(sender);
             } else {
-                sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_OTHER_VAULT.toString().replace("%v", String.valueOf(number)).replaceAll("%p", player.getName()));
+                this.plugin.getTL().deleteOtherVault().title().with("vault", String.valueOf(number)).with("player", player.getName()).send(sender);
             }
         }
 

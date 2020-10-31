@@ -19,7 +19,6 @@
 package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.translations.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -65,8 +64,8 @@ public class UUIDVaultManager {
      * Saves the inventory to the specified player and vault number.
      *
      * @param inventory The inventory to be saved.
-     * @param target    The player of whose file to save to.
-     * @param number    The vault number.
+     * @param target The player of whose file to save to.
+     * @param number The vault number.
      */
     public void saveVault(Inventory inventory, String target, int number) {
         int size = inventory.getSize();
@@ -99,7 +98,7 @@ public class UUIDVaultManager {
             size = PlayerVaults.getInstance().getDefaultVaultSize();
         }
 
-        String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", player.getName());
+        String title = PlayerVaults.getInstance().getVaultTitle(String.valueOf(number));
         VaultViewInfo info = new VaultViewInfo(player.getUniqueId().toString(), number);
         Inventory inv;
         if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
@@ -112,7 +111,7 @@ public class UUIDVaultManager {
                     inv = Bukkit.createInventory(vaultHolder, size, title);
                     vaultHolder.setInventory(inv);
                 } else {
-                    player.sendMessage(Lang.TITLE.toString() + Lang.INSUFFICIENT_FUNDS.toString());
+                    PlayerVaults.getInstance().getTL().insufficientFunds().title().send(player);
                     return null;
                 }
             } else {
@@ -139,7 +138,7 @@ public class UUIDVaultManager {
         if (size % 9 != 0) {
             size = PlayerVaults.getInstance().getDefaultVaultSize();
         }
-        String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", PlayerVaults.getInstance().getNameIfPlayer(holder));
+        String title = PlayerVaults.getInstance().getVaultTitle(String.valueOf(number));
         VaultViewInfo info = new VaultViewInfo(holder, number);
         Inventory inv;
         if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
@@ -161,8 +160,8 @@ public class UUIDVaultManager {
      * Get an inventory from file. Returns null if the inventory doesn't exist. SHOULD ONLY BE USED INTERNALLY
      *
      * @param playerFile the YamlConfiguration file.
-     * @param size       the size of the vault.
-     * @param number     the vault number.
+     * @param size the size of the vault.
+     * @param number the vault number.
      * @return inventory if exists, otherwise null.
      */
     private Inventory getInventory(YamlConfiguration playerFile, int size, int number, String title) {
@@ -190,7 +189,7 @@ public class UUIDVaultManager {
         ConfigurationSection section = playerFile.getConfigurationSection("vault" + number);
         int maxSize = VaultOperations.getMaxVaultSize(holder.toString());
 
-        String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number));
+        String title = PlayerVaults.getInstance().getVaultTitle(String.valueOf(number));
 
         if (section == null) {
             VaultHolder vaultHolder = new VaultHolder(number);
@@ -258,9 +257,9 @@ public class UUIDVaultManager {
         OfflinePlayer player = Bukkit.getPlayer(holder);
         if (player != null) {
             if (sender.getName().equalsIgnoreCase(player.getName())) {
-                sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT.toString().replace("%v", String.valueOf(number)));
+                PlayerVaults.getInstance().getTL().deleteVault().title().with("vault", String.valueOf(number)).send(sender);
             } else {
-                sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_OTHER_VAULT.toString().replace("%v", String.valueOf(number)).replaceAll("%p", player.getName()));
+                PlayerVaults.getInstance().getTL().deleteOtherVault().title().with("vault", String.valueOf(number)).with("player", player.getName()).send(sender);
             }
         }
 

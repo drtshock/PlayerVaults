@@ -19,9 +19,7 @@
 package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.translations.Lang;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -60,7 +58,7 @@ public class VaultOperations {
                     InventoryView view = player.getOpenInventory();
                     if (view.getTopInventory().getHolder() instanceof VaultHolder) {
                         player.closeInventory();
-                        player.sendMessage(Lang.TITLE + Lang.LOCKED.toString());
+                        PlayerVaults.getInstance().getTL().locked().title().send(player);
                     }
                 }
             }
@@ -142,7 +140,7 @@ public class VaultOperations {
                 return false;
             }
         } catch (NumberFormatException nfe) {
-            player.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER.toString());
+            PlayerVaults.getInstance().getTL().mustBeNumber().title().send(player);
             return false;
         }
 
@@ -165,14 +163,14 @@ public class VaultOperations {
                 VaultViewInfo info = new VaultViewInfo(player.getUniqueId().toString(), number);
                 PlayerVaults.getInstance().getOpenInventories().put(info.toString(), inv);
 
-                player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
+                PlayerVaults.getInstance().getTL().openVault().title().with("vault", arg).send(player);
                 return true;
             } else {
-                player.sendMessage(Lang.TITLE.toString() + Lang.INSUFFICIENT_FUNDS);
+                PlayerVaults.getInstance().getTL().insufficientFunds().title().send(player);
                 return false;
             }
         } else {
-            player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
+            PlayerVaults.getInstance().getTL().noPerms().title().send(player);
         }
         return false;
     }
@@ -189,7 +187,7 @@ public class VaultOperations {
         if (isCommand && player.hasPermission("playervaults.commands.use")) {
             return openOwnVault(player, arg);
         }
-        player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS.toString());
+        PlayerVaults.getInstance().getTL().noPerms().title().send(player);
         return false;
     }
 
@@ -216,11 +214,11 @@ public class VaultOperations {
         try {
             number = Integer.parseInt(arg);
             if (number < 1) {
-                player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+                PlayerVaults.getInstance().getTL().mustBeNumber().title().send(player);
                 return false;
             }
         } catch (NumberFormatException nfe) {
-            player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+            PlayerVaults.getInstance().getTL().mustBeNumber().title().send(player);
         }
 
         Inventory inv = VaultManager.getInstance().loadOtherVault(vaultOwner, number, getMaxVaultSize(vaultOwner));
@@ -233,7 +231,7 @@ public class VaultOperations {
         }
 
         if (inv == null) {
-            player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
+            PlayerVaults.getInstance().getTL().vaultDoesNotExist().title().send(player);
         } else {
             player.openInventory(inv);
 
@@ -242,7 +240,7 @@ public class VaultOperations {
                 PlayerVaults.debug(String.format("Cancelled opening vault %s for %s from an outside source.", arg, player.getName()));
                 return false; // inventory open event was cancelled.
             }
-            player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", name));
+            PlayerVaults.getInstance().getTL().openOtherVault().title().with("vault", arg).with("player",name).send(player);
             PlayerVaults.debug("opening other vault", time);
 
             // Need to set ViewInfo for a third party vault for the opening player.
@@ -271,20 +269,20 @@ public class VaultOperations {
             try {
                 number = Integer.parseInt(arg);
                 if (number == 0) {
-                    player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+                    PlayerVaults.getInstance().getTL().mustBeNumber().title().send(player);
                     return;
                 }
             } catch (NumberFormatException nfe) {
-                player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+                PlayerVaults.getInstance().getTL().mustBeNumber().title().send(player);
             }
 
             if (EconomyOperations.refundOnDelete(player, number)) {
                 VaultManager.getInstance().deleteVault(player, player.getUniqueId().toString(), number);
-                player.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT.toString().replaceAll("%v", arg));
+                PlayerVaults.getInstance().getTL().deleteVault().title().with("vault", arg).send(player);
             }
 
         } else {
-            player.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
+            PlayerVaults.getInstance().getTL().mustBeNumber().title().send(player);
         }
     }
 
@@ -305,20 +303,20 @@ public class VaultOperations {
                 try {
                     number = Integer.parseInt(arg);
                     if (number == 0) {
-                        sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+                        PlayerVaults.getInstance().getTL().mustBeNumber().title().send(sender);
                         return;
                     }
                 } catch (NumberFormatException nfe) {
-                    sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+                    PlayerVaults.getInstance().getTL().mustBeNumber().title().send(sender);
                 }
 
                 VaultManager.getInstance().deleteVault(sender, holder, number);
-                sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_OTHER_VAULT.toString().replaceAll("%v", arg).replaceAll("%p", holder));
+                PlayerVaults.getInstance().getTL().deleteOtherVault().title().with("vault", arg).with("player", holder).send(sender);
             } else {
-                sender.sendMessage(Lang.TITLE.toString() + Lang.MUST_BE_NUMBER);
+                PlayerVaults.getInstance().getTL().mustBeNumber().title().send(sender);
             }
         } else {
-            sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
+            PlayerVaults.getInstance().getTL().noPerms().title().send(sender);
         }
     }
 
@@ -337,7 +335,7 @@ public class VaultOperations {
             VaultManager.getInstance().deleteAllVaults(holder);
             PlayerVaults.getInstance().getLogger().info(String.format("%s deleted ALL vaults belonging to %s", sender.getName(), holder));
         } else {
-            sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
+            PlayerVaults.getInstance().getTL().noPerms().title().send(sender);
         }
     }
 

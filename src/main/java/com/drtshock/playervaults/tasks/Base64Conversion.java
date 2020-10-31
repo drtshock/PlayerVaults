@@ -92,7 +92,7 @@ public final class Base64Conversion implements Runnable {
                     continue;
                 }
 
-                int vaultNumber = Integer.valueOf(key.replace("vault", ""));
+                int vaultNumber = Integer.parseInt(key.replace("vault", ""));
 
                 try {
                     Inventory inventory = oldManager.getVault(holderUUID, vaultNumber);

@@ -19,7 +19,6 @@
 package com.drtshock.playervaults.listeners;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.translations.Lang;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import org.bukkit.Bukkit;
@@ -121,7 +120,7 @@ public class Listeners implements Listener {
             if (info != null) {
                 int num = info.getNumber();
                 String inventoryTitle = event.getView().getTitle();
-                String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(num)).replace("%p", info.getVaultName());
+                String title = this.plugin.getVaultTitle(String.valueOf(num));
                 if (inventoryTitle.equalsIgnoreCase(title)) {
                     ItemStack[] items = new ItemStack[2];
                     items[0] = event.getCurrentItem();
@@ -136,13 +135,13 @@ public class Listeners implements Listener {
                         try {
                             item.toString();
                         } catch (Exception e) {
-                            player.sendMessage(Lang.TITLE.toString() + Lang.BLOCKED_BAD_ITEM);
+                            this.plugin.getTL().blockedBadItem().title().send(player);
                             event.setCancelled(true);
                             return;
                         }
                         if (!player.hasPermission("playervaults.bypassblockeditems") && PlayerVaults.getInstance().isBlockedMaterial(item.getType())) {
                             event.setCancelled(true);
-                            player.sendMessage(Lang.TITLE.toString() + Lang.BLOCKED_ITEM.toString().replace("%m", item.getType().name()));
+                            this.plugin.getTL().blockedItem().title().with("item",item.getType().name()).send(player);
                             return;
                         }
                     }
@@ -165,19 +164,19 @@ public class Listeners implements Listener {
             if (info != null) {
                 int num = info.getNumber();
                 String inventoryTitle = event.getView().getTitle();
-                String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(num)).replace("%p", info.getVaultName());
+                String title = this.plugin.getVaultTitle(String.valueOf(num));
                 if ((inventoryTitle != null && inventoryTitle.equalsIgnoreCase(title)) && event.getNewItems() != null) {
                     for (ItemStack item : event.getNewItems().values()) {
                         try {
                             item.toString();
                         } catch (Exception e) {
-                            player.sendMessage(Lang.TITLE.toString() + Lang.BLOCKED_BAD_ITEM);
+                            this.plugin.getTL().blockedBadItem().title().send(player);
                             event.setCancelled(true);
                             continue;
                         }
                         if (!player.hasPermission("playervaults.bypassblockeditems") && PlayerVaults.getInstance().isBlockedMaterial(item.getType())) {
                             event.setCancelled(true);
-                            player.sendMessage(Lang.TITLE.toString() + Lang.BLOCKED_ITEM.toString().replace("%m", item.getType().name()));
+                            this.plugin.getTL().blockedItem().title().with("item",item.getType().name()).send(player);
                             return;
                         }
                     }

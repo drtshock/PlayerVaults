@@ -127,11 +127,6 @@ public class Config {
             "Default: 6")
     private int defaultVaultRows = 6;
 
-    @Comment("Language\n" +
-            " This determines which language file the plugin will read from.\n" +
-            "  Valid options are (don't include .yml): bulgarian, danish, dutch, english, german, turkish, russian")
-    private String language = "english";
-
     @Comment("Signs\n" +
             " This will determine whether vault signs are enabled.\n" +
             " If you don't know what this is or if it's for you, see the resource page.")
@@ -162,7 +157,6 @@ public class Config {
     public void setFromConfig(Logger l, FileConfiguration c) {
         l.info("Importing old configuration...");
         l.info("debug = "+(this.debug = c.getBoolean("debug", false)));
-        l.info("language = "+(this.language = c.getString("language", "english")));
         l.info("signs = "+(this.signs = c.getBoolean("signs-enabled", false)));
         l.info("economy enabled = "+(this.economy.enabled = c.getBoolean("economy.enabled", false)));
         l.info(" creation fee = "+(this.economy.feeToCreate = c.getDouble("economy.cost-to-create", 100)));
@@ -188,10 +182,6 @@ public class Config {
 
     public int getDefaultVaultRows() {
         return this.defaultVaultRows;
-    }
-
-    public String getLanguage() {
-        return this.language;
     }
 
     public boolean isSigns() {

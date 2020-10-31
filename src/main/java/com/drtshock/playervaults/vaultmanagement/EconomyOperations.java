@@ -19,9 +19,7 @@
 package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.translations.Lang;
 import net.milkbowl.vault.economy.EconomyResponse;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -53,7 +51,7 @@ public class EconomyOperations {
             double cost = PlayerVaults.getInstance().getConf().getEconomy().getFeeToOpen();
             EconomyResponse resp = PlayerVaults.getInstance().getEconomy().withdrawPlayer(player, cost);
             if (resp.transactionSuccess()) {
-                player.sendMessage(Lang.TITLE.toString() + Lang.COST_TO_OPEN.toString().replaceAll("%price", "" + cost));
+                PlayerVaults.getInstance().getTL().costToOpen().title().with("price", cost + "").send(player);
                 return true;
             }
         }
@@ -75,7 +73,7 @@ public class EconomyOperations {
         double cost = PlayerVaults.getInstance().getConf().getEconomy().getFeeToCreate();
         EconomyResponse resp = PlayerVaults.getInstance().getEconomy().withdrawPlayer(player, cost);
         if (resp.transactionSuccess()) {
-            player.sendMessage(Lang.TITLE.toString() + Lang.COST_TO_CREATE.toString().replaceAll("%price", "" + cost));
+            PlayerVaults.getInstance().getTL().costToCreate().title().with("price", cost + "").send(player);
             return true;
         }
 
@@ -98,18 +96,18 @@ public class EconomyOperations {
         if (playerFile.exists()) {
             YamlConfiguration playerData = YamlConfiguration.loadConfiguration(playerFile);
             if (playerData.getString("vault" + number) == null) {
-                player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.VAULT_DOES_NOT_EXIST);
+                PlayerVaults.getInstance().getTL().vaultDoesNotExist().title().send(player);
                 return false;
             }
         } else {
-            player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.VAULT_DOES_NOT_EXIST);
+            PlayerVaults.getInstance().getTL().vaultDoesNotExist().title().send(player);
             return false;
         }
 
         double cost = PlayerVaults.getInstance().getConf().getEconomy().getRefundOnDelete();
         EconomyResponse resp = PlayerVaults.getInstance().getEconomy().depositPlayer(player, cost);
         if (resp.transactionSuccess()) {
-            player.sendMessage(Lang.TITLE.toString() + Lang.REFUND_AMOUNT.toString().replaceAll("%price", String.valueOf(cost)));
+            PlayerVaults.getInstance().getTL().refundAmount().title().with("price", cost + "").send(player);
             return true;
         }
 

@@ -19,12 +19,10 @@
 package com.drtshock.playervaults.commands;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.translations.Lang;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -33,11 +31,16 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 public class VaultCommand implements CommandExecutor {
+    private final PlayerVaults plugin;
+
+    public VaultCommand(PlayerVaults plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (VaultOperations.isLocked()) {
-            sender.sendMessage(Lang.TITLE + Lang.LOCKED.toString());
+            this.plugin.getTL().locked().title().send(sender);
             return true;
         }
 
@@ -61,20 +64,20 @@ public class VaultCommand implements CommandExecutor {
 
                         YamlConfiguration file = VaultManager.getInstance().getPlayerVaultFile(target, false);
                         if (file == null) {
-                            sender.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
+                            this.plugin.getTL().vaultDoesNotExist().title().send(sender);
                         } else {
                             StringBuilder sb = new StringBuilder();
                             for (String key : file.getKeys(false)) {
                                 sb.append(key.replace("vault", "")).append(" ");
                             }
 
-                            sender.sendMessage(Lang.TITLE.toString() + Lang.EXISTING_VAULTS.toString().replaceAll("%p", args[0]).replaceAll("%v", sb.toString().trim()));
+                            this.plugin.getTL().existingVaults().title().with("player", args[0]).with("vault", sb.toString().trim()).send(sender);
                         }
                     }
                     break;
                 case 2:
                     if (!player.hasPermission("playervaults.admin")) {
-                        player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS.toString());
+                        this.plugin.getTL().noPerms().title().send(sender);
                         break;
                     }
 
@@ -82,7 +85,7 @@ public class VaultCommand implements CommandExecutor {
                     try {
                         number = Integer.parseInt(args[1]);
                     } catch (NumberFormatException e) {
-                        player.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.MUST_BE_NUMBER);
+                        this.plugin.getTL().mustBeNumber().title().send(sender);
                         return true;
                     }
 
@@ -94,14 +97,14 @@ public class VaultCommand implements CommandExecutor {
                     if (VaultOperations.openOtherVault(player, target, args[1])) {
                         PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(target, number));
                     } else {
-                        sender.sendMessage(Lang.TITLE.toString() + Lang.NO_OWNER_FOUND.toString().replaceAll("%p", args[0]));
+                        this.plugin.getTL().noOwnerFound().title().with("player", args[0]).send(sender);
                     }
                     break;
                 default:
-                    sender.sendMessage(Lang.TITLE.toString() + Lang.HELP.toString());
+                    this.plugin.getTL().help().title().send(sender);
             }
         } else {
-            sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.PLAYER_ONLY.toString());
+            this.plugin.getTL().playerOnly().title().send(sender);
         }
 
         return true;

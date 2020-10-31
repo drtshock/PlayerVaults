@@ -19,11 +19,9 @@
 package com.drtshock.playervaults.commands;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.translations.Lang;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,11 +29,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class DeleteCommand implements CommandExecutor {
+    private final PlayerVaults plugin;
+
+    public DeleteCommand(PlayerVaults plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (VaultOperations.isLocked()) {
-            sender.sendMessage(Lang.TITLE + Lang.LOCKED.toString());
+            this.plugin.getTL().locked().title().send(sender);
             return true;
         }
         switch (args.length) {
@@ -43,7 +46,7 @@ public class DeleteCommand implements CommandExecutor {
                 if (sender instanceof Player) {
                     VaultOperations.deleteOwnVault((Player) sender, args[0]);
                 } else {
-                    sender.sendMessage(Lang.TITLE.toString() + ChatColor.RED + Lang.PLAYER_ONLY);
+                    this.plugin.getTL().playerOnly().title().send(sender);
                 }
                 break;
             case 2:
@@ -57,19 +60,19 @@ public class DeleteCommand implements CommandExecutor {
                 if (args[1].equalsIgnoreCase("all")) {
                     if (sender.hasPermission("playervaults.delete.all")) {
                         VaultManager.getInstance().deleteAllVaults(target);
-                        sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_OTHER_VAULT_ALL.toString().replaceAll("%p", target));
+                        this.plugin.getTL().deleteOtherVaultAll().title().with("player", target).send(sender);
                         PlayerVaults.getInstance().getLogger().info(String.format("%s deleted ALL vaults belonging to %s", sender.getName(), target));
                     } else {
-                        sender.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
+                        this.plugin.getTL().noPerms().title().send(sender);
                     }
 
                 }
                 VaultOperations.deleteOtherVault(sender, target, args[1]);
                 break;
             default:
-                sender.sendMessage(Lang.TITLE + "/" + label + " <number>");
-                sender.sendMessage(Lang.TITLE + "/" + label + " <player> <number>");
-                sender.sendMessage(Lang.TITLE + "/" + label + " <player> all");
+                sender.sendMessage("/" + label + " <number>");
+                sender.sendMessage("/" + label + " <player> <number>");
+                sender.sendMessage("/" + label + " <player> all");
         }
         return true;
     }

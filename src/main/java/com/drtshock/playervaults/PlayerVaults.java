@@ -25,17 +25,17 @@ import com.drtshock.playervaults.commands.SignSetInfo;
 import com.drtshock.playervaults.commands.VaultCommand;
 import com.drtshock.playervaults.config.Loader;
 import com.drtshock.playervaults.config.file.Config;
+import com.drtshock.playervaults.config.file.Translation;
 import com.drtshock.playervaults.listeners.Listeners;
 import com.drtshock.playervaults.listeners.SignListener;
 import com.drtshock.playervaults.listeners.VaultPreloadListener;
 import com.drtshock.playervaults.tasks.Base64Conversion;
 import com.drtshock.playervaults.tasks.Cleanup;
 import com.drtshock.playervaults.tasks.UUIDConversion;
-import com.drtshock.playervaults.translations.Lang;
-import com.drtshock.playervaults.translations.Language;
 import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -90,6 +90,8 @@ public class PlayerVaults extends JavaPlugin {
     private int maxVaultAmountPermTest;
     private Metrics metrics;
     private Config config = new Config();
+    private BukkitAudiences platform;
+    private Translation translation = new Translation(this);
 
     public static PlayerVaults getInstance() {
         return instance;
@@ -112,6 +114,9 @@ public class PlayerVaults extends JavaPlugin {
         instance = this;
         long start = System.currentTimeMillis();
         long time = System.currentTimeMillis();
+        this.platform = BukkitAudiences.create(this);
+        debug("adventure!", time);
+        time = System.currentTimeMillis();
         loadConfig();
         DEBUG = getConf().isDebug();
         debug("config", time);
@@ -123,12 +128,9 @@ public class PlayerVaults extends JavaPlugin {
         getServer().getScheduler().runTask(this, new UUIDConversion()); // Convert to UUIDs first. Class checks if necessary.
         debug("uuid conversion", time);
         time = System.currentTimeMillis();
-        new VaultManager();
+        new VaultManager(this);
         getServer().getScheduler().runTask(this, new Base64Conversion());
         debug("base64 conversion", time);
-        time = System.currentTimeMillis();
-        loadLang();
-        debug("lang", time);
         time = System.currentTimeMillis();
         new UUIDVaultManager();
         debug("uuidvaultmanager", time);
@@ -143,10 +145,10 @@ public class PlayerVaults extends JavaPlugin {
         loadSigns();
         debug("loaded signs", time);
         time = System.currentTimeMillis();
-        getCommand("pv").setExecutor(new VaultCommand());
-        getCommand("pvdel").setExecutor(new DeleteCommand());
-        getCommand("pvconvert").setExecutor(new ConvertCommand());
-        getCommand("pvsign").setExecutor(new SignCommand());
+        getCommand("pv").setExecutor(new VaultCommand(this));
+        getCommand("pvdel").setExecutor(new DeleteCommand(this));
+        getCommand("pvconvert").setExecutor(new ConvertCommand(this));
+        getCommand("pvsign").setExecutor(new SignCommand(this));
         debug("registered commands", time);
         time = System.currentTimeMillis();
         useVault = setupEconomy();
@@ -218,7 +220,6 @@ public class PlayerVaults extends JavaPlugin {
 
         this.metricsSimplePie("signs", () -> getConf().isSigns() ? "enabled" : "disabled");
         this.metricsSimplePie("cleanup", () -> getConf().getPurge().isEnabled() ? "enabled" : "disabled");
-        this.metricsSimplePie("language", () -> getConf().getLanguage());
 
         this.metricsDrillPie("block_items", () -> {
             Map<String, Map<String, Integer>> map = new HashMap<>();
@@ -308,7 +309,6 @@ public class PlayerVaults extends JavaPlugin {
             reloadConfig();
             loadConfig(); // To update blocked materials.
             reloadSigns();
-            loadLang();
             sender.sendMessage(ChatColor.GREEN + "Reloaded PlayerVault's configuration and lang files.");
         }
         return true;
@@ -356,6 +356,24 @@ public class PlayerVaults extends JavaPlugin {
                     getLogger().log(Level.INFO, "Added {0} to list of blocked materials.", mat.name());
                 }
             }
+        }
+
+        File lang = new File(this.getDataFolder(), "lang");
+        if (lang.exists()) {
+            this.getLogger().warning("There is no clean way for us to migrate your old lang data.");
+            this.getLogger().warning("If you made any customizations, or used another language, you need to migrate the info to the new format in lang.conf");
+            try {
+                Files.move(lang.toPath(), lang.getParentFile().toPath().resolve("old_unused_lang"));
+            } catch (Exception e) {
+                this.getLogger().log(Level.SEVERE, "Failed to rename lang folder as it is no longer used", e);
+                configYaml.deleteOnExit();
+            }
+        }
+
+        try {
+            Loader.loadAndSave("lang", this.translation);
+        } catch(IOException | IllegalAccessException e) {
+            this.getLogger().log(Level.SEVERE, "Could not load lang.", e);
         }
     }
 
@@ -421,50 +439,6 @@ public class PlayerVaults extends JavaPlugin {
             getLogger().severe("Please report this error on GitHub @ https://github.com/drtshock/PlayerVaults/");
             e.printStackTrace();
         }
-    }
-
-    public void loadLang() {
-        File folder = new File(getDataFolder(), "lang");
-        if (!folder.exists()) {
-            folder.mkdir();
-        }
-
-        String definedLanguage = getConf().getLanguage();
-
-        // Save as default just incase.
-        File english = null;
-        File definedFile = null;
-
-        for (Language lang : Language.values()) {
-            String fileName = lang.getFriendlyName() + ".yml";
-            File file = new File(folder, fileName);
-            if (lang == Language.ENGLISH) {
-                english = file;
-            }
-
-            if (definedLanguage.equalsIgnoreCase(lang.getFriendlyName())) {
-                definedFile = file;
-            }
-
-            // Have Bukkit save the file.
-            if (!file.exists()) {
-                saveResource("lang/" + fileName, false);
-            }
-        }
-
-        if (definedFile != null && !definedFile.exists()) {
-            getLogger().severe("Failed to load language for " + definedLanguage + ". Defaulting to English.");
-            definedFile = english;
-        }
-
-        if (definedFile == null) {
-            getLogger().severe("Failed to load custom language settings. Loading plugin defaults. This should never happen, go ask for help.");
-            return;
-        }
-
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(definedFile);
-        Lang.setFile(config);
-        getLogger().info("Loaded lang for " + definedLanguage);
     }
 
     public HashMap<String, SignSetInfo> getSetSign() {
@@ -566,5 +540,17 @@ public class PlayerVaults extends JavaPlugin {
 
     public int getMaxVaultAmountPermTest() {
         return this.maxVaultAmountPermTest;
+    }
+
+    public BukkitAudiences getPlatform() {
+        return this.platform;
+    }
+
+    public Translation getTL() {
+        return this.translation;
+    }
+
+    public String getVaultTitle(String id) {
+        return this.translation.vaultTitle().with("vault", id).getLegacy();
     }
 }

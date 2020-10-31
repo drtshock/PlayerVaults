@@ -19,7 +19,6 @@
 package com.drtshock.playervaults.listeners;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.translations.Lang;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
@@ -34,7 +33,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.CraftingInventory;
@@ -42,11 +40,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 public class SignListener implements Listener {
-    private PlayerVaults plugin;
+    private final PlayerVaults plugin;
 
     /**
      * TODO: Some of these events can be lag inducing (specifically: interactions & block breaking),
-     *         perhaps we should try to optimize these listeners at some point?
+     * perhaps we should try to optimize these listeners at some point?
      */
 
     public SignListener(PlayerVaults plugin) {
@@ -92,12 +90,12 @@ public class SignListener implements Listener {
                     }
                     plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z + ".chest", i);
                     plugin.saveSigns();
-                    player.sendMessage(Lang.TITLE.toString() + Lang.SET_SIGN);
+                    this.plugin.getTL().setSign().title().send(player);
                 } else {
-                    player.sendMessage(Lang.TITLE.toString() + Lang.NOT_A_SIGN);
+                    this.plugin.getTL().notASign().title().send(player);
                 }
             } else {
-                player.sendMessage(Lang.TITLE.toString() + Lang.NOT_A_SIGN);
+                this.plugin.getTL().notASign().title().send(player);
             }
             return;
         }
@@ -115,7 +113,7 @@ public class SignListener implements Listener {
                         String owner = self ? player.getName() : PlayerVaults.getInstance().getSigns().getString(world + ";;" + x + ";;" + y + ";;" + z + ".owner");
                         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(owner != null ? owner : event.getPlayer().getName()); // Not best way but :\
                         if (offlinePlayer == null || (!offlinePlayer.isOnline() && !offlinePlayer.hasPlayedBefore())) {
-                            player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
+                            this.plugin.getTL().vaultDoesNotExist().title().send(player);
                             return;
                         }
                         if (self) {
@@ -127,33 +125,33 @@ public class SignListener implements Listener {
 
                                     // Check if the inventory was actually opened
                                     if (player.getOpenInventory().getTopInventory() instanceof CraftingInventory || player.getOpenInventory().getTopInventory() == null) {
-                                        PlayerVaults.debug(String.format("Cancelled opening sign vault.", player.getName()));
+                                        PlayerVaults.debug(String.format("Cancelled opening sign vault (%s).", player.getName()));
                                         return; // inventory open event was cancelled.
                                     }
                                 }
                             } else {
-                                player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS.toString());
+                                this.plugin.getTL().noPerms().title().send(player);
                                 return; // Otherwise it would try to add vault view info down there.
                             }
                         } else {
                             Inventory inv = VaultManager.getInstance().loadOtherVault(offlinePlayer.getUniqueId().toString(), num, VaultOperations.getMaxVaultSize(offlinePlayer));
                             if (inv == null) {
-                                player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
+                                this.plugin.getTL().vaultDoesNotExist().title().send(player);
                             } else {
                                 player.openInventory(inv);
 
                                 // Check if the inventory was actually opened
                                 if (player.getOpenInventory().getTopInventory() instanceof CraftingInventory || player.getOpenInventory().getTopInventory() == null) {
-                                    PlayerVaults.debug(String.format("Cancelled opening non-self sign vault.", player.getName()));
+                                    PlayerVaults.debug(String.format("Cancelled opening non-self sign vault. (%s)", player.getName()));
                                     return; // inventory open event was cancelled.
                                 }
                             }
                         }
                         PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(self ? player.getUniqueId().toString() : offlinePlayer.getUniqueId().toString(), num));
                         event.setCancelled(true);
-                        player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_WITH_SIGN.toString().replace("%v", String.valueOf(num)).replace("%p", owner));
+                        this.plugin.getTL().openWithSign().title().with("vault", String.valueOf(num)).with("player", owner).send(player);
                     } else {
-                        player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
+                        this.plugin.getTL().noPerms().title().send(player);
                     }
                 }
             }
