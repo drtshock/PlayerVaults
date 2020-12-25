@@ -19,15 +19,15 @@
 package com.drtshock.playervaults.tasks;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.vaultmanagement.UUIDVaultManager;
-import com.drtshock.playervaults.vaultmanagement.VaultManager;
+import com.drtshock.playervaults.vaultmanagement.CardboardBoxSerialization;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.Inventory;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -41,24 +41,36 @@ public final class Base64Conversion implements Runnable {
         Logger logger = PlayerVaults.getInstance().getLogger();
 
         File newDir = PlayerVaults.getInstance().getVaultData();
+        File oldVaults = PlayerVaults.getInstance().getDataFolder().toPath().resolve("base64vaults").toFile();
+        File reallyOldVaults = PlayerVaults.getInstance().getDataFolder().toPath().resolve("uuidvaults").toFile();
         if (newDir.exists()) {
+            PlayerVaults.getInstance().getDataFolder().toPath().resolve("oldVaultsData").toFile().mkdirs();
+            if (oldVaults.exists()) {
+                try {
+                    Files.move(oldVaults.toPath(), PlayerVaults.getInstance().getDataFolder().toPath().resolve("oldVaultsData").resolve("base64vaults"));
+                } catch (IOException e) {
+                    PlayerVaults.getInstance().getLogger().warning("Failed to move old vaults dir: " + e.getMessage());
+                }
+            }
+            if (reallyOldVaults.exists()) {
+                try {
+                    Files.move(reallyOldVaults.toPath(), PlayerVaults.getInstance().getDataFolder().toPath().resolve("oldVaultsData").resolve("uuidvaults"));
+                } catch (IOException e) {
+                    PlayerVaults.getInstance().getLogger().warning("Failed to move old vaults dir: " + e.getMessage());
+                }
+            }
             return;
         }
 
         newDir.mkdirs();
 
-        File oldVaults = PlayerVaults.getInstance().getUuidData();
         if (!oldVaults.exists()) {
-            logger.info("No uuidvaults found to convert to base64.");
+            logger.info("No base64vaults found to convert to new format.");
             return;
         }
 
-        newDir.mkdirs();
 
-        UUIDVaultManager oldManager = UUIDVaultManager.getInstance();
-        VaultManager manager = VaultManager.getInstance();
-
-        logger.info("********** Starting conversion to Base64 for PlayerVaults **********");
+        logger.info("********** Starting conversion from Base64 for PlayerVaults **********");
         logger.info("This might take awhile.");
         logger.info(oldVaults.toString() + " will remain as a backup.");
 
@@ -92,21 +104,27 @@ public final class Base64Conversion implements Runnable {
                     continue;
                 }
 
-                int vaultNumber = Integer.valueOf(key.replace("vault", ""));
+                int vaultNumber = Integer.parseInt(key.replace("vault", ""));
 
                 try {
-                    Inventory inventory = oldManager.getVault(holderUUID, vaultNumber);
-                    manager.saveVault(inventory, holderUUID.toString(), vaultNumber);
+                    String data = uuidFile.getString(key);
+                    String newData = CardboardBoxSerialization.convert(data, holderUUID + " " + key);
+                    uuidFile.set(key, newData);
                     vaults++;
                 } catch (Exception e) {
                     logger.severe("Failed to parse vault " + vaultNumber + " for " + holderUUID);
                     failed++;
                 }
             }
+            try {
+                uuidFile.save(newDir.toPath().resolve(file.getName()).toFile());
+            } catch (IOException e) {
+                logger.severe("Failed to save new file " + file.getName());
+            }
 
             players++;
         }
 
-        logger.info(String.format("Converted %d vaults for %d players to base64. %d failed to convert", vaults, players, failed));
+        logger.info(String.format("Converted %d vaults for %d players to new storage. %d failed to convert", vaults, players, failed));
     }
 }

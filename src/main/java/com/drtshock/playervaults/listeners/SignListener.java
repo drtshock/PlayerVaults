@@ -19,7 +19,6 @@
 package com.drtshock.playervaults.listeners;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.translations.Lang;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import org.bukkit.Bukkit;
@@ -38,7 +37,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.InventoryHolder;
 
 public class SignListener implements Listener {
-    private PlayerVaults plugin;
+    private final PlayerVaults plugin;
 
     /**
      * TODO: Some of these events can be lag inducing (specifically: interactions & block breaking),
@@ -88,12 +87,12 @@ public class SignListener implements Listener {
                     }
                     plugin.getSigns().set(world + ";;" + x + ";;" + y + ";;" + z + ".chest", i);
                     plugin.saveSigns();
-                    player.sendMessage(Lang.TITLE.toString() + Lang.SET_SIGN);
+                    this.plugin.getTL().setSign().title().send(player);
                 } else {
-                    player.sendMessage(Lang.TITLE.toString() + Lang.NOT_A_SIGN);
+                    this.plugin.getTL().notASign().title().send(player);
                 }
             } else {
-                player.sendMessage(Lang.TITLE.toString() + Lang.NOT_A_SIGN);
+                this.plugin.getTL().notASign().title().send(player);
             }
             return;
         }
@@ -120,7 +119,7 @@ public class SignListener implements Listener {
                         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(owner != null ? owner : event.getPlayer().getName()); // Not best way but :\
                         if (offlinePlayer == null || (!offlinePlayer.isOnline() && !offlinePlayer.hasPlayedBefore())) {
                             PlayerVaults.debug("Denied sign vault for never-seen-before owner " + owner);
-                            player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
+                            this.plugin.getTL().vaultDoesNotExist().title().send(player);
                             return;
                         }
                         if (self) {
@@ -139,10 +138,10 @@ public class SignListener implements Listener {
                         }
                         PlayerVaults.debug("Player " + player.getName() + " succeeded in opening sign vault");
                         event.setCancelled(true);
-                        player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_WITH_SIGN.toString().replace("%v", String.valueOf(num)).replace("%p", owner));
+                        this.plugin.getTL().openWithSign().title().with("vault", String.valueOf(num)).with("player", owner).send(player);
                     } else {
-                        player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
                         PlayerVaults.debug("Player " + player.getName() + " no sign perms!");
+                        this.plugin.getTL().noPerms().title().send(player);
                     }
                 }
             }

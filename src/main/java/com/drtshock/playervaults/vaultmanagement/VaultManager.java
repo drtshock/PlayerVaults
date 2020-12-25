@@ -19,7 +19,6 @@
 package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
-import com.drtshock.playervaults.translations.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -45,8 +44,10 @@ public class VaultManager {
     private static VaultManager instance;
     private final File directory = PlayerVaults.getInstance().getVaultData();
     private final Map<String, YamlConfiguration> cachedVaultFiles = new ConcurrentHashMap<>();
+    private final PlayerVaults plugin;
 
-    public VaultManager() {
+    public VaultManager(PlayerVaults plugin) {
+        this.plugin = plugin;
         instance = this;
     }
 
@@ -69,7 +70,7 @@ public class VaultManager {
     public void saveVault(Inventory inventory, String target, int number) {
         YamlConfiguration yaml = getPlayerVaultFile(target, true);
         int size = VaultOperations.getMaxVaultSize(target);
-        String serialized = Base64Serialization.toBase64(inventory, size, target);
+        String serialized = CardboardBoxSerialization.toStorage(inventory, target);
         yaml.set(String.format(VAULTKEY, number), serialized);
         saveFileSync(target, yaml);
     }
@@ -87,7 +88,7 @@ public class VaultManager {
 
         PlayerVaults.debug("Loading self vault for " + player.getName() + " (" + player.getUniqueId() + ')');
 
-        String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", player.getName());
+        String title = PlayerVaults.getInstance().getVaultTitle(String.valueOf(number));
         VaultViewInfo info = new VaultViewInfo(player.getUniqueId().toString(), number);
         if (PlayerVaults.getInstance().getOpenInventories().containsKey(info.toString())) {
             PlayerVaults.debug("Already open");
@@ -129,7 +130,7 @@ public class VaultManager {
             // Not a player
         }
 
-        String title = Lang.VAULT_TITLE.toString().replace("%number", String.valueOf(number)).replace("%p", holder);
+        String title = PlayerVaults.getInstance().getVaultTitle(String.valueOf(number));
         VaultViewInfo info = new VaultViewInfo(name, number);
         Inventory inv;
         VaultHolder vaultHolder = new VaultHolder(number);
@@ -161,23 +162,23 @@ public class VaultManager {
         Inventory inventory = Bukkit.createInventory(owner, size, title);
 
         String data = playerFile.getString(String.format(VAULTKEY, number));
-        Inventory deserialized = Base64Serialization.fromBase64(data, ownerName);
+        ItemStack[] deserialized = CardboardBoxSerialization.fromStorage(data, ownerName);
         if (deserialized == null) {
-            PlayerVaults.debug("Loaded vault as null");
+            PlayerVaults.debug("Loaded vault for " + ownerName + " as null");
             return inventory;
         }
 
         // Check if deserialized has more used slots than the limit here.
         // Happens on change of permission or if people used the broken version.
         // In this case, players will lose items.
-        if (deserialized.getContents().length > size) {
-            for (ItemStack stack : deserialized.getContents()) {
+        if (deserialized.length > size) {
+            for (ItemStack stack : deserialized) {
                 if (stack != null) {
                     inventory.addItem(stack);
                 }
             }
         } else {
-            inventory.setContents(deserialized.getContents());
+            inventory.setContents(deserialized);
         }
 
         PlayerVaults.debug("Loaded vault");
@@ -194,7 +195,10 @@ public class VaultManager {
     public Inventory getVault(String holder, int number) {
         YamlConfiguration playerFile = getPlayerVaultFile(holder, true);
         String serialized = playerFile.getString(String.format(VAULTKEY, number));
-        return Base64Serialization.fromBase64(serialized, holder);
+        ItemStack[] contents = CardboardBoxSerialization.fromStorage(serialized, holder);
+        Inventory inventory = Bukkit.createInventory(null, contents.length, holder + " vault " + number);
+        inventory.setContents(contents);
+        return inventory;
     }
 
     /**
@@ -279,9 +283,9 @@ public class VaultManager {
         OfflinePlayer player = Bukkit.getPlayer(holder);
         if (player != null) {
             if (sender.getName().equalsIgnoreCase(player.getName())) {
-                sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_VAULT.toString().replace("%v", String.valueOf(number)));
+                this.plugin.getTL().deleteVault().title().with("vault", String.valueOf(number)).send(sender);
             } else {
-                sender.sendMessage(Lang.TITLE.toString() + Lang.DELETE_OTHER_VAULT.toString().replace("%v", String.valueOf(number)).replaceAll("%p", player.getName()));
+                this.plugin.getTL().deleteOtherVault().title().with("vault", String.valueOf(number)).with("player", player.getName()).send(sender);
             }
         }
 
