@@ -40,7 +40,7 @@ public class CardboardBoxSerialization {
         }
     }
 
-    private static byte[] writeInventory(ItemStack[] contents) throws IOException {
+    public static byte[] writeInventory(ItemStack[] contents) throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(bytes);
         out.writeInt(contents.length);
@@ -63,22 +63,5 @@ public class CardboardBoxSerialization {
             contents[i] = CardboardBox.deserializeItem(itemBytes);
         }
         return contents;
-    }
-
-    public static String convert(String data, String target) {
-        try {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
-            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
-            ItemStack[] contents = new ItemStack[dataInput.readInt()];
-            // Read the serialized inventory
-            for (int i = 0; i < contents.length; i++) {
-                contents[i] = (ItemStack) dataInput.readObject();
-            }
-            dataInput.close();
-            return Base64Coder.encodeLines(writeInventory(contents));
-        } catch (Exception e) {
-            PlayerVaults.getInstance().getLogger().log(Level.SEVERE, "Failed to convert vault " + target, e);
-        }
-        return null;
     }
 }
