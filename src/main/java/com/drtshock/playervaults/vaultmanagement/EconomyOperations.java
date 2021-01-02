@@ -19,9 +19,13 @@
 package com.drtshock.playervaults.vaultmanagement;
 
 import com.drtshock.playervaults.PlayerVaults;
+import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
+import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.io.File;
 
@@ -29,6 +33,33 @@ import java.io.File;
  * A class that handles all economy operations.
  */
 public class EconomyOperations {
+
+    private static Economy economy;
+
+    public static boolean setup() {
+        economy = null;
+        if (Bukkit.getServer().getPluginManager().getPlugin("Vault") != null) {
+            RegisteredServiceProvider<Economy> provider = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
+            if (provider != null) {
+                economy = provider.getProvider();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static String getName() {
+        return economy == null ? "NONE" : economy.getName();
+    }
+
+    public static String getPermsName() {
+        RegisteredServiceProvider<Permission> provider = Bukkit.getServer().getServicesManager().getRegistration(Permission.class);
+        if (provider != null) {
+            Permission perm = provider.getProvider();
+            return perm.getName();
+        }
+        return null;
+    }
 
     /**
      * Have a player pay to open a vault.
@@ -49,7 +80,7 @@ public class EconomyOperations {
                 return true;
             }
             double cost = PlayerVaults.getInstance().getConf().getEconomy().getFeeToOpen();
-            EconomyResponse resp = PlayerVaults.getInstance().getEconomy().withdrawPlayer(player, cost);
+            EconomyResponse resp = economy.withdrawPlayer(player, cost);
             if (resp.transactionSuccess()) {
                 PlayerVaults.getInstance().getTL().costToOpen().title().with("price", cost + "").send(player);
                 return true;
@@ -71,7 +102,7 @@ public class EconomyOperations {
         }
 
         double cost = PlayerVaults.getInstance().getConf().getEconomy().getFeeToCreate();
-        EconomyResponse resp = PlayerVaults.getInstance().getEconomy().withdrawPlayer(player, cost);
+        EconomyResponse resp = economy.withdrawPlayer(player, cost);
         if (resp.transactionSuccess()) {
             PlayerVaults.getInstance().getTL().costToCreate().title().with("price", cost + "").send(player);
             return true;
@@ -105,7 +136,7 @@ public class EconomyOperations {
         }
 
         double cost = PlayerVaults.getInstance().getConf().getEconomy().getRefundOnDelete();
-        EconomyResponse resp = PlayerVaults.getInstance().getEconomy().depositPlayer(player, cost);
+        EconomyResponse resp = economy.depositPlayer(player, cost);
         if (resp.transactionSuccess()) {
             PlayerVaults.getInstance().getTL().refundAmount().title().with("price", cost + "").send(player);
             return true;

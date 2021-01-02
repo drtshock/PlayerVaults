@@ -4,7 +4,7 @@
 
     <groupId>com.drtshock</groupId>
     <artifactId>PlayerVaultsX</artifactId>
-    <version>4.1.17</version>
+    <version>4.2.0-SNAPSHOT</version>
     <name>PlayerVaultsX</name>
     <url>https://www.spigotmc.org/resources/51204/</url>
 
@@ -75,6 +75,10 @@
             <url>http://nexus.hc.to/content/repositories/pub_releases/</url>
         </repository>
         <repository>
+            <id>fuuid-repo</id>
+            <url>https://github.com/factions-site/repo/raw/public</url>
+        </repository>
+        <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
@@ -117,6 +121,12 @@
             <groupId>org.kitteh</groupId>
             <artifactId>cardboardbox</artifactId>
             <version>0.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.kitteh</groupId>
+            <artifactId>paste-gg-api</artifactId>
+            <version>0.9.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

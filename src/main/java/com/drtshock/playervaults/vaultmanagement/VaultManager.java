@@ -370,6 +370,7 @@ public class VaultManager {
         try {
             yaml.save(file);
         } catch (IOException e) {
+            PlayerVaults.getInstance().addException(new IllegalStateException("Failed to save vault file for: " + holder, e));
             PlayerVaults.getInstance().getLogger().log(Level.SEVERE, "Failed to save vault file for: " + holder, e);
         }
         PlayerVaults.debug("Saved vault for " + holder);

@@ -20,6 +20,7 @@ package com.drtshock.playervaults;
 
 import com.drtshock.playervaults.commands.ConvertCommand;
 import com.drtshock.playervaults.commands.DeleteCommand;
+import com.drtshock.playervaults.commands.HelpMeCommand;
 import com.drtshock.playervaults.commands.SignCommand;
 import com.drtshock.playervaults.commands.SignSetInfo;
 import com.drtshock.playervaults.commands.VaultCommand;
@@ -30,11 +31,10 @@ import com.drtshock.playervaults.listeners.Listeners;
 import com.drtshock.playervaults.listeners.SignListener;
 import com.drtshock.playervaults.listeners.VaultPreloadListener;
 import com.drtshock.playervaults.tasks.Cleanup;
+import com.drtshock.playervaults.vaultmanagement.EconomyOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -47,23 +47,28 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import sun.misc.Unsafe;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
@@ -77,7 +82,6 @@ public class PlayerVaults extends JavaPlugin {
     // VaultViewInfo - Inventory
     private final HashMap<String, Inventory> openInventories = new HashMap<>();
     private final Set<Material> blockedMats = new HashSet<>();
-    private Economy economy;
     private boolean useVault;
     private YamlConfiguration signs;
     private File signsFile;
@@ -92,6 +96,7 @@ public class PlayerVaults extends JavaPlugin {
     private Config config = new Config();
     private BukkitAudiences platform;
     private Translation translation = new Translation(this);
+    private List<String> exceptions = new CopyOnWriteArrayList<>();
 
     public static PlayerVaults getInstance() {
         return instance;
@@ -142,9 +147,10 @@ public class PlayerVaults extends JavaPlugin {
         getCommand("pvdel").setExecutor(new DeleteCommand(this));
         getCommand("pvconvert").setExecutor(new ConvertCommand(this));
         getCommand("pvsign").setExecutor(new SignCommand(this));
+        getCommand("pvhelpme").setExecutor(new HelpMeCommand(this));
         debug("registered commands", time);
         time = System.currentTimeMillis();
-        useVault = setupEconomy();
+        useVault = EconomyOperations.setup();
         debug("setup economy", time);
 
         if (getConf().getPurge().isEnabled()) {
@@ -167,14 +173,17 @@ public class PlayerVaults extends JavaPlugin {
             this.metricsDrillPie("vault_econ", () -> {
                 Map<String, Map<String, Integer>> map = new HashMap<>();
                 Map<String, Integer> entry = new HashMap<>();
-                entry.put(economy == null ? "none" : economy.getName(), 1);
+                entry.put(!this.useVault ? "none" : EconomyOperations.getName(), 1);
                 map.put(isEconomyEnabled() ? "enabled" : "disabled", entry);
                 return map;
             });
             if (isEconomyEnabled()) {
-                String name = economy.getName();
+                String name = EconomyOperations.getName();
                 if (name.equals("Essentials Economy")) {
                     name = "Essentials";
+                }
+                if (name.equals("CMIEconomy")) {
+                    name = "CMI";
                 }
                 Plugin plugin = getServer().getPluginManager().getPlugin(name);
                 if (plugin != null) {
@@ -190,10 +199,8 @@ public class PlayerVaults extends JavaPlugin {
         }
 
         if (vault != null) {
-            RegisteredServiceProvider<Permission> provider = getServer().getServicesManager().getRegistration(Permission.class);
-            if (provider != null) {
-                Permission perm = provider.getProvider();
-                String name = perm.getName();
+            String name = EconomyOperations.getPermsName();
+            if (name != null) {
                 Plugin plugin = getServer().getPluginManager().getPlugin(name);
                 final String version;
                 if (plugin == null) {
@@ -212,6 +219,7 @@ public class PlayerVaults extends JavaPlugin {
         }
 
         this.metricsSimplePie("signs", () -> getConf().isSigns() ? "enabled" : "disabled");
+        this.metricsSimplePie("cats", () -> HelpMeCommand.likesCats ? "meow" : "purr");
         this.metricsSimplePie("cleanup", () -> getConf().getPurge().isEnabled() ? "enabled" : "disabled");
 
         this.metricsDrillPie("block_items", () -> {
@@ -307,20 +315,6 @@ public class PlayerVaults extends JavaPlugin {
             sender.sendMessage(ChatColor.GREEN + "Reloaded PlayerVault's configuration and lang files.");
         }
         return true;
-    }
-
-    private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
-        }
-
-        RegisteredServiceProvider<Economy> provider = getServer().getServicesManager().getRegistration(Economy.class);
-        if (provider == null) {
-            return false;
-        }
-
-        economy = provider.getProvider();
-        return economy != null;
     }
 
     private void loadConfig() {
@@ -448,10 +442,6 @@ public class PlayerVaults extends JavaPlugin {
         return this.openInventories;
     }
 
-    public Economy getEconomy() {
-        return this.economy;
-    }
-
     public boolean isEconomyEnabled() {
         return this.getConf().getEconomy().isEnabled() && this.useVault;
     }
@@ -547,5 +537,35 @@ public class PlayerVaults extends JavaPlugin {
 
     public String getVaultTitle(String id) {
         return this.translation.vaultTitle().with("vault", id).getLegacy();
+    }
+
+    public String getExceptions() {
+        if (this.exceptions.isEmpty()) {
+            return null;
+        }
+        StringBuilder builder = new StringBuilder();
+        boolean more = false;
+        for (String e : this.exceptions) {
+            if (more) {
+                builder.append("\n\n");
+            } else {
+                more = true;
+            }
+            builder.append(e);
+        }
+        return builder.toString();
+    }
+
+    public <T extends Throwable> T addException(T t) {
+        if (this.getConf().isDebug()) {
+            StringBuilder builder = new StringBuilder();
+            builder.append(ZonedDateTime.now(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss"))).append('\n');
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(stringWriter);
+            t.printStackTrace(printWriter);
+            builder.append(stringWriter.toString());
+            this.exceptions.add(builder.toString());
+        }
+        return t;
     }
 }

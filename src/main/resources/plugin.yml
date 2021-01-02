@@ -23,6 +23,9 @@ commands:
   pvreload:
     description: Reload the configuration and language files.
     permission: playervaults.admin
+  pvhelpme:
+    description: Pastes debug info to get better assistance.
+    permission: playervaults.admin
 
 permissions:
   playervaults.admin:

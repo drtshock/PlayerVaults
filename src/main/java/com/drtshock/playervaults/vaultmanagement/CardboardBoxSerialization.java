@@ -4,7 +4,6 @@ import com.drtshock.playervaults.PlayerVaults;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.io.BukkitObjectInputStream;
 import org.kitteh.cardboardbox.CardboardBox;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
@@ -20,7 +19,7 @@ public class CardboardBoxSerialization {
         try {
             return Base64Coder.encodeLines(writeInventory(inventory.getContents()));
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to save items for " + target, e);
+            throw PlayerVaults.getInstance().addException(new IllegalStateException("Failed to save items for " + target, e));
         }
     }
 
@@ -35,6 +34,7 @@ public class CardboardBoxSerialization {
         try {
             return readInventory(Base64Coder.decodeLines(data));
         } catch (IOException e) {
+            PlayerVaults.getInstance().addException(new IllegalStateException("Failed to save items for " + target, e));
             PlayerVaults.getInstance().getLogger().log(Level.SEVERE, "Failed to load items for " + target, e);
             return null;
         }
