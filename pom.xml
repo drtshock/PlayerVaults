@@ -51,6 +51,10 @@
                             <pattern>com.google.gson</pattern>
                             <shadedPattern>com.drtshock.playervaults.lib.com.google.gson</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>org.kitteh</pattern>
+                            <shadedPattern>com.drtshock.playervaults.lib.org.kitteh</shadedPattern>
+                        </relocation>
                     </relocations>
                 </configuration>
                 <executions>
