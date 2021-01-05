@@ -129,7 +129,7 @@ public class Config {
 
     @Comment("Language\n" +
             " This determines which language file the plugin will read from.\n" +
-            "  Valid options are (don't include .yml): bulgarian, danish, dutch, english, german, turkish, russian")
+            "  Valid options are (don't include .yml): bulgarian, danish, dutch, english, german, turkish, russian, polish")
     private String language = "english";
 
     @Comment("Signs\n" +
