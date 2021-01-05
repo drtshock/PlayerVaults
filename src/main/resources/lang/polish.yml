@@ -1,0 +1,39 @@
+# Use & for color codes.
+# %p is where the player name will get inserted.
+# %v is where the vault number will get inserted.
+# %price is the price.
+# %number is the vault number
+# %converted is the number of vaults converted (where applicable)
+# %m will be replaced by the blacklisted material (where applicable)
+# Made with love :)
+
+title-name: "&4[&fPlayerVaultsX&4]:"
+open-vault: "&fOtwieranie skarbca nr &a%v"
+open-other-vault: "&fOtwieranie skarbca nr &a%v &fgracza &a%p"
+delete-vault: "&fUsunieto skarbiec nr &a%v"
+delete-other-vault: "&fUsunieto skarbiec nr &a%v &fgracza &a%p"
+delete-other-vault-all: "&4Usunieto wszystkie skarbce gracza &a%p"
+player-only: "&cTa komenda moze byc uzyta tylko przez gracza!"
+must-be-number: "&cMusisz podac prawidlowa liczbe."
+invalid-args: "&cNiewlasciwe argumenty!"
+no-permissions: "&cNie posiadasz wystarczajacych uprawnien do tego!"
+insufficient-funds: "&cNie posiadasz wystarczajacych srodkow do tego!"
+refund-amount: "&Zwrocono &a%price &fza usuniecie tego skarbca."
+cost-to-create: "&fZaplacono &c%price &fza stworzenie tego skarbca."
+cost-to-open: "&fZaplacono &c%price &fza otwarcie tego skarbca."
+vault-title: "&cSkarbiec nr &a%number"
+existing-vaults: "&fGracz &a%p &fposiada skarbce: &a%v"
+no-owner-found: "&cNie znaleziono wlasciciela skarbca: &a%p"
+plugin-not-found: "&cNie znaleziono konwertera dla tego pluginu."
+conversion-complete: "&aSkonwertowano &c%converted &agraczy do PlayerVaults."
+conversion-background: "&fProces konwersji w tle. Aktualizacje znajduja sie w konsoli."
+vaults-locked: "&cSkarbce sa obecnie zablokowane podczas konwersji. Sproboj ponownie za jakis czas!"
+help: "/pv <numer>"
+blocked-item: "&cPrzedmiot &6%m &cnie jest dozwolony w skarbcu."
+signs-disabled: "&cTabliczki skarbcow sa wylaczone."
+blocked-bad-item: "&cTen przedmiot nie jest dozwolony w skarbcu."
+vault-does-not-exist: "&cTaki skarbiec nie istnieje!"
+click-a-sign: "&fTeraz kliknij na tabliczke!"
+not-a-sign: "&cMusisz kliknac na tabliczke!"
+set-sign-success: "&fPomyslnie utworzono tabliczke dostepu do skarbca!"
+open-with-sign: "&fOtwieranie skarbca nr &a%v &fgracza &a%p"
