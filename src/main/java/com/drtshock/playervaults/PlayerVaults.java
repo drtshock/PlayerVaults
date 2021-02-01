@@ -324,7 +324,7 @@ public class PlayerVaults extends JavaPlugin {
             try {
                 Files.move(configYaml.toPath(), this.getDataFolder().toPath().resolve("old_unused_config.yml"));
             } catch (Exception e) {
-                this.getLogger().log(Level.SEVERE, "Failed to move config for backup", e);
+                this.getLogger().log(Level.SEVERE, "Failed to move config for backup: " + e.getMessage());
                 configYaml.deleteOnExit();
             }
         }
@@ -354,7 +354,7 @@ public class PlayerVaults extends JavaPlugin {
             try {
                 Files.move(lang.toPath(), lang.getParentFile().toPath().resolve("old_unused_lang"));
             } catch (Exception e) {
-                this.getLogger().log(Level.SEVERE, "Failed to rename lang folder as it is no longer used", e);
+                this.getLogger().log(Level.SEVERE, "Failed to rename lang folder as it is no longer used: " + e.getMessage());
                 configYaml.deleteOnExit();
             }
         }
