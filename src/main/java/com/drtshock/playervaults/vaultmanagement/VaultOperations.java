@@ -129,6 +129,14 @@ public class VaultOperations {
      * @return Whether or not the player was allowed to open it.
      */
     public static boolean openOwnVault(Player player, String arg) {
+        return openOwnVaultE(player, arg, false, true);
+    }
+
+    public static boolean openOwnVaultSign(Player player, String arg) {
+        return openOwnVaultE(player, arg, true, false);
+    }
+
+    private static boolean openOwnVaultE(Player player, String arg, boolean free, boolean send) {
         if (isLocked()) {
             return false;
         }
@@ -147,7 +155,7 @@ public class VaultOperations {
         }
 
         if (checkPerms(player, number)) {
-            if (EconomyOperations.payToOpen(player, number)) {
+            if (free || EconomyOperations.payToOpen(player, number)) {
                 Inventory inv = VaultManager.getInstance().loadOwnVault(player, number, getMaxVaultSize(player));
                 if (inv == null) {
                     PlayerVaults.debug(String.format("Failed to open null vault %d for %s. This is weird.", number, player.getName()));
@@ -165,7 +173,9 @@ public class VaultOperations {
                 VaultViewInfo info = new VaultViewInfo(player.getUniqueId().toString(), number);
                 PlayerVaults.getInstance().getOpenInventories().put(info.toString(), inv);
 
-                player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
+                if (send) {
+                    player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_VAULT.toString().replace("%v", arg));
+                }
                 return true;
             } else {
                 player.sendMessage(Lang.TITLE.toString() + Lang.INSUFFICIENT_FUNDS);
@@ -202,6 +212,10 @@ public class VaultOperations {
      * @return Whether or not the player was allowed to open it.
      */
     public static boolean openOtherVault(Player player, String vaultOwner, String arg) {
+        return openOtherVault(player, vaultOwner, arg, true);
+    }
+
+    public static boolean openOtherVault(Player player, String vaultOwner, String arg, boolean send) {
         if (isLocked()) {
             return false;
         }
@@ -242,7 +256,9 @@ public class VaultOperations {
                 PlayerVaults.debug(String.format("Cancelled opening vault %s for %s from an outside source.", arg, player.getName()));
                 return false; // inventory open event was cancelled.
             }
-            player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", name));
+            if (send) {
+                player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_OTHER_VAULT.toString().replace("%v", arg).replace("%p", name));
+            }
             PlayerVaults.debug("opening other vault", time);
 
             // Need to set ViewInfo for a third party vault for the opening player.

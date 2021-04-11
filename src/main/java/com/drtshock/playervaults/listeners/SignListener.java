@@ -20,7 +20,6 @@ package com.drtshock.playervaults.listeners;
 
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.translations.Lang;
-import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import org.bukkit.Bukkit;
@@ -34,11 +33,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.CraftingInventory;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 public class SignListener implements Listener {
@@ -46,7 +42,7 @@ public class SignListener implements Listener {
 
     /**
      * TODO: Some of these events can be lag inducing (specifically: interactions & block breaking),
-     *         perhaps we should try to optimize these listeners at some point?
+     * perhaps we should try to optimize these listeners at some point?
      */
 
     public SignListener(PlayerVaults plugin) {
@@ -109,51 +105,44 @@ public class SignListener implements Listener {
                 int y = l.getBlockY();
                 int z = l.getBlockZ();
                 if (plugin.getSigns().getKeys(false).contains(world + ";;" + x + ";;" + y + ";;" + z)) {
+                    PlayerVaults.debug("Player " + player.getName() + " clicked sign at world(" + x + "," + y + "," + z + ")");
+                    if (PlayerVaults.getInstance().getInVault().containsKey(player.getUniqueId().toString())) {
+                        // don't let them open another vault.
+                        PlayerVaults.debug("Player " + player.getName() + " denied sign vault because already in a vault!");
+                        return;
+                    }
                     int num = PlayerVaults.getInstance().getSigns().getInt(world + ";;" + x + ";;" + y + ";;" + z + ".chest", 1);
+                    String numS = String.valueOf(num);
                     if (player.hasPermission("playervaults.signs.use") || player.hasPermission("playervaults.signs.bypass")) {
                         boolean self = PlayerVaults.getInstance().getSigns().getBoolean(world + ";;" + x + ";;" + y + ";;" + z + ".self", false);
                         String owner = self ? player.getName() : PlayerVaults.getInstance().getSigns().getString(world + ";;" + x + ";;" + y + ";;" + z + ".owner");
+                        PlayerVaults.debug("Player " + player.getName() + " wants to open a " + (self ? "self" : "non-self (" + owner + ")") + " sign vault");
                         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(owner != null ? owner : event.getPlayer().getName()); // Not best way but :\
                         if (offlinePlayer == null || (!offlinePlayer.isOnline() && !offlinePlayer.hasPlayedBefore())) {
+                            PlayerVaults.debug("Denied sign vault for never-seen-before owner " + owner);
                             player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
                             return;
                         }
                         if (self) {
                             // We already checked that they can use signs, now lets check if they have this many vaults.
-                            if (VaultOperations.checkPerms(player, num)) {
-                                Inventory inv = VaultManager.getInstance().loadOwnVault(player, num, VaultOperations.getMaxVaultSize(player));
-                                if (inv != null) {
-                                    player.openInventory(inv);
-
-                                    // Check if the inventory was actually opened
-                                    if (player.getOpenInventory().getTopInventory() instanceof CraftingInventory || player.getOpenInventory().getTopInventory() == null) {
-                                        PlayerVaults.debug(String.format("Cancelled opening sign vault.", player.getName()));
-                                        return; // inventory open event was cancelled.
-                                    }
-                                }
+                            if (VaultOperations.openOwnVault(player, numS, true)) {
+                                PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(player.getUniqueId().toString(), num));
                             } else {
-                                player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS.toString());
-                                return; // Otherwise it would try to add vault view info down there.
+                                PlayerVaults.debug("Player " + player.getName() + " failed to open sign vault!");
+                                return;
                             }
                         } else {
-                            Inventory inv = VaultManager.getInstance().loadOtherVault(offlinePlayer.getUniqueId().toString(), num, VaultOperations.getMaxVaultSize(offlinePlayer));
-                            if (inv == null) {
-                                player.sendMessage(Lang.TITLE.toString() + Lang.VAULT_DOES_NOT_EXIST.toString());
-                            } else {
-                                player.openInventory(inv);
-
-                                // Check if the inventory was actually opened
-                                if (player.getOpenInventory().getTopInventory() instanceof CraftingInventory || player.getOpenInventory().getTopInventory() == null) {
-                                    PlayerVaults.debug(String.format("Cancelled opening non-self sign vault.", player.getName()));
-                                    return; // inventory open event was cancelled.
-                                }
+                            if (!VaultOperations.openOtherVault(player, owner, numS, false)) {
+                                PlayerVaults.debug("Player " + player.getName() + " failed to open sign vault!");
+                                return;
                             }
                         }
-                        PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(self ? player.getUniqueId().toString() : offlinePlayer.getUniqueId().toString(), num));
+                        PlayerVaults.debug("Player " + player.getName() + " succeeded in opening sign vault");
                         event.setCancelled(true);
                         player.sendMessage(Lang.TITLE.toString() + Lang.OPEN_WITH_SIGN.toString().replace("%v", String.valueOf(num)).replace("%p", owner));
                     } else {
                         player.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMS);
+                        PlayerVaults.debug("Player " + player.getName() + " no sign perms!");
                     }
                 }
             }
