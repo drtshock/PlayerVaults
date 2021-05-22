@@ -44,14 +44,17 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import sun.misc.Unsafe;
 
 import java.io.File;
 import java.io.IOException;
@@ -236,17 +239,19 @@ public class PlayerVaults extends JavaPlugin {
         });
 
         try {
+            Field f = Unsafe.class.getDeclaredField("theUnsafe");
+            f.setAccessible(true);
+            Unsafe unsafe = (Unsafe) f.get(null);
+
             Class<?> clazz = Class.forName(this.getServer().getClass().getPackage().getName() + ".util.CraftNBTTagConfigSerializer");
             Field field = clazz.getDeclaredField("INTEGER");
-            field.setAccessible(true);
-            Field modifiers = Field.class.getDeclaredField("modifiers");
-            modifiers.setAccessible(true);
-            modifiers.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-            Pattern pattern = (Pattern) field.get(null);
+
+            Pattern pattern = (Pattern) unsafe.getObject(clazz, unsafe.staticFieldOffset(field));
+
             if (pattern.pattern().equals("[-+]?(?:0|[1-9][0-9]*)?i")) {
-                field.set(null, Pattern.compile("[-+]?(?:0|[1-9][0-9]*)i", Pattern.CASE_INSENSITIVE));
+                unsafe.putObject(clazz, unsafe.staticFieldOffset(field), Pattern.compile("[-+]?(?:0|[1-9][0-9]*)i", Pattern.CASE_INSENSITIVE));
+                this.getLogger().info("Patched Spigot item storage bug.");
             }
-            this.getLogger().info("Patched Spigot item storage bug.");
         } catch (Exception ignored) {
             // Don't worry about it.
         }
