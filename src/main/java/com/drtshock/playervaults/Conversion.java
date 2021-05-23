@@ -180,7 +180,7 @@ class Conversion {
             logger.info(oldVaults.toString() + " will remain as a backup.");
             recent = true;
             oldDir = oldVaults;
-        } else if (reallyOldVaults.exists() && oldVaults.isDirectory()) {
+        } else if (reallyOldVaults.exists() && reallyOldVaults.isDirectory()) {
             logger.info("********** Starting data storage conversion **********");
             logger.info("This might take a while and might say \"unable to resolve\"");
             logger.info(reallyOldVaults.toString() + " will remain as a backup.");
