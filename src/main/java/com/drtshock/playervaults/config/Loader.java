@@ -76,7 +76,7 @@ public class Loader {
         return Loader.loadNode(config, configObject);
     }
 
-    private static Set<Class<?>> types = new HashSet<>();
+    private static final Set<Class<?>> types = new HashSet<>();
 
     static {
         Loader.types.add(Boolean.TYPE);

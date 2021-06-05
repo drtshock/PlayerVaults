@@ -220,7 +220,7 @@ public class VaultManager {
     /**
      * Gets the numbers belonging to all their vaults.
      *
-     * @param holder
+     * @param holder holder
      * @return a set of Integers, which are player's vaults' numbers (fuck grammar).
      */
     public Set<Integer> getVaultNumbers(String holder) {
@@ -326,7 +326,6 @@ public class VaultManager {
      * Attempt to delete a vault file.
      *
      * @param holder UUID of the holder.
-     * @return true if successful, otherwise false.
      */
     public void deletePlayerVaultFile(String holder) {
         File file = new File(this.directory, holder + ".yml");

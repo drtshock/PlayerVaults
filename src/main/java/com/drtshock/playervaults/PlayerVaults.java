@@ -91,10 +91,10 @@ public class PlayerVaults extends JavaPlugin {
     private String _versionString;
     private int maxVaultAmountPermTest;
     private Metrics metrics;
-    private Config config = new Config();
+    private final Config config = new Config();
     private BukkitAudiences platform;
-    private Translation translation = new Translation(this);
-    private List<String> exceptions = new CopyOnWriteArrayList<>();
+    private final Translation translation = new Translation(this);
+    private final List<String> exceptions = new CopyOnWriteArrayList<>();
 
     public static PlayerVaults getInstance() {
         return instance;
@@ -452,7 +452,7 @@ public class PlayerVaults extends JavaPlugin {
      * Get the legacy UUID vault data folder.
      * Deprecated in favor of base64 data.
      *
-     * @return
+     * @return uuid folder
      */
     @Deprecated
     public File getUuidData() {

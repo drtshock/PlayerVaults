@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
-@SuppressWarnings({"FieldCanBeLocal", "InnerClassMayBeStatic", "unused"})
+@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "InnerClassMayBeStatic", "unused"})
 public class Config {
     public class Block {
         private boolean enabled = true;

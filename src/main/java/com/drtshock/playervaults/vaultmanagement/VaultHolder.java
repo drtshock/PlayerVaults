@@ -27,7 +27,7 @@ import org.bukkit.inventory.InventoryHolder;
 public class VaultHolder implements InventoryHolder {
 
     private Inventory inventory;
-    private int vaultNumber;
+    private final int vaultNumber;
 
     /**
      * Creates a new vault holder
