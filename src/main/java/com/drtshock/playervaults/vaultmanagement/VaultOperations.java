@@ -194,7 +194,7 @@ public class VaultOperations {
      * @return Whether or not the player was allowed to open it.
      */
     public static boolean openOwnVault(Player player, String arg, boolean isCommand) {
-        if (isCommand && player.hasPermission("playervaults.commands.use")) {
+        if (!isCommand || player.hasPermission("playervaults.commands.use")) {
             return openOwnVault(player, arg);
         }
         PlayerVaults.getInstance().getTL().noPerms().title().send(player);

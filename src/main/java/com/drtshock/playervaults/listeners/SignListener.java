@@ -124,7 +124,7 @@ public class SignListener implements Listener {
                         }
                         if (self) {
                             // We already checked that they can use signs, now lets check if they have this many vaults.
-                            if (VaultOperations.openOwnVault(player, numS, true)) {
+                            if (VaultOperations.openOwnVault(player, numS, false)) {
                                 PlayerVaults.getInstance().getInVault().put(player.getUniqueId().toString(), new VaultViewInfo(player.getUniqueId().toString(), num));
                             } else {
                                 PlayerVaults.debug("Player " + player.getName() + " failed to open sign vault!");
