@@ -52,7 +52,7 @@ public class Listeners implements Listener {
     public void saveVault(Player player, Inventory inventory) {
         if (plugin.getInVault().containsKey(player.getUniqueId().toString())) {
 
-            Inventory inv = Bukkit.createInventory(null, 6 * 9);
+            Inventory inv = Bukkit.createInventory(null, inventory.getSize());
             inv.setContents(inventory.getContents().clone());
 
             PlayerVaults.debug(inventory.getType() + " " + inventory.getClass().getSimpleName());

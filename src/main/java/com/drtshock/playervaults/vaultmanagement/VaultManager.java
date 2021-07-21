@@ -172,6 +172,7 @@ public class VaultManager {
         // Happens on change of permission or if people used the broken version.
         // In this case, players will lose items.
         if (deserialized.length > size) {
+            PlayerVaults.debug("Loaded vault for " + ownerName + " and got " + deserialized.length + " items for allowed size of " + size+". Attempting to rescue!");
             for (ItemStack stack : deserialized) {
                 if (stack != null) {
                     inventory.addItem(stack);
