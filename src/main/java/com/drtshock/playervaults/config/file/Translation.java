@@ -1,6 +1,7 @@
 package com.drtshock.playervaults.config.file;
 
 import com.drtshock.playervaults.PlayerVaults;
+import com.drtshock.playervaults.config.annotation.Comment;
 import com.google.common.collect.ImmutableMap;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -228,6 +229,7 @@ public class Translation {
         TL.plugin = plugin;
     }
 
+    @Comment("https://docs.adventure.kyori.net/minimessage.html#format")
     private Map<String, String> colorMappings = new HashMap<String, String>() {
         {
             this.put("error", "red");
