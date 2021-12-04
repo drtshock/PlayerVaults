@@ -65,7 +65,7 @@ public class HelpMeCommand implements CommandExecutor {
             if (args.length >= 1 && args[0].equalsIgnoreCase("mini")) {
                 Audience audience = PlayerVaults.getInstance().getPlatform().sender(sender);
                 for (String string : mainInfo.toString().split("\n")) {
-                    audience.sendMessage(MiniMessage.get().parse((sender instanceof Player ? "<rainbow>" : "<green>") + string));
+                    audience.sendMessage(MiniMessage.miniMessage().parse((sender instanceof Player ? "<rainbow>" : "<green>") + string));
                 }
                 return true;
             }
@@ -115,9 +115,9 @@ public class HelpMeCommand implements CommandExecutor {
                                     String delKey = result.getPaste().get().getDeletionKey().orElse("No deletion key");
                                     String url = "https://paste.gg/anonymous/" + result.getPaste().get().getId();
                                     audience.sendMessage(Component.text("URL generated: ").append(Component.text().clickEvent(ClickEvent.openUrl(url)).content(url)));
-                                    audience.sendMessage(MiniMessage.get().parse((sender instanceof Player ? "<rainbow>" : "<green>") + "Deletion key:</rainbow> " + delKey));
+                                    audience.sendMessage(MiniMessage.miniMessage().parse((sender instanceof Player ? "<rainbow>" : "<green>") + "Deletion key:</rainbow> " + delKey));
                                 } else {
-                                    audience.sendMessage(MiniMessage.get().parse("<red>Failed to generate output. See console for details."));
+                                    audience.sendMessage(MiniMessage.miniMessage().parse("<red>Failed to generate output. See console for details."));
                                     PlayerVaults.getInstance().getLogger().warning("Received: " + result.getMessage());
                                 }
                             }
@@ -127,7 +127,7 @@ public class HelpMeCommand implements CommandExecutor {
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                PlayerVaults.getInstance().getPlatform().sender(sender).sendMessage(MiniMessage.get().parse("<red>Failed to generate output. See console for details."));
+                                PlayerVaults.getInstance().getPlatform().sender(sender).sendMessage(MiniMessage.miniMessage().parse("<red>Failed to generate output. See console for details."));
                             }
                         }.runTask(PlayerVaults.getInstance());
                     }

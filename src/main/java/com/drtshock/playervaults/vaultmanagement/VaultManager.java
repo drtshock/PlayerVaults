@@ -256,7 +256,6 @@ public class VaultManager {
      * @param sender The sender of whom to send messages to.
      * @param holder The vault holder.
      * @param number The vault number.
-     * @throws IOException Uh oh!
      */
     public void deleteVault(CommandSender sender, final String holder, final int number) {
         new BukkitRunnable() {
