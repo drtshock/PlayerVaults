@@ -72,7 +72,7 @@
     <repositories>
         <repository>
             <id>vault-repo</id>
-            <url>http://nexus.hc.to/content/repositories/pub_releases/</url>
+            <url>https://nexus.hc.to/content/repositories/pub_releases/</url>
         </repository>
         <repository>
             <id>fuuid-repo</id>
@@ -84,7 +84,7 @@
         </repository>
         <repository>
             <id>sonatype</id>
-            <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
             <releases>
                 <enabled>false</enabled>
             </releases>
