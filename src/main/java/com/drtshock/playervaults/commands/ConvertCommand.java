@@ -21,6 +21,7 @@ package com.drtshock.playervaults.commands;
 import com.drtshock.playervaults.PlayerVaults;
 import com.drtshock.playervaults.converters.BackpackConverter;
 import com.drtshock.playervaults.converters.Converter;
+import com.drtshock.playervaults.converters.CosmicConverter;
 import com.drtshock.playervaults.vaultmanagement.VaultOperations;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -36,6 +37,7 @@ public class ConvertCommand implements CommandExecutor {
 
     public ConvertCommand(PlayerVaults plugin) {
         converters.add(new BackpackConverter());
+        converters.add(new CosmicConverter());
         this.plugin = plugin;
     }
 
