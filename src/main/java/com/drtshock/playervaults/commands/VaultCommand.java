@@ -58,7 +58,7 @@ public class VaultCommand implements CommandExecutor {
                     } else if (sender.hasPermission("playervaults.admin")) {
                         OfflinePlayer searchPlayer = Bukkit.getOfflinePlayer(args[0]);
                         String target = args[0];
-                        if (searchPlayer != null && searchPlayer.hasPlayedBefore()) {
+                        if (searchPlayer != null) {
                             target = searchPlayer.getUniqueId().toString();
                         }
 
@@ -91,7 +91,7 @@ public class VaultCommand implements CommandExecutor {
 
                     String target = args[0];
                     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                    if (offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
+                    if (offlinePlayer != null) {
                         target = offlinePlayer.getUniqueId().toString();
                     }
                     if (VaultOperations.openOtherVault(player, target, args[1])) {
