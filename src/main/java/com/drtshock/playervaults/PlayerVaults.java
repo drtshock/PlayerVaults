@@ -80,6 +80,7 @@ public class PlayerVaults extends JavaPlugin {
     // VaultViewInfo - Inventory
     private final HashMap<String, Inventory> openInventories = new HashMap<>();
     private final Set<Material> blockedMats = new HashSet<>();
+    private final Set<String> blockedNames = new HashSet<>();
     private boolean useVault;
     private YamlConfiguration signs;
     private File signsFile;
@@ -345,6 +346,17 @@ public class PlayerVaults extends JavaPlugin {
             }
         }
 
+        // Clear just in case this is a reload.
+        blockedNames.clear();
+        if (getConf().getItemBlocking().isEnabled()) {
+            for (String s : getConf().getItemBlocking().getNames()) {
+                if (s != null && !s.isEmpty()) {
+                    blockedNames.add(s);
+                    getLogger().log(Level.INFO, "Added {0} to list of blocked names.", s);
+                }
+            }
+        }
+
         File lang = new File(this.getDataFolder(), "lang");
         if (lang.exists()) {
             this.getLogger().warning("There is no clean way for us to migrate your old lang data.");
@@ -493,6 +505,9 @@ public class PlayerVaults extends JavaPlugin {
 
     public boolean isBlockedMaterial(Material mat) {
         return blockedMats.contains(mat);
+    }
+    public boolean isBlockedName(String name) {
+        return blockedNames.contains(name);
     }
 
     /**
