@@ -132,10 +132,17 @@ public class Listeners implements Listener {
                         if (item == null) {
                             continue;
                         }
-                        if (!player.hasPermission("playervaults.bypassblockeditems") && PlayerVaults.getInstance().isBlockedMaterial(item.getType())) {
-                            event.setCancelled(true);
-                            this.plugin.getTL().blockedItem().title().with("item", item.getType().name()).send(player);
-                            return;
+                        if (!player.hasPermission("playervaults.bypassblockeditems")) {
+                            if (PlayerVaults.getInstance().isBlockedMaterial(item.getType())) {
+                                event.setCancelled(true);
+                                this.plugin.getTL().blockedItem().title().with("item", item.getType().name()).send(player);
+                                return;
+                            }
+                            else if (PlayerVaults.getInstance().isBlockedName(item.getItemMeta().getDisplayName())) {
+                                event.setCancelled(true);
+                                this.plugin.getTL().blockedItemName().title().with("name", item.getItemMeta().getDisplayName()).send(player);
+                                return;
+                            }
                         }
                     }
                 }
@@ -160,10 +167,17 @@ public class Listeners implements Listener {
                 String title = this.plugin.getVaultTitle(String.valueOf(num));
                 if ((inventoryTitle != null && inventoryTitle.equalsIgnoreCase(title)) && event.getNewItems() != null) {
                     for (ItemStack item : event.getNewItems().values()) {
-                        if (!player.hasPermission("playervaults.bypassblockeditems") && PlayerVaults.getInstance().isBlockedMaterial(item.getType())) {
-                            event.setCancelled(true);
-                            this.plugin.getTL().blockedItem().title().with("item", item.getType().name()).send(player);
-                            return;
+                        if (!player.hasPermission("playervaults.bypassblockeditems")) {
+                            if (PlayerVaults.getInstance().isBlockedMaterial(item.getType())) {
+                                event.setCancelled(true);
+                                this.plugin.getTL().blockedItem().title().with("item", item.getType().name()).send(player);
+                                return;
+                            }
+                            else if (PlayerVaults.getInstance().isBlockedName(item.getItemMeta().getDisplayName())) {
+                                event.setCancelled(true);
+                                this.plugin.getTL().blockedItemName().title().with("name", item.getItemMeta().getDisplayName()).send(player);
+                                return;
+                            }
                         }
                     }
                 }

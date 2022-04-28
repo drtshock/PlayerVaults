@@ -48,6 +48,21 @@ public class Config {
             }
             return Collections.unmodifiableList(list);
         }
+
+        @Comment("Exact item names for blocked items, only effective if the feature is enabled.\n" +
+                " Useful for blocking custom items based on item name.")
+        private List<String> names = new ArrayList<String>() {
+            {
+                this.add("Named item to be blocked");
+            }
+        };
+
+        public List<String> getNames() {
+            if (this.names == null) {
+                this.names = new ArrayList<>();
+            }
+            return Collections.unmodifiableList(names);
+        }
     }
 
     public class Economy {
