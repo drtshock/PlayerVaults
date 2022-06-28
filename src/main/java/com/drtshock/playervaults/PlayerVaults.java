@@ -56,9 +56,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -70,6 +72,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class PlayerVaults extends JavaPlugin {
     public static boolean DEBUG;
@@ -358,6 +361,11 @@ public class PlayerVaults extends JavaPlugin {
         }
 
         try {
+            Path langPath = this.getDataFolder().toPath().resolve("lang.conf");
+            List<String> lines = Files.readAllLines(langPath);
+            List<String> updatedLines = new ArrayList<>();
+            lines.forEach(line -> updatedLines.add(line.replaceAll("\\{(vault|player|price|count|item)}", "<$1>")));
+            Files.write(langPath, updatedLines.stream().collect(Collectors.joining("\n")).getBytes());
             Loader.loadAndSave("lang", this.translation);
         } catch (IOException | IllegalAccessException e) {
             this.getLogger().log(Level.SEVERE, "Could not load lang.", e);

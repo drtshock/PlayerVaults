@@ -127,6 +127,9 @@ public class Listeners implements Listener {
                     if (event.getHotbarButton() > -1 && event.getWhoClicked().getInventory().getItem(event.getHotbarButton()) != null) {
                         items[1] = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
                     }
+                    if (event.getClick().name().equals("SWAP_OFFHAND")) {
+                        items[1] = event.getWhoClicked().getInventory().getItemInOffHand();
+                    }
 
                     for (ItemStack item : items) {
                         if (item == null) {
