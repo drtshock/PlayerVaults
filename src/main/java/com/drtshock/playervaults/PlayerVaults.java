@@ -362,10 +362,12 @@ public class PlayerVaults extends JavaPlugin {
 
         try {
             Path langPath = this.getDataFolder().toPath().resolve("lang.conf");
-            List<String> lines = Files.readAllLines(langPath);
-            List<String> updatedLines = new ArrayList<>();
-            lines.forEach(line -> updatedLines.add(line.replaceAll("\\{(vault|player|price|count|item)}", "<$1>")));
-            Files.write(langPath, updatedLines.stream().collect(Collectors.joining("\n")).getBytes());
+            if (Files.exists(langPath)) {
+                List<String> lines = Files.readAllLines(langPath);
+                List<String> updatedLines = new ArrayList<>();
+                lines.forEach(line -> updatedLines.add(line.replaceAll("\\{(vault|player|price|count|item)}", "<$1>")));
+                Files.write(langPath, updatedLines.stream().collect(Collectors.joining("\n")).getBytes());
+            }
             Loader.loadAndSave("lang", this.translation);
         } catch (IOException | IllegalAccessException e) {
             this.getLogger().log(Level.SEVERE, "Could not load lang.", e);
