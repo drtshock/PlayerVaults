@@ -21,8 +21,6 @@
                 <filtering>true</filtering>
                 <directory>src/main/resources/</directory>
                 <includes>
-                    <include>*.yml</include>
-                    <include>lang/*.yml</include>
                     <include>credit/*.txt</include>
                 </includes>
             </resource>
