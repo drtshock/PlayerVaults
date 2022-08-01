@@ -50,6 +50,10 @@ public class DeleteCommand implements CommandExecutor {
                 }
                 break;
             case 2:
+                if (!sender.hasPermission("playervaults.delete")) {
+                    PlayerVaults.getInstance().getTL().noPerms().title().send(sender);
+                    break;
+                }
                 OfflinePlayer searchPlayer = Bukkit.getOfflinePlayer(args[0]);
                 String target = args[0];
                 if (searchPlayer != null && searchPlayer.hasPlayedBefore()) {
