@@ -28,7 +28,7 @@ import org.bukkit.inventory.Inventory;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class CosmicConverter implements Converter {
+public class Cosmic2Converter implements Converter {
 
     @Override
     public int run(CommandSender initiator) {
@@ -80,6 +80,6 @@ public class CosmicConverter implements Converter {
 
     @Override
     public String getName() {
-        return "CosmicVaults";
+        return "CosmicVaults2";
     }
 }

@@ -105,7 +105,7 @@ public class HelpMeCommand implements CommandExecutor {
                         if (exceptionLog != null) {
                             add("exceptions.txt", exceptionLog);
                         }
-                        add("main.conf", getFile(dataPath.resolve("config.conf")));
+                        add("config.conf", getFile(dataPath.resolve("config.conf")));
                         PasteBuilder.PasteResult result = builder.build();
                         new BukkitRunnable() {
                             @Override

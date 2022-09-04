@@ -34,7 +34,12 @@ import com.drtshock.playervaults.tasks.Cleanup;
 import com.drtshock.playervaults.vaultmanagement.EconomyOperations;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
+import com.google.gson.Gson;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -50,11 +55,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import sun.misc.Unsafe;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.ZoneId;
@@ -98,6 +109,8 @@ public class PlayerVaults extends JavaPlugin {
     private BukkitAudiences platform;
     private final Translation translation = new Translation(this);
     private final List<String> exceptions = new CopyOnWriteArrayList<>();
+    private String updateCheck;
+    private Response updateResponse;
 
     public static PlayerVaults getInstance() {
         return instance;
@@ -120,6 +133,7 @@ public class PlayerVaults extends JavaPlugin {
         instance = this;
         long start = System.currentTimeMillis();
         long time = System.currentTimeMillis();
+        UpdateCheck update = new UpdateCheck("PlayerVaultsX", this.getDescription().getVersion(), this.getServer().getName(), this.getServer().getVersion());
         this.platform = BukkitAudiences.create(this);
         debug("adventure!", time);
         time = System.currentTimeMillis();
@@ -144,11 +158,13 @@ public class PlayerVaults extends JavaPlugin {
         loadSigns();
         debug("loaded signs", time);
         time = System.currentTimeMillis();
+        update.spigotId = "%%__USER__%%";
         getCommand("pv").setExecutor(new VaultCommand(this));
         getCommand("pvdel").setExecutor(new DeleteCommand(this));
         getCommand("pvconvert").setExecutor(new ConvertCommand(this));
         getCommand("pvsign").setExecutor(new SignCommand(this));
         getCommand("pvhelpme").setExecutor(new HelpMeCommand(this));
+        update.meow = this.getClass().getDeclaredMethods().length;
         debug("registered commands", time);
         time = System.currentTimeMillis();
         useVault = EconomyOperations.setup();
@@ -257,6 +273,45 @@ public class PlayerVaults extends JavaPlugin {
         }
 
         this.getLogger().info("Loaded! Took " + (System.currentTimeMillis() - start) + "ms");
+
+        this.updateCheck = new Gson().toJson(update);
+        if (!HelpMeCommand.likesCats) return;
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL("https://update.plugin.party/check");
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    con.setRequestMethod("POST");
+                    con.setDoOutput(true);
+                    con.setRequestProperty("Content-Type", "application/json");
+                    con.setRequestProperty("Accept", "application/json");
+                    try (OutputStream out = con.getOutputStream()) {
+                        out.write(PlayerVaults.this.updateCheck.getBytes(StandardCharsets.UTF_8));
+                    }
+                    String reply = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n"));
+                    Response response = new Gson().fromJson(reply, Response.class);
+                    if (response.isSuccess()) {
+                        PlayerVaults.this.updateResponse = response;
+                        if (response.isUpdateAvailable()) {
+                            if (response.isUrgent()) {
+                                PlayerVaults.this.getServer().getOnlinePlayers().forEach(PlayerVaults.this::updateNotification);
+                            }
+                            PlayerVaults.this.getLogger().warning("Update available: " + response.getLatestVersion() + (response.getMessage() == null ? "" : (" - " + response.getMessage())));
+                        }
+                    } else {
+                        if (response.getMessage().equals("INVALID")) {
+                            this.cancel();
+                        } else if (response.getMessage().equals("TOO_FAST")) {
+                            // Nothing for now
+                        } else {
+                            PlayerVaults.this.getLogger().warning("Failed to check for updates: " + response.getMessage());
+                        }
+                    }
+                } catch (Exception ignored) {
+                }
+            }
+        }.runTaskTimerAsynchronously(this, 1, 20 /* ticks */ * 60 /* seconds in a minute */ * 60 /* minutes in an hour*/);
     }
 
     private void metricsLine(String name, Callable<Integer> callable) {
@@ -562,6 +617,81 @@ public class PlayerVaults extends JavaPlugin {
             builder.append(e);
         }
         return builder.toString();
+    }
+
+    private static class UpdateCheck {
+        private String pluginName;
+        private String pluginVersion;
+        private String serverName;
+        private String serverVersion;
+        private int meow;
+        private String spigotId;
+
+        public UpdateCheck(String pluginName, String pluginVersion, String serverName, String serverVersion) {
+            this.pluginName = pluginName;
+            this.pluginVersion = pluginVersion;
+            this.serverName = serverName;
+            this.serverVersion = serverVersion;
+        }
+    }
+
+    private static class Response {
+        private boolean success;
+        private String message;
+        private boolean updateAvailable;
+        private boolean isUrgent;
+        private String latestVersion;
+
+        private Component component;
+
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public boolean isUpdateAvailable() {
+            return updateAvailable;
+        }
+
+        public boolean isUrgent() {
+            return isUrgent;
+        }
+
+        public String getLatestVersion() {
+            return latestVersion;
+        }
+
+        public Component getComponent() {
+            if (component == null) {
+                component = message == null ? null : MiniMessage.miniMessage().deserialize(message);
+            }
+            return component;
+        }
+    }
+
+    private final Set<UUID> told = new HashSet<>();
+
+    public void updateNotification(Player player) {
+        if (updateResponse == null || !player.hasPermission("playervaults.admin")) {
+            return;
+        }
+        if (!updateResponse.isUrgent() && this.told.contains(player.getUniqueId())) {
+            return;
+        }
+        this.told.add(player.getUniqueId());
+        Audience audience = PlayerVaults.this.platform.player(player);
+        audience.sendMessage(Component.text().color(TextColor.fromHexString("#e35959"))
+                .content("PlayerVaultsX Update Available: " + updateResponse.getLatestVersion()));
+        if (updateResponse.isUrgent()) {
+            audience.sendMessage(Component.text().color(TextColor.fromHexString("#5E0B15"))
+                    .content("This is an important update. Download and restart ASAP."));
+        }
+        if (updateResponse.getComponent() != null) {
+            audience.sendMessage(updateResponse.getComponent());
+        }
     }
 
     public <T extends Throwable> T addException(T t) {

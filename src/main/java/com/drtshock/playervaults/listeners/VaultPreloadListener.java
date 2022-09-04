@@ -35,6 +35,7 @@ public class VaultPreloadListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
+        PlayerVaults.getInstance().updateNotification(event.getPlayer());
         final UUID uuid = event.getPlayer().getUniqueId();
         new BukkitRunnable() {
             @Override
