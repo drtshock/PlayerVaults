@@ -292,8 +292,8 @@ public class PlayerVaults extends JavaPlugin {
                     String reply = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n"));
                     Response response = new Gson().fromJson(reply, Response.class);
                     if (response.isSuccess()) {
-                        PlayerVaults.this.updateResponse = response;
                         if (response.isUpdateAvailable()) {
+                            PlayerVaults.this.updateResponse = response;
                             if (response.isUrgent()) {
                                 PlayerVaults.this.getServer().getOnlinePlayers().forEach(PlayerVaults.this::updateNotification);
                             }
