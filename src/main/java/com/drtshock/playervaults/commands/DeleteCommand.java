@@ -56,7 +56,7 @@ public class DeleteCommand implements CommandExecutor {
                 }
                 OfflinePlayer searchPlayer = Bukkit.getOfflinePlayer(args[0]);
                 String target = args[0];
-                if (searchPlayer != null && searchPlayer.hasPlayedBefore()) {
+                if (args[0].matches("^\\w{3,16}$") && searchPlayer != null) {
                     target = searchPlayer.getUniqueId().toString();
                 }
 
