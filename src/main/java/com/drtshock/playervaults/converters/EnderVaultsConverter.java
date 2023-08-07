@@ -28,8 +28,14 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -44,12 +50,6 @@ public class EnderVaultsConverter implements Converter {
     public int run(CommandSender initiator) {
         PlayerVaults plugin = PlayerVaults.getInstance();
         VaultManager vaultManager = VaultManager.getInstance();
-
-        Path path = plugin.getDataFolder().toPath().getParent().resolve("EnderVaults").resolve("data");
-        if (!Files.isDirectory(path)) {
-            plugin.getLogger().warning("Could not find EnderVaults data folder");
-            return -1;
-        }
 
         MethodHandle load;
         MethodHandle getInventory;
@@ -90,34 +90,73 @@ public class EnderVaultsConverter implements Converter {
         }
 
         AtomicInteger playerCount = new AtomicInteger(0);
-        try (Stream<Path> dir = Files.list(path)) {
-            dir.forEach(f -> {
-                if (!Files.isDirectory(f)) {
-                    return;
-                }
-                try {
-                    List<Object> list = (List<Object>) load.invoke(dataStorage, UUID.fromString(f.getFileName().toString()));
-                    for (Object vault : list) {
-                        Inventory inventory = (Inventory) getInventory.invoke(vault);
-                        Map<String, Object> meta = (Map<String, Object>) getMetadata.invoke(vault);
-                        Integer order = (Integer) meta.get("order");
-                        vaultManager.saveVault(inventory, f.getFileName().toString(), order);
+
+        List<UUID> uuids = new ArrayList<>();
+        if (dataStorage.getClass().getSimpleName().equals("YamlStorage")) {
+            Path path = plugin.getDataFolder().toPath().getParent().resolve("EnderVaults").resolve("data");
+            if (!Files.isDirectory(path)) {
+                plugin.getLogger().warning("Could not find EnderVaults data folder");
+                return -1;
+            }
+            try (Stream<Path> dir = Files.list(path)) {
+                dir.forEach(f -> {
+                    if (!Files.isDirectory(f)) {
+                        return;
                     }
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                    return;
+                    uuids.add(UUID.fromString(f.getFileName().toString()));
+                });
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.SEVERE, "Failed. ", e);
+            }
+        } else if (dataStorage.getClass().getSimpleName().equals("HikariStorage")) {
+            Class<?> hiklassi = dataStorage.getClass();
+            try {
+                Field vaultTableString = hiklassi.getDeclaredField("vaultTable");
+                vaultTableString.setAccessible(true);
+                String vaultTable = (String) vaultTableString.get(dataStorage);
+                Field hikariDataSourceF = hiklassi.getDeclaredField("hikariDataSource");
+                hikariDataSourceF.setAccessible(true);
+                Object hikariDataSource = hikariDataSourceF.get(dataStorage);
+                Method getConnection = hikariDataSource.getClass().getMethod("getConnection");
+                try (Connection connection = (Connection) getConnection.invoke(hikariDataSource);
+                     PreparedStatement stmt = connection.prepareStatement("SELECT `owner_uuid` FROM " + vaultTable)) {
+                    ResultSet resultSet = stmt.executeQuery();
+                    while (resultSet.next()) {
+                        try {
+                            uuids.add(UUID.fromString(resultSet.getString("owner_uuid")));
+                        } catch (IllegalArgumentException iae) {
+                            plugin.getLogger().warning("Ignoring invalid uuid " + resultSet.getString("owner_uuid"));
+                        }
+                    }
                 }
-                playerCount.incrementAndGet();
-            });
-        } catch (IOException e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed. ", e);
+            } catch (Exception e) {
+                plugin.getLogger().log(Level.SEVERE, "UH OH", e);
+            }
+        } else {
+            plugin.getLogger().warning("No known storage found: " + dataStorage.getClass().getSimpleName());
         }
+
+        uuids.forEach(uuid -> {
+            try {
+                List<Object> list = (List<Object>) load.invoke(dataStorage, uuid);
+                for (Object vault : list) {
+                    Inventory inventory = (Inventory) getInventory.invoke(vault);
+                    Map<String, Object> meta = (Map<String, Object>) getMetadata.invoke(vault);
+                    Integer order = (Integer) meta.get("order");
+                    vaultManager.saveVault(inventory, uuid.toString(), order);
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
+                return;
+            }
+            playerCount.incrementAndGet();
+        });
         return playerCount.get();
     }
 
     @Override
     public boolean canConvert() {
-        return Files.isDirectory(PlayerVaults.getInstance().getDataFolder().toPath().getParent().resolve("EnderVaults").resolve("data"));
+        return PlayerVaults.getInstance().getServer().getPluginManager().isPluginEnabled("EnderVaults");
     }
 
     @Override
