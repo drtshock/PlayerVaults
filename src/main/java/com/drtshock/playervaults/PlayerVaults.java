@@ -50,6 +50,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -94,6 +95,8 @@ public class PlayerVaults extends JavaPlugin {
     // VaultViewInfo - Inventory
     private final HashMap<String, Inventory> openInventories = new HashMap<>();
     private final Set<Material> blockedMats = new HashSet<>();
+    private boolean blockWithModelData = false;
+    private boolean blockWithoutModelData = false;
     private boolean useVault;
     private YamlConfiguration signs;
     private File signsFile;
@@ -393,14 +396,28 @@ public class PlayerVaults extends JavaPlugin {
 
         // Clear just in case this is a reload.
         blockedMats.clear();
+        this.blockWithModelData = false;
+        this.blockWithoutModelData = false;
         if (getConf().getItemBlocking().isEnabled()) {
             for (String s : getConf().getItemBlocking().getList()) {
+                if (s.equalsIgnoreCase("BLOCK_ALL_WITH_CUSTOM_MODEL_DATA")) {
+                    this.blockWithModelData = true;
+                }
+                if (s.equalsIgnoreCase("BLOCK_ALL_WITHOUT_CUSTOM_MODEL_DATA")) {
+                    this.blockWithoutModelData = true;
+                }
                 Material mat = Material.matchMaterial(s);
                 if (mat != null) {
                     blockedMats.add(mat);
                     getLogger().log(Level.INFO, "Added {0} to list of blocked materials.", mat.name());
                 }
             }
+        }
+        try {
+            ItemMeta.class.getMethod("hasCustomModelData");
+        } catch (NoSuchMethodException e) {
+            this.blockWithModelData = false;
+            this.blockWithoutModelData = false;
         }
 
         File lang = new File(this.getDataFolder(), "lang");
@@ -558,6 +575,14 @@ public class PlayerVaults extends JavaPlugin {
 
     public boolean isBlockedMaterial(Material mat) {
         return blockedMats.contains(mat);
+    }
+
+    public boolean isBlockWithModelData() {
+        return this.blockWithModelData;
+    }
+
+    public boolean isBlockWithoutModelData() {
+        return this.blockWithoutModelData;
     }
 
     /**

@@ -30,7 +30,10 @@ public class Config {
     public class Block {
         private boolean enabled = true;
         @Comment("Material list for blocked items (does not support ID's), only effective if the feature is enabled.\n" +
-                " If you don't know material names: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html")
+                " If you don't know material names: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html\n" +
+                "\n" +
+                "Also, if you add \"BLOCK_ALL_WITH_CUSTOM_MODEL_DATA\" or \"BLOCK_ALL_WITHOUT_CUSTOM_MODEL_DATA\"\n" +
+                " then either all items with custom model data will be blocked, or all items without custom model data will be blocked.")
         private List<String> list = new ArrayList<String>() {
             {
                 this.add("PUMPKIN");

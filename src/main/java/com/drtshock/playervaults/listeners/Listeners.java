@@ -135,10 +135,22 @@ public class Listeners implements Listener {
                         if (item == null) {
                             continue;
                         }
-                        if (!player.hasPermission("playervaults.bypassblockeditems") && PlayerVaults.getInstance().isBlockedMaterial(item.getType())) {
-                            event.setCancelled(true);
-                            this.plugin.getTL().blockedItem().title().with("item", item.getType().name()).send(player);
-                            return;
+                        if (!player.hasPermission("playervaults.bypassblockeditems")) {
+                            if (PlayerVaults.getInstance().isBlockWithModelData() && item.hasItemMeta() && item.getItemMeta().hasCustomModelData()) {
+                                event.setCancelled(true);
+                                this.plugin.getTL().blockedItemWithModelData().title().send(player);
+                                return;
+                            }
+                            if (PlayerVaults.getInstance().isBlockWithoutModelData() && (!item.hasItemMeta() || !item.getItemMeta().hasCustomModelData())) {
+                                event.setCancelled(true);
+                                this.plugin.getTL().blockedItemWithoutModelData().title().send(player);
+                                return;
+                            }
+                            if (PlayerVaults.getInstance().isBlockedMaterial(item.getType())) {
+                                event.setCancelled(true);
+                                this.plugin.getTL().blockedItem().title().with("item", item.getType().name()).send(player);
+                                return;
+                            }
                         }
                     }
                 }

@@ -174,6 +174,8 @@ public class Translation {
         private TL locked = TL.of("<error>Vaults are currently locked while conversion occurs. Please try again in a moment!");
         private TL help = TL.of("/pv <number>");
         private TL blockedItem = TL.of("<gold><item></gold> <error>is blocked from vaults.");
+        private TL blockedItemWithModelData = TL.of("<error>This item is blocked from vaults.");
+        private TL blockedItemWithoutModelData = TL.of("<error>This item is blocked from vaults.");
         private TL signsDisabled = TL.of("<error>Vault signs are currently disabled.");
         private TL blockedBadItem = TL.of("<error>This item is not allowed in a vault.");
     }
@@ -304,6 +306,14 @@ public class Translation {
 
     public @NonNull TL blockedItem() {
         return this.translations.blockedItem;
+    }
+
+    public @NonNull TL blockedItemWithModelData() {
+        return this.translations.blockedItemWithModelData;
+    }
+
+    public @NonNull TL blockedItemWithoutModelData() {
+        return this.translations.blockedItemWithoutModelData;
     }
 
     public @NonNull TL signsDisabled() {
