@@ -18,7 +18,7 @@ public class CardboardBoxSerialization {
     public static String toStorage(Inventory inventory, String target) {
         try {
             return Base64Coder.encodeLines(writeInventory(inventory.getContents()));
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw PlayerVaults.getInstance().addException(new IllegalStateException("Failed to save items for " + target, e));
         }
     }
@@ -33,8 +33,8 @@ public class CardboardBoxSerialization {
         }
         try {
             return readInventory(Base64Coder.decodeLines(data));
-        } catch (IOException e) {
-            PlayerVaults.getInstance().addException(new IllegalStateException("Failed to save items for " + target, e));
+        } catch (Exception e) {
+            PlayerVaults.getInstance().addException(new IllegalStateException("Failed to load items for " + target, e));
             PlayerVaults.getInstance().getLogger().log(Level.SEVERE, "Failed to load items for " + target, e);
             return null;
         }
