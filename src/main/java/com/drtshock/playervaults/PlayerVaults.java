@@ -18,6 +18,7 @@
 
 package com.drtshock.playervaults;
 
+import com.drtshock.playervaults.commands.ConsoleCommand;
 import com.drtshock.playervaults.commands.ConvertCommand;
 import com.drtshock.playervaults.commands.DeleteCommand;
 import com.drtshock.playervaults.commands.HelpMeCommand;
@@ -180,6 +181,7 @@ public class PlayerVaults extends JavaPlugin {
         getCommand("pvconvert").setExecutor(new ConvertCommand(this));
         getCommand("pvsign").setExecutor(new SignCommand(this));
         getCommand("pvhelpme").setExecutor(new HelpMeCommand(this));
+        getCommand("pvconsole").setExecutor(new ConsoleCommand(this));
         update.meow = this.getClass().getDeclaredMethods().length;
         debug("registered commands", time);
         time = System.currentTimeMillis();

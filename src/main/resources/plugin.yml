@@ -26,6 +26,9 @@ commands:
   pvhelpme:
     description: Pastes debug info to get better assistance.
     permission: playervaults.admin
+  pvconsole:
+    description: Console-only commands
+    permission: playervaults.console
 
 permissions:
   playervaults.admin:
