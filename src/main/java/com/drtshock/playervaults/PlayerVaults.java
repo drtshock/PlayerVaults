@@ -56,7 +56,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.kitteh.cardboardbox.CardboardBox;
+import dev.kitteh.cardboardbox.CardboardBox;
 import sun.misc.Unsafe;
 
 import java.io.BufferedReader;
@@ -137,13 +137,7 @@ public class PlayerVaults extends JavaPlugin {
     @Override
     public void onEnable() {
         if (!CardboardBox.isReady()) {
-            Exception ex = null;
-            try {
-                CardboardBox.serializeItem(new ItemStack(Material.STONE));
-            } catch (Exception e) {
-                ex = e;
-            }
-            this.getLogger().log(Level.SEVERE, "Could not initialize!", ex);
+            this.getLogger().log(Level.SEVERE, "Could not initialize!", CardboardBox.getException());
             this.getServer().getPluginManager().disablePlugin(this);
             return;
         }

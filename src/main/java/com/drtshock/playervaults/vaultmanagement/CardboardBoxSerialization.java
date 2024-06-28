@@ -4,7 +4,7 @@ import com.drtshock.playervaults.PlayerVaults;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.kitteh.cardboardbox.CardboardBox;
+import dev.kitteh.cardboardbox.CardboardBox;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.ByteArrayInputStream;

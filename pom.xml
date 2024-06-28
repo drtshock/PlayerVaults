@@ -4,13 +4,12 @@
 
     <groupId>com.drtshock</groupId>
     <artifactId>PlayerVaultsX</artifactId>
-    <version>4.2.17</version>
+    <version>4.3.0</version>
     <name>PlayerVaultsX</name>
     <url>https://www.spigotmc.org/resources/51204/</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <build.number>SNAPSHOT</build.number>
     </properties>
 
     <build>
@@ -29,16 +28,15 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.13.0</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <release>17</release>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.6.0</version>
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <relocations>
@@ -53,6 +51,10 @@
                         <relocation>
                             <pattern>org.kitteh</pattern>
                             <shadedPattern>com.drtshock.playervaults.lib.org.kitteh</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>dev.kitteh</pattern>
+                            <shadedPattern>com.drtshock.playervaults.lib.dev.kitteh</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -78,6 +80,10 @@
             <url>https://github.com/factions-site/repo/raw/public</url>
         </repository>
         <repository>
+            <id>dependency-download</id>
+            <url>https://dependency.download/releases</url>
+        </repository>
+        <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
@@ -101,7 +107,7 @@
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-platform-bukkit</artifactId>
-            <version>4.3.3-SNAPSHOT</version>
+            <version>4.3.3</version>
             <scope>compile</scope>
             <optional>true</optional>
             <exclusions>
@@ -139,9 +145,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.kitteh</groupId>
+            <groupId>dev.kitteh</groupId>
             <artifactId>cardboardbox</artifactId>
-            <version>1.0.0</version>
+            <version>2.0.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
