@@ -19,6 +19,7 @@
 package com.drtshock.playervaults.listeners;
 
 import com.drtshock.playervaults.PlayerVaults;
+import com.drtshock.playervaults.events.PlayerVaultsBlacklistedItemEvent;
 import com.drtshock.playervaults.vaultmanagement.VaultManager;
 import com.drtshock.playervaults.vaultmanagement.VaultViewInfo;
 import org.bukkit.Bukkit;
@@ -136,20 +137,24 @@ public class Listeners implements Listener {
                             continue;
                         }
                         if (!player.hasPermission("playervaults.bypassblockeditems")) {
-                            if (PlayerVaults.getInstance().isBlockWithModelData() && item.hasItemMeta() && item.getItemMeta().hasCustomModelData()) {
-                                event.setCancelled(true);
-                                this.plugin.getTL().blockedItemWithModelData().title().send(player);
-                                return;
-                            }
-                            if (PlayerVaults.getInstance().isBlockWithoutModelData() && (!item.hasItemMeta() || !item.getItemMeta().hasCustomModelData())) {
-                                event.setCancelled(true);
-                                this.plugin.getTL().blockedItemWithoutModelData().title().send(player);
-                                return;
-                            }
-                            if (PlayerVaults.getInstance().isBlockedMaterial(item.getType())) {
-                                event.setCancelled(true);
-                                this.plugin.getTL().blockedItem().title().with("item", item.getType().name()).send(player);
-                                return;
+                            PlayerVaultsBlacklistedItemEvent playerVaultsBlacklistedItemEvent = new PlayerVaultsBlacklistedItemEvent(player, item);
+                            this.plugin.getServer().getPluginManager().callEvent(playerVaultsBlacklistedItemEvent);
+                            if (!playerVaultsBlacklistedItemEvent.isCancelled()) {
+                                if (PlayerVaults.getInstance().isBlockWithModelData() && item.hasItemMeta() && item.getItemMeta().hasCustomModelData()) {
+                                    event.setCancelled(true);
+                                    this.plugin.getTL().blockedItemWithModelData().title().send(player);
+                                    return;
+                                }
+                                if (PlayerVaults.getInstance().isBlockWithoutModelData() && (!item.hasItemMeta() || !item.getItemMeta().hasCustomModelData())) {
+                                    event.setCancelled(true);
+                                    this.plugin.getTL().blockedItemWithoutModelData().title().send(player);
+                                    return;
+                                }
+                                if (PlayerVaults.getInstance().isBlockedMaterial(item.getType())) {
+                                    event.setCancelled(true);
+                                    this.plugin.getTL().blockedItem().title().with("item", item.getType().name()).send(player);
+                                    return;
+                                }
                             }
                         }
                     }
