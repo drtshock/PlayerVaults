@@ -137,23 +137,27 @@ public class Listeners implements Listener {
                             continue;
                         }
                         if (!player.hasPermission("playervaults.bypassblockeditems")) {
-                            PlayerVaultsBlacklistedItemEvent playerVaultsBlacklistedItemEvent = new PlayerVaultsBlacklistedItemEvent(player, item);
-                            this.plugin.getServer().getPluginManager().callEvent(playerVaultsBlacklistedItemEvent);
-                            if (!playerVaultsBlacklistedItemEvent.isCancelled()) {
-                                if (PlayerVaults.getInstance().isBlockWithModelData() && item.hasItemMeta() && item.getItemMeta().hasCustomModelData()) {
-                                    event.setCancelled(true);
-                                    this.plugin.getTL().blockedItemWithModelData().title().send(player);
-                                    return;
-                                }
-                                if (PlayerVaults.getInstance().isBlockWithoutModelData() && (!item.hasItemMeta() || !item.getItemMeta().hasCustomModelData())) {
-                                    event.setCancelled(true);
-                                    this.plugin.getTL().blockedItemWithoutModelData().title().send(player);
-                                    return;
-                                }
-                                if (PlayerVaults.getInstance().isBlockedMaterial(item.getType())) {
-                                    event.setCancelled(true);
-                                    this.plugin.getTL().blockedItem().title().with("item", item.getType().name()).send(player);
-                                    return;
+                            InventoryHolder holder = event.getInventory().getHolder();
+                            if (holder instanceof VaultHolder vaultHolder) {
+                                int vaultNumber = vaultHolder.getVaultNumber();
+                                PlayerVaultsBlacklistedItemEvent playerVaultsBlacklistedItemEvent = new PlayerVaultsBlacklistedItemEvent(player, item, vaultNumber);
+                                this.plugin.getServer().getPluginManager().callEvent(playerVaultsBlacklistedItemEvent);
+                                if (!playerVaultsBlacklistedItemEvent.isCancelled()) {
+                                    if (PlayerVaults.getInstance().isBlockWithModelData() && item.hasItemMeta() && item.getItemMeta().hasCustomModelData()) {
+                                        event.setCancelled(true);
+                                        this.plugin.getTL().blockedItemWithModelData().title().send(player);
+                                        return;
+                                    }
+                                    if (PlayerVaults.getInstance().isBlockWithoutModelData() && (!item.hasItemMeta() || !item.getItemMeta().hasCustomModelData())) {
+                                        event.setCancelled(true);
+                                        this.plugin.getTL().blockedItemWithoutModelData().title().send(player);
+                                        return;
+                                    }
+                                    if (PlayerVaults.getInstance().isBlockedMaterial(item.getType())) {
+                                        event.setCancelled(true);
+                                        this.plugin.getTL().blockedItem().title().with("item", item.getType().name()).send(player);
+                                        return;
+                                    }
                                 }
                             }
                         }
