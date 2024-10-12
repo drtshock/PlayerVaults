@@ -29,11 +29,13 @@ public class PlayerVaultsBlacklistedItemEvent extends Event implements Cancellab
     private static final HandlerList handlers = new HandlerList();
     private boolean isCancelled;
     private final ItemStack item;
+    private final int vaultNumber;
     private final Player player;
 
-    public PlayerVaultsBlacklistedItemEvent(Player player, ItemStack item) {
+    public PlayerVaultsBlacklistedItemEvent(Player player, ItemStack item, int vaultNumber) {
         this.player = player;
         this.item = item;
+        this.vaultNumber = vaultNumber;
         this.isCancelled = false;
     }
 
@@ -43,6 +45,10 @@ public class PlayerVaultsBlacklistedItemEvent extends Event implements Cancellab
 
     public ItemStack getItem() {
         return item;
+    }
+
+    public int getVaultNumber() {
+        return vaultNumber;
     }
 
     @Override
